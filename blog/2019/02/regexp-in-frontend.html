@@ -104,7 +104,7 @@
 <meta property="og:image" content="http://jsorz.cn/images/captures/20190220_back_tracking.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20190220_look_ahead.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20190220_multi_line.png">
-<meta property="og:updated_time" content="2019-02-20T03:06:27.160Z">
+<meta property="og:updated_time" content="2019-02-20T03:25:18.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端为什么要会正则表达式">
 <meta name="twitter:description" content="在笔者学生时代，一直单纯地认为正则都是后端老哥的事儿，前端只要 split 一把梭就够了。万不得已的时候就网上搜几段正则代码，copy 一下也能用。  这是维基百科上正则表达式的词条，截图只截了一屏，事实上这张正则表达式的表格两个屏幕都装不下。。。我第一次查的时候立马就弃了，于是很长一段时间里都在原地踏步，只会用用 ^ $ . *  最初见到正则表达式是在表单验证里，多少会用些 validate">
@@ -439,10 +439,10 @@
 <p>现在希望把这段 JSON 对象改成 key 不带引号，value 都为单引号。观察下这份数据，key 和 value 都有单引号和双引号，于是我的想法是先把所有双引号改成单引号，然后再把 key 的单引号去掉。</p>
 <p>双引号 → 单引号，我第一次写出来是这样的</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">replace(<span class="regexp">/"(.*)"/g</span>, <span class="string">'$1'</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/captures/20190220_find_replace.png" style="max-width: 300px"></p>
+<p><img src="/images/captures/20190220_find_replace.png"></p>
 <p>大部分 IDE 的 find-replace 功能都支持写正则，不妨可以试试看，上面这段正则有什么问题。</p>
 <p><code>.*</code> 也匹配了双引号，上面 <code>&quot;a1&quot;:&quot;a1&quot;</code> 被 <code>&quot;.*&quot;</code> 匹配了，这是典型的过度匹配。解决办法是使用 <code>[^&quot;]*</code> 或者使用 <code>.*?</code> 以表示尽可能少的重复。这就说到了正则表达式中的贪婪与惰性。</p>
-<p><img src="/images/captures/20190220_back_tracking.png" style="max-width: 750px"></p>
+<p><img src="/images/captures/20190220_back_tracking.png"></p>
 <p>图片示例来自<a href="https://zhuanlan.zhihu.com/p/29707385" target="_blank" rel="noopener">《JavaScript 正则表达式迷你书》</a></p>
 <p>上面这张图解释了正则引擎的匹配过程，正则表达式是 <code>&quot;.*&quot;</code>，待匹配的字符串是 <code>&quot;abc&quot;de</code></p>
 <ul>
@@ -461,7 +461,7 @@
 <h3 id="3、字符串去重"><a href="#3、字符串去重" class="headerlink" title="3、字符串去重"></a>3、字符串去重</h3><p>你可能在算法题里也见过字符串去重，去掉字符串中重复的字符。本文这里不讨论算法，想说明通过正则表达式也能判断用户的输入里有无重复字符。这里需要先学习正则里的几个武器。</p>
 <h4 id="反向引用-back-reference"><a href="#反向引用-back-reference" class="headerlink" title="反向引用 (back reference)"></a>反向引用 (back reference)</h4><p>简单说就是在一个正则表达式中引用一个分组的子表达式。举个 HTML 标签的例子，如果要匹配 <code>&lt;h1&gt;&lt;/h1&gt;</code> 标签，可以这么写 <code>/&lt;(h[1-6])&gt;[\s\S]*&lt;\/\1&gt;/</code> 这个正则可以匹配任意合法的 h 标签，其中 <code>\1</code> 就代表第 1 个分组的反向引用，否则就得为 h1 ~ h6 各写一个表达式就很累赘。反向引用的关键在于前面要先有分组，否则 <code>\1</code> 是无效的。</p>
 <h4 id="先行断言-look-ahead-后行断言-look-behind"><a href="#先行断言-look-ahead-后行断言-look-behind" class="headerlink" title="先行断言 (look ahead)  / 后行断言 (look behind)"></a>先行断言 (look ahead)  / 后行断言 (look behind)</h4><p>先行断言的语法形式为 <code>/c(?=a)/</code>，表示匹配 a 左边的 c。为了避免与断言中的「前」和 「后」混淆，这里就用「a 左边的 c」来表达。</p>
-<p><img src="/images/captures/20190220_look_ahead.png" style="max-width: 250px"></p>
+<p><img src="/images/captures/20190220_look_ahead.png" style="max-width: 400px"></p>
 <p>先行断言有些地方也叫「前瞻断言」或「前向查找」，想象你自己就是一个指针，扫描字符串的过程就像指针在向前移动。</p>
 <p>先行断言也有其否定形式，叫做先行否定断言，如 <code>/c(?!a)/</code>，即匹配「非a」左边的 c，其实这与 <code>/c(?=[^a])/</code> 效果相同，感兴趣的朋友可以自己试试。</p>
 <p>所有的正则引擎都支持先行断言和先行否定断言。到了 ES2018 才支持后行断言，细节可参考 <a href="http://es6.ruanyifeng.com/#docs/regex#后行断言" target="_blank" rel="noopener">ECMAScript 6 入门的正则章节</a>。</p>
@@ -486,7 +486,7 @@
 <p>很好记，合起来 <code>img</code>，ES6 中又新增了几种修饰符，细节可参考 <a href="http://es6.ruanyifeng.com/#docs/regex#u-修饰符" target="_blank" rel="noopener">ECMAScript 6 入门的正则章节</a>。</p>
 <h4 id="多行模式-multiline"><a href="#多行模式-multiline" class="headerlink" title="多行模式 (multiline)"></a>多行模式 (multiline)</h4><p>上面这个问题需要用到正则表达式中的多行模式，因为要在代码文件中做匹配，肯定涉及到换行。</p>
 <p>当使用了 <code>m</code> 修饰符后，多行模式下会更改 <code>^</code> 和 <code>$</code> 的含义，使它们分别在任意一行的行首和行尾匹配，而不是整个字符串的开头和结尾。</p>
-<p><img src="/images/captures/20190220_multi_line.png" style="max-width: 250px"></p>
+<p><img src="/images/captures/20190220_multi_line.png" style="max-width: 400px"></p>
 <p>回到刚才的问题，如何提取 <code>&lt;template&gt;&lt;/template&gt;</code> 标签之间的内容，首先会想到 <code>/&lt;template&gt;(.*)&lt;\/template&gt;/m</code>，然而可以试试发现不行。这是因为 <code>.</code> 匹配的是除 <code>\r</code> <code>\n</code> 之外的任何单个字符，并不是所有任意字符。所以正则表达式需要改成 <code>/&lt;template&gt;([\s\S]*)&lt;\/template&gt;/m</code>，分组中捕获的就是标签之间的内容。</p>
 <p>同理，匹配 <code>&lt;style&gt;</code> 标签里的样式，可以写出 <code>/&lt;style(?:\s+lang=&quot;(\w+)&quot;)?&gt;([\s\S]*?)&lt;\/style&gt;/mg</code> 其中 <code>&lt;style(?:\s+lang=&quot;(\w+)&quot;)?&gt;</code> 可以同时匹配 <code>&lt;style&gt;</code> 与 <code>&lt;style lang=&quot;stylus&quot;&gt;</code>，并且可以从分组捕获中拿到 lang 属性的值。另外要提的是，.vue 文件里可能会写多个 <code>&lt;style&gt;</code>，所以这个正则表达式中要使用 <code>m</code> 和 <code>g</code> 两个修饰符，并且在标签内容的里要使用 <code>[\s\S]*?</code> 以表示惰性（尽可能少的匹配）。</p>
 <p>最后就是区分 <code>&lt;script&gt;</code> 标签了，在我们定制的模板中，存在着 <code>&lt;script type=&quot;json&quot;&gt;</code> 这是我们自己约定的写 JSON 配置的地方，而普通的 <code>&lt;script&gt;</code> 或 <code>&lt;script type=&quot;text/javascript&quot;&gt;</code> 则是写 JavaScript 代码。用先行否定断言，可以写出 <code>/&lt;script(?!\s+type=&quot;json&quot;).*?&gt;([\s\S]*?)&lt;\/script&gt;/m</code> 来提取 JavaScript 代码。这里可以体会下，如果前面半段写成 <code>/&lt;script(?!\s+type=&quot;json&quot;)&gt;/</code> 的话，就无法匹配到 <code>&lt;script type=&quot;text/javascript&quot;&gt;</code> 了。</p>
@@ -506,7 +506,7 @@
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正则表达式是前端工程师的一把利器，也是值得每个程序员掌握的。本文抛砖引玉，主要想说明正则表达式在前端中有着很多应用场景，而不仅仅是纯粹的表单验证。</p>
 <p>正则表达式的语法看着多而复杂，但只要从语法的功能分类入手，平时多写多运用，就能很快克服语法的记忆负担。书写正则表达式的过程也体现着思考的过程，正则的细化也就是需求的细化。</p>
 <p>最后再次推荐入门书籍<a href="https://book.douban.com/subject/2269648/" target="_blank" rel="noopener">《正则表达式必知必会》</a>，以及正则表达式的可视化工具 <a href="https://jex.im/regulex" target="_blank" rel="noopener">regulex</a>。</p>
-<p>参考资料</p>
+<p><strong>参考资料</strong></p>
 <p><a href="https://zhuanlan.zhihu.com/p/29707385" target="_blank" rel="noopener">《JavaScript 正则表达式迷你书》</a></p>
 <p><a href="http://es6.ruanyifeng.com/#docs/regex" target="_blank" rel="noopener">ECMAScript 6 入门的正则章节</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/54615672" target="_blank" rel="noopener">正则实现数组滤重</a></p>
