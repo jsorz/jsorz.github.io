@@ -1,0 +1,1304 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="前端,面试,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="之前一直在忙，也没来得及管这个博客。实习从5月干到了8月底，办离职那天，交了工牌归还电脑后，还被运营拖着解答问题，又被通知线上价格问题，借着同事的电脑把bug修了，也是因为升级代码时自己的疏忽导致的。虽然在团队里自己只是一个打杂的小前端，但是与好多同事合作过，对接过好多运营同学。走的时候和团队里一一道别，听到最多的一句话就是“早点回来”。但是很遗憾，我回不来了。没有来得及完成师兄对我的期望，没有来">
+<meta name="keywords" content="前端,面试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端知识体系以及面试点">
+<meta property="og:url" content="http://jsorz.cn/blog/2015/09/fe-review-points.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="之前一直在忙，也没来得及管这个博客。实习从5月干到了8月底，办离职那天，交了工牌归还电脑后，还被运营拖着解答问题，又被通知线上价格问题，借着同事的电脑把bug修了，也是因为升级代码时自己的疏忽导致的。虽然在团队里自己只是一个打杂的小前端，但是与好多同事合作过，对接过好多运营同学。走的时候和团队里一一道别，听到最多的一句话就是“早点回来”。但是很遗憾，我回不来了。没有来得及完成师兄对我的期望，没有来">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.838Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端知识体系以及面试点">
+<meta name="twitter:description" content="之前一直在忙，也没来得及管这个博客。实习从5月干到了8月底，办离职那天，交了工牌归还电脑后，还被运营拖着解答问题，又被通知线上价格问题，借着同事的电脑把bug修了，也是因为升级代码时自己的疏忽导致的。虽然在团队里自己只是一个打杂的小前端，但是与好多同事合作过，对接过好多运营同学。走的时候和团队里一一道别，听到最多的一句话就是“早点回来”。但是很遗憾，我回不来了。没有来得及完成师兄对我的期望，没有来">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2015/09/fe-review-points.html">
+
+
+
+
+
+  <title>前端知识体系以及面试点 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2015/09/fe-review-points.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端知识体系以及面试点</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-09-20T00:00:00+08:00">
+                2015-09-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/吹水/" itemprop="url" rel="index">
+                    <span itemprop="name">吹水</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前一直在忙，也没来得及管这个博客。实习从5月干到了8月底，办离职那天，交了工牌归还电脑后，还被运营拖着解答问题，又被通知线上价格问题，借着同事的电脑把bug修了，也是因为升级代码时自己的疏忽导致的。虽然在团队里自己只是一个打杂的小前端，但是与好多同事合作过，对接过好多运营同学。走的时候和团队里一一道别，听到最多的一句话就是“早点回来”。但是很遗憾，我回不来了。没有来得及完成师兄对我的期望，没有来得及和他好好道别，没有来得及和主管挑盘台球，没有来得及吃遍食堂的所有菜点。那天晚上Jarven同学送我出去，说你走了我以后吃饭又不认识路了。只好相望于江湖，等到自己成长为大前端时，可以鼓足勇气说“I’m back.”</p>
+<a id="more"></a>
+<p>矫情完了。。。回校后好好回顾了下前端知识点，结合实习经验体会更深，于是想整理下。</p>
+<h2 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h2><h3 id="CSS布局"><a href="#CSS布局" class="headerlink" title="CSS布局"></a>CSS布局</h3><p>首先是模型的理解</p>
+<ul>
+<li><a href="/blog/2015/03/css-box-model.html">盒模型</a></li>
+<li><a href="/blog/2015/03/css-position-model.html">定位模型</a></li>
+<li><a href="http://www.w3cplus.com/css3/a-guide-to-flexbox.html" target="_blank" rel="noopener">Flexbox模型</a></li>
+<li>理解类似Boostrap里的栅格系统</li>
+</ul>
+<p>然后来几个实际的布局练手</p>
+<ul>
+<li>相对整个屏幕的水平垂直居中</li>
+<li>中间定宽，两边铺满容器，这样的三列布局</li>
+<li>左边定宽，右边自适应宽度，两列的等高布局</li>
+<li>三列固定宽度的等高布局</li>
+</ul>
+<p>这些都能想出1种或两三种实现的话，CSS布局不会再难了，于是可以再看下移动端web的适配。</p>
+<ul>
+<li>响应式的图片，并且是延迟加载的，要预先为图片占据空间，避免文档高度乱跳</li>
+<li>屏幕不断变大时，同一行的元素容器里应该可以看到更多的内容，而不是将文字放大</li>
+<li>利用Flexbox做移动端的弹性布局</li>
+</ul>
+<p>大体的路线图就是这样，如果再深入的话，可能就是对一些特别的属性或兼容性的理解了，比如</p>
+<ul>
+<li>IE6的盒模型是类似于<code>box-sizing: border-box</code></li>
+<li><code>zoom: 1</code>与hasLayout</li>
+<li>BFC（Block Formatting Context）</li>
+</ul>
+<p>CSS到此打住了，不是太刁难的设计稿都能hold住了！</p>
+<h3 id="Javascript语言机制"><a href="#Javascript语言机制" class="headerlink" title="Javascript语言机制"></a>Javascript语言机制</h3><p>JS里最重要的3点</p>
+<ul>
+<li>作用域</li>
+<li>闭包</li>
+<li>原型</li>
+</ul>
+<p>理解了这个后，就是运用这些特性做的一些具体方案，去解决实际问题</p>
+<ul>
+<li>函数作用域的绑定，<code>Function.prototype.bind</code>的实现</li>
+<li>模拟“类/模块”的实现</li>
+<li>类式继承的实现</li>
+<li>常用设计模式的实现，比如单例模式、观察者模式</li>
+</ul>
+<p>其中还涉及到一些js变量环境和单线程的知识点，详见我以前整理的文章</p>
+<ul>
+<li><a href="/tags.html#读书笔记-ref">《JavaScript模式》读书笔记系列</a></li>
+<li><a href="/blog/2015/03/a-question-of-intern-recruit-test-by-tencent.html">一道腾讯笔试题想到的JS中的一些特性</a></li>
+</ul>
+<p>当然光看理论不行，得拿东西练手</p>
+<ul>
+<li>实现一个Slider轮播组件</li>
+<li>实现一个带自动提示功能的输入框组件</li>
+</ul>
+<p>要注意代码的封装以及API的设计，提供一些事件及扩展性的接口，尽量优雅的去实现，并且尽量使用原生javascript。这里提供一个参考：<a href="http://www.imooc.com/view/99" target="_blank" rel="noopener">阿当大话西游之WEB组件</a></p>
+<h3 id="HTML5新特性"><a href="#HTML5新特性" class="headerlink" title="HTML5新特性"></a>HTML5新特性</h3><p>HTML5推动了很久了，标准定稿意味着Web 2.0时代已跨入Web 3.0时代。HTML5是否就直接简称H5，这个一直存在争议，我们先来看下HTML5到底有哪些新特性。</p>
+<ul>
+<li>语义化DOM结构</li>
+<li>多媒体支持</li>
+<li>本地存储，突破cookie大小限制</li>
+<li>地理定位支持</li>
+<li>web workers</li>
+<li>服务端事件主动推送</li>
+</ul>
+<p>个人感觉HTML5并不只是一些新标签、新属性、新API，它代表着一种新的理念和趋势，即web页面的丰富交互性已经可以做到和APP类似的体验了。HTML5并不是一种编程语言，而是跨终端、重视用户体验的理念，这也是Web 3.0时代所要求的。</p>
+<h2 id="进阶篇"><a href="#进阶篇" class="headerlink" title="进阶篇"></a>进阶篇</h2><p>虽然上面写的叫“基础篇”，要做好的话已经很进阶了，已经可以做出跨终端、交互丰富、代码优雅的web页面或者是web app了。这里写进阶篇主要是指规模较大的项目里会涉及到的一些东西，以及前端工程化的思想。</p>
+<h3 id="前端资源模块化"><a href="#前端资源模块化" class="headerlink" title="前端资源模块化"></a>前端资源模块化</h3><p>CSS里衍生出来SASS和LESS，相当于加强版的CSS。而js模块化衍生出来了CMD和AMD规范。我最初觉得做模块化主要是为了复用，css和js都可以一定程度地复用。后来看了<a href="http://weibo.com/fouber" target="_blank" rel="noopener">@前端农民工</a>的文章，说<strong>模块化更多的是为了“分治”</strong>，即分而治之，觉得很有道理，尤其是在规模较大的项目中。</p>
+<p>如果要说面试点的话，这里可能会涉及到</p>
+<ul>
+<li>AMD和CMD的区别</li>
+<li>模块Loader的大体实现思路</li>
+</ul>
+<p>既然有了模块化，进行了“分治”，那接下来自然就会遇到依赖管理的问题，比如</p>
+<ul>
+<li>依赖去重。a依赖[b, c]，b依赖[c, d]，如何求出a的所有依赖（算法实现）</li>
+<li>循环依赖。a依赖[b]，b依赖[c, d]，c依赖[a]，如何求出a的依赖（避免算法死循环）</li>
+</ul>
+<p>这只是依赖管理里的小打小闹，再进一步的话，整个静态资源如何管理</p>
+<ul>
+<li>缓存VS更新</li>
+<li>按需加载VS资源合并（静态资源的combo机制）</li>
+</ul>
+<p>这里涉及到的知识相当多，要深入的话每一点都能挖的很深，但我们需要从整体上有个大体的了解。可参考以下资料：</p>
+<ul>
+<li><a href="https://github.com/fouber/blog/issues/10" target="_blank" rel="noopener">前端工程——基础篇</a></li>
+<li><a href="http://www.infoq.com/cn/articles/front-end-engineering-and-performance-optimization-part2" target="_blank" rel="noopener">前端工程精粹：静态资源管理与模板框架</a></li>
+<li><a href="http://docs.kissyui.com/1.4/docs/html/guideline/seed.html#seed-" target="_blank" rel="noopener">KISSY中开启combo</a></li>
+</ul>
+<h3 id="了解服务端"><a href="#了解服务端" class="headerlink" title="了解服务端"></a>了解服务端</h3><p>在做页面级的开发时，我们肯定会接触一点web原理方面的知识</p>
+<ul>
+<li>http与https</li>
+<li>session与cookie</li>
+<li>请求与跨域</li>
+</ul>
+<p>那么再上升一层，就是整个web server，我们可以了解一些</p>
+<ul>
+<li>nodejs server与ngnix</li>
+<li>DNS与CDN</li>
+<li>如何做负载均衡</li>
+</ul>
+<p>如今用nodejs来做web controller是趋势，使前端人员拥有全栈的可能性，不一定要样样精通，但是了解一些基本的网络知识是必要的。</p>
+<h3 id="web安全"><a href="#web安全" class="headerlink" title="web安全"></a>web安全</h3><p>企业级项目里web安全也不可忽视，最常见的就是XSS漏洞和CSRF攻击，了解一点它们被攻击的原因，以及常用的一些攻防手段。我也不是很懂，只知道一些概念。这个方向深入下去的话，可以考虑做运维和安全人员。</p>
+<h2 id="高级篇"><a href="#高级篇" class="headerlink" title="高级篇"></a>高级篇</h2><p>只是随便取个标题用于划分，上面每个point深入下去的话都可以是高级篇，这里更多想扯些抽象原则的东西。</p>
+<h3 id="知其所以然才能做好性能优化"><a href="#知其所以然才能做好性能优化" class="headerlink" title="知其所以然才能做好性能优化"></a>知其所以然才能做好性能优化</h3><p>性能优化涵盖的做法数不尽数，但是不管什么手段，其目的我归结成三大方面：</p>
+<ul>
+<li>减少请求。很多做法最后都是为了减少请求，或是合并请求。</li>
+<li>服务端优化。优化响应速度，或者减少传输量。</li>
+<li>浏览器渲染原理</li>
+</ul>
+<p>最难的也是渲染原理，必须知道其原理，才能去优化事件，优化动画。</p>
+<h3 id="前后端分离是前端工程的核心"><a href="#前后端分离是前端工程的核心" class="headerlink" title="前后端分离是前端工程的核心"></a>前后端分离是前端工程的核心</h3><p>上面写的前端工程化都是在说资源管理，以及和服务端的配合，然而前后端分离才是工程化中最重要的。这方面可以看下@不四的分享<a href="http://www.infoq.com/cn/presentations/change-an-angle-to-see-front-end-and-back-end-dev-separation" target="_blank" rel="noopener">换个角度看前后端分离</a>。</p>
+<p>最后要达到的工程化效果是：</p>
+<ul>
+<li>前端不是切图仔</li>
+<li>后端也不是套页面</li>
+<li>前后端约定好后，前端可以基于mock数据开发</li>
+</ul>
+<h3 id="什么是前端"><a href="#什么是前端" class="headerlink" title="什么是前端"></a>什么是前端</h3><p>最后要回归一个本质问题，到底什么是前端？这个问题是实习前@三七终面时问的，我一下子被唬住了。</p>
+<blockquote>
+<p>前端 = 用户端 = 手机 + 平板 + PC 三端一致且良好的体验</p>
+</blockquote>
+<p>这是我后来参加了2015的QCon见了世面后的第一印象，当时前端专栏的主题就是跨终端。</p>
+<blockquote>
+<p>前端是还原设计的同时，以工程师的角度去优雅地实现。</p>
+</blockquote>
+<p>这是我实习阶段的感受，这里“优雅地”实现并非指代码要写的多么多么牛，得看具体业务场景以及需求排期，需要工程师在设计和排期以及需求优先级之间找到平衡点，以最权衡的方式去还原设计。如果是可复用的场景，最终可沉淀出一套优雅的可扩展的实现方案。</p>
+<blockquote>
+<p>前端要牢牢把控View层，以最适合用户的方式去展现。</p>
+</blockquote>
+<p>这是实习时团队的主管所提倡的，由于现在native和hybrid技术的普及，不应该把web前端和native前端界限划分得太清楚，web和native本都是View层把控者。前端人员应该根据具体业务场景，去选择最合适的实现方式，而不是根据自己的技能去选择展现方式。</p>
+<p>到底什么是前端？这类抽象问题本就不该有明确答案，就像一百个人眼中有一百个哈姆雷特。每个人的背景不同，随着经验和视野的增长，自然会沉淀出最适合自己的答案。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/面试/" rel="tag"># 面试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/06/infected-by-intership-work.html" rel="next" title="实习小想">
+                <i class="fa fa-chevron-left"></i> 实习小想
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/10/touch-event-and-defect.html" rel="prev" title="也来说说touch事件与点击穿透问题">
+                也来说说touch事件与点击穿透问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础篇"><span class="nav-number">1.</span> <span class="nav-text">基础篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS布局"><span class="nav-number">1.1.</span> <span class="nav-text">CSS布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Javascript语言机制"><span class="nav-number">1.2.</span> <span class="nav-text">Javascript语言机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML5新特性"><span class="nav-number">1.3.</span> <span class="nav-text">HTML5新特性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进阶篇"><span class="nav-number">2.</span> <span class="nav-text">进阶篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端资源模块化"><span class="nav-number">2.1.</span> <span class="nav-text">前端资源模块化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解服务端"><span class="nav-number">2.2.</span> <span class="nav-text">了解服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web安全"><span class="nav-number">2.3.</span> <span class="nav-text">web安全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高级篇"><span class="nav-number">3.</span> <span class="nav-text">高级篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#知其所以然才能做好性能优化"><span class="nav-number">3.1.</span> <span class="nav-text">知其所以然才能做好性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前后端分离是前端工程的核心"><span class="nav-number">3.2.</span> <span class="nav-text">前后端分离是前端工程的核心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是前端"><span class="nav-number">3.3.</span> <span class="nav-text">什么是前端</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1463 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="javascript,css,mobile,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="上一篇为了解释移动端web的事件和点击穿透问题，我做了一个弹出框做例子，见demo。现在请把关注点转移到弹出层本身上来，我使用fix定位将它定在屏幕中间，滚动屏幕时发现问题没有，底层元素还是在滚动，只是弹出层在屏幕正中间而且周围有遮罩。所以我们就“滚动”这件事详细说说，可能存在哪些滚动需求。">
+<meta name="keywords" content="javascript,css,mobile">
+<meta property="og:type" content="article">
+<meta property="og:title" content="由弹出层引发对滚动原理的讨论">
+<meta property="og:url" content="http://jsorz.cn/blog/2015/10/popup-scroll-tricks.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="上一篇为了解释移动端web的事件和点击穿透问题，我做了一个弹出框做例子，见demo。现在请把关注点转移到弹出层本身上来，我使用fix定位将它定在屏幕中间，滚动屏幕时发现问题没有，底层元素还是在滚动，只是弹出层在屏幕正中间而且周围有遮罩。所以我们就“滚动”这件事详细说说，可能存在哪些滚动需求。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20151010_01.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20151010_02.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20151010_03.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20151010_04.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20151010_05.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20151010_06.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20151010_07.png">
+<meta property="og:image" content="http://jsorz.cn/images/photos/wulian.jpg">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.839Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="由弹出层引发对滚动原理的讨论">
+<meta name="twitter:description" content="上一篇为了解释移动端web的事件和点击穿透问题，我做了一个弹出框做例子，见demo。现在请把关注点转移到弹出层本身上来，我使用fix定位将它定在屏幕中间，滚动屏幕时发现问题没有，底层元素还是在滚动，只是弹出层在屏幕正中间而且周围有遮罩。所以我们就“滚动”这件事详细说说，可能存在哪些滚动需求。">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20151010_01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2015/10/popup-scroll-tricks.html">
+
+
+
+
+
+  <title>由弹出层引发对滚动原理的讨论 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2015/10/popup-scroll-tricks.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">由弹出层引发对滚动原理的讨论</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-10T00:00:00+08:00">
+                2015-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mobile/" itemprop="url" rel="index">
+                    <span itemprop="name">mobile</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上一篇为了解释移动端web的事件和点击穿透问题，我做了一个弹出框做例子，<a href="/demo/touch-event/problem.html">见demo</a>。现在请把关注点转移到弹出层本身上来，我使用fix定位将它定在屏幕中间，滚动屏幕时发现问题没有，底层元素还是在滚动，只是弹出层在屏幕正中间而且周围有遮罩。所以我们就“滚动”这件事详细说说，可能存在哪些滚动需求。</p>
+<a id="more"></a>
+<h2 id="页面滚动原理"><a href="#页面滚动原理" class="headerlink" title="页面滚动原理"></a>页面滚动原理</h2><p>在PC上网页滚动主要靠鼠标滚轮，其次按“上”“下”键也能滚动页面，还可以按“空格”“Page Down/Up”以及“HOME”键，或者直接点击或拖动滚动条也能滚动页面。那么我们来做个实验，看这些事件的发生顺序是怎样的。</p>
+<pre><code>document.addEventListener(&apos;scroll&apos;, function(){
+    alert(&apos;document scroll&apos;);
+});
+
+window.addEventListener(&apos;scroll&apos;, function(){
+    alert(&apos;window scroll&apos;);
+});
+
+window.addEventListener(&apos;mousewheel&apos;, function(){
+    alert(&apos;window mousewheel&apos;);
+});
+
+window.addEventListener(&apos;keydown&apos;, function(e){
+    if(37 &lt;= e.keyCode &amp;&amp; e.keyCode &lt;= 40 || e.keyCode == 32){
+        alert(&apos;keydown &apos; + e.keyCode);
+    }
+});
+</code></pre><p>可以得知，当通过鼠标滚轮时，<code>mousewheel</code>事件会先触发，然后才是<code>scroll</code>。而事件的listener默认是遵循冒泡的，所以绑在<code>document</code>上的函数会先触发，然后才是<code>window</code>上的。同理，当通过按特定的键去滚动页面时，<code>keydown</code>事件会先触发，然后也是<code>scroll</code>。</p>
+<p>PC上没啥问题，那来看看手机端的表现。</p>
+<pre><code>document.addEventListener(&apos;scroll&apos;, function(){
+    alert(&apos;document scroll&apos;);
+});
+
+document.addEventListener(&apos;touchstart&apos;, function(){
+    alert(&apos;document touchstart&apos;);
+});
+
+document.addEventListener(&apos;touchmove&apos;, function(){
+    alert(&apos;document touchmove&apos;);
+});
+
+document.addEventListener(&apos;touchend&apos;, function(){
+    alert(&apos;document touchend&apos;);
+});
+</code></pre><p>按照PC上类似的逻辑，以及<a href="/blog/2015/10/touch-event-and-defect.html">前一篇文章中提到的touch事件原理</a>，我们很容易猜出alert顺序是：touchstart -&gt; touchmove -&gt; scroll -&gt; touchend <em>但这是事件发生的顺序，并不是alert结果的顺序</em>。可以扫二维码看看，这个alert很诡异的。</p>
+<p><img src="/images/captures/20151010_01.png"></p>
+<p>当慢慢滑时，只会 alert touchstart，然后就没有了。而快速滑时，alert touchstart 然后 alert scroll。这是因为alert框会阻塞事件响应，当touchstart后还没来的及滑动就已经弹出alert了，整个事件线程就被中断了，所以就不会响应scroll了。而当弹出alert后继续滑动（从开始到现在手指始终不松开），然后再松开手指，我们会发现 alert touchstart 后又 alert scroll。为什么alert又没中断事件线程呢？</p>
+<p>我们知道PC上的alert框是会中断整个页面的，即除非你先点“确定”，否则页面上的任何操作都是无效的，即整个用户界面被“卡住”了。而在手机上，由于触摸事件的连贯性，<em>我猜测是这样的</em>。当手机上弹出alert时是阻塞其他事件的，但由于手指始终没松开，所以整个触摸过程还在继续。一边是alert的阻塞性，一边是前一轮的触摸过程还未结束，由于js单线程的特性，所有事件在用户界面上的响应都是要进入队列处理的，然后才会在界面上体现出来。因为触摸过程是先发生的，它仍未结束，而alert是后发生的，所以alert并不能阻塞当前还未结束的触摸过程。因此只要不松开手指，继续滑动，最后再松开手指，alert touchstart 后还会 alert scroll。</p>
+<p>那么还有个问题，为什么不会 alert touchmove 和 alert touchend 呢？我们继续做实验，依次把 touchstart 和 touchmove 的 alert 语句注释掉，看看表现结果。</p>
+<pre><code>document.addEventListener(&apos;touchstart&apos;, function(){
+    // alert(&apos;document touchstart&apos;);
+});
+
+document.addEventListener(&apos;touchmove&apos;, function(){
+    alert(&apos;document touchmove&apos;);
+});
+
+document.addEventListener(&apos;touchend&apos;, function(){
+    alert(&apos;document touchend&apos;);
+});
+</code></pre><p>去掉 alert touchstart 后发现只弹出 alert touchmove，我猜测是因为 touchstart / touchmove / touchend 都是在同一轮触摸过程中的，由于alert的阻塞性，前面解释了它允许先发生的触摸（还未松开的手指）继续touch，但是 alert 会阻塞同一轮触摸过程的其他事件的响应函数。而之所以alert弹出后继续滑动手指（始终不松开），仍能看到页面在滚动，这是因为这是浏览器的默认行为，并且touch过程的发生时刻早于alert，所以在队列中alert没法阻塞它。</p>
+<p><em>以上只是我的猜测，有谁知道具体细节的请告诉我~</em> 手指不松开时，这个alert框的底层滚动问题正好也迎合了本文一开始说的<a href="/demo/touch-event/problem.html">弹出框demo</a>，如果有需求说弹出框出现时必须让外部不能滚动，该怎么办？</p>
+<h2 id="滚动禁用"><a href="#滚动禁用" class="headerlink" title="滚动禁用"></a>滚动禁用</h2><h3 id="overflow"><a href="#overflow" class="headerlink" title="overflow"></a>overflow</h3><p>我们经常会写<code>overflow: hidden</code>这样的css去让固定尺寸的元素写死，这样就算它的子元素超出了父容器的尺寸范围，也不会“溢出来”。借这个道理，我们可以在root元素上写死，这样<code>body</code>里面就不会溢出屏幕了，就不会出现滚动条了。</p>
+<pre><code>html, body{
+    overflow: hidden;
+}
+</code></pre><p>但随之又出现了另一个问题，如果页面原来是有滚动条的，在windows下的浏览器中滚动条是会占据一定宽度的（chrome下是17px，firefox下可能是13px），会让整个viewport的宽度减小一段，看起就像页面里的所有元素整体往左偏移一小段。而mac下浏览器的滚动条是悬浮在上面的，所以不会占据页面上的空间。</p>
+<p>这样的话，windows就哭了。假设页面原本就是有滚动条的，当我们打开弹出框时，为了禁止滚动，root元素被加上<code>overflow: hidden</code>，滚动条消失，底层所有元素就向右偏移一小段。关闭弹出框时，要让页面恢复滚动，root元素改成<code>overflow: auto</code>，滚动条又出现了，底层所有元素又向左偏移一小段。整个体验很糟糕！</p>
+<p>办法就是在<code>overflow: hidden</code>的同时通过<code>padding-right</code>把滚动条的空间预留出来。那么如何知道不同浏览器中滚动条到底占多宽呢？通常类似判断当前浏览器是否支持某个css属性或者某些取值，这种跟浏览器环境相关的问题，办法就是试探。用js动态生成一个元素，把你想测试的属性或值赋在这个元素上，然后把元素append到document中去，最后再通过js去取相应的值，看它到底表现出来是啥。</p>
+<p><a href="http://segmentfault.com/blog/kidsamong/1190000002545307?utm_source=Weibo&amp;utm_medium=shareLink&amp;utm_campaign=socialShare" target="_blank" rel="noopener">参考这篇文章</a>，可以知道</p>
+<blockquote>
+<p>滚动条宽度 = 元素的offsetWidth - 元素border占据的2倍宽 - 元素的clientWidth</p>
+</blockquote>
+<p>上面公式的前提是，元素具备y轴滚动条。还有种类似办法是</p>
+<blockquote>
+<p>滚动条宽度 = 不带滚动条的元素的clientWidth - 为该元素加上y轴滚动条后的clientWidth</p>
+</blockquote>
+<pre><code>var getScrollbarWidth = function(){
+    if(typeof getScrollbarWidth.value === &apos;undefined&apos;){
+        var $test = $(&apos;&lt;div&gt;&lt;/div&gt;&apos;);
+        $test.css({
+            width: &apos;100px&apos;,
+            height: &apos;1px&apos;,
+            &apos;overflow-y&apos;: &apos;scroll&apos;
+        });
+
+        $(&apos;body&apos;).append($test);
+        getScrollbarWidth.value = $test[0].offsetWidth - $test[0].clientWidth;
+        $test.remove();
+    }
+    return getScrollbarWidth.value;
+};
+</code></pre><p>这是根据第一种计算方式写出的方法，有了这个再配合overflow就能实现页面滚动的禁用与恢复了。<a href="/demo/popup-scroll/disable1.html">详细代码见demo</a></p>
+<pre><code>var disableScroll = function(){
+    // body上禁用
+    $(&apos;body, html&apos;).css({
+        &apos;overflow&apos;: &apos;hidden&apos;,
+        &apos;padding-right&apos;: getScrollbarWidth() + &apos;px&apos;
+    });
+};
+
+var enableScroll = function(){
+    $(&apos;body, html&apos;).css({
+        &apos;overflow&apos;: &apos;auto&apos;,
+        &apos;padding-right&apos;: &apos;0&apos;
+    });
+};
+</code></pre><p>我们看看表现结果：PC上很OK，简单有效；手机上完全没卵用！（我是安卓机，注意是真机上无效，而非chrome手机模拟器）</p>
+<p><img src="/images/captures/20151010_02.png"></p>
+<h3 id="禁用事件"><a href="#禁用事件" class="headerlink" title="禁用事件"></a>禁用事件</h3><p>根据上面页面滚动原理我们做的实验，很明显可以把滚动涉及到的事件干掉，这样当然不会滚动了。</p>
+<pre><code>// 记录原来的事件函数，以便恢复
+var oldonwheel, oldonmousewheel, oldonkeydown, oldontouchmove;
+var isDisabled;
+
+var disableScroll = function(){
+    oldonwheel = window.onwheel;
+    window.onwheel = preventDefault;
+
+    oldonmousewheel = window.onmousewheel;
+    window.onmousewheel = preventDefault;
+
+    oldonkeydown = document.onkeydown;
+    document.onkeydown = preventDefaultForScrollKeys;
+
+    oldontouchmove = window.ontouchmove;
+    window.ontouchmove = preventDefault;
+
+    isDisabled = true;
+};
+
+var enableScroll = function(){
+    if(!isDisabled){
+        return;
+    }
+
+    window.onwheel = oldonwheel;
+    window.onmousewheel = oldonmousewheel;
+    document.onkeydown = oldonkeydown;
+
+    window.ontouchmove = oldontouchmove;
+    isDisabled = false;
+};
+</code></pre><p>这里要注意的是，不同浏览器上事件到底在<code>window</code>还是<code>document</code>上，PC上会有一些浏览器兼容处理。<a href="/demo/popup-scroll/disable2.html">详细代码见demo</a></p>
+<p>同样看看表现结果：PC上很粗暴的解决了；手机上也OK</p>
+<p><img src="/images/captures/20151010_03.png"></p>
+<h2 id="弹出层滚动需求"><a href="#弹出层滚动需求" class="headerlink" title="弹出层滚动需求"></a>弹出层滚动需求</h2><p>至此我们看到，使用<code>overflow</code>能够解决PC上的滚动禁用问题，而禁用与滚动相关的事件能够彻底解决PC和手机的问题。那么有弹出层的话，就应该禁用整个页面的滚动吗，如果弹出层内部需要滚动怎么办？即我们有可能面临这样的需求：弹出框的内部是可以滚动的，而弹出层外部和底层元素是不能滚动的。</p>
+<h3 id="先看overflow"><a href="#先看overflow" class="headerlink" title="先看overflow"></a>先看overflow</h3><p>前面说到给root元素写上<code>overflow: hidden</code>就可以禁用滚动，那么我们对弹出层这个容器重新写个<code>overflow: scroll</code>就可以了。</p>
+<pre><code>#popupLayer{
+    overflow: scroll;
+}
+</code></pre><p>PC上简单有效，但是同样手机上不鸟这些。<a href="/demo/popup-scroll/inner1.html">见demo</a></p>
+<h3 id="事件禁用与恢复"><a href="#事件禁用与恢复" class="headerlink" title="事件禁用与恢复"></a>事件禁用与恢复</h3><p>我们把document上的<code>mousewheel</code>事件禁用了，即给它绑上了一个事件函数，只不过事件函数里将事件发生后的浏览器默认行为阻止了。</p>
+<pre><code>function preventDefault(e) {
+    e = e || window.event;
+    e.preventDefault &amp;&amp; e.preventDefault();
+    e.returnValue = false;
+}
+
+var disableScroll = function(){
+    $(document).on(&apos;mousewheel&apos;, preventDefault);
+    $(document).on(&apos;touchmove&apos;, preventDefault);
+};
+</code></pre><p>于是思路就来了，我们知道浏览器里的事件是遵循冒泡机制的（准确来说是先从root节点由外向内“捕获”，然后到达目标元素后，事件再由内向外逐层冒泡，<a href="http://www.cnblogs.com/yexiaochai/p/3451045.html" target="_blank" rel="noopener">关于这个机制请看这篇文章的第一部分</a>，这不是本文的重点）。所以我们就可以为弹出层的元素再绑个同样的事件，阻止事件冒泡到document上，这样就不会调用到<code>e.preventDefault()</code>就不会阻止浏览器默认的滚动行为了。</p>
+<pre><code>function preventDefault(e) {
+    e = e || window.event;
+    e.preventDefault &amp;&amp; e.preventDefault();
+    e.returnValue = false;
+}
+
+// 内部可滚
+$(&apos;#popupLayer&apos;).on(&apos;mousewheel&apos;, stopPropagation);
+$(&apos;#popupLayer&apos;).on(&apos;touchmove&apos;, stopPropagation);
+</code></pre><p><a href="/demo/popup-scroll/inner2.html">来看下demo</a>，手机上请看</p>
+<p><img src="/images/captures/20151010_04.png"></p>
+<p>背景层是不能滚动的，而弹出层妥妥的可以滚动了！但是发现问题了不，弹出层内部滚动到底部再继续滚时，会将背景底层的元素一起滚下去了，这尼玛FUCK</p>
+<h2 id="改进的内部滚动"><a href="#改进的内部滚动" class="headerlink" title="改进的内部滚动"></a>改进的内部滚动</h2><p>解决问题的思路很清晰，就是判断滚动边界，当滚动到达bottom和top时，就阻止滚动就好啦。</p>
+<pre><code>function innerScroll(e){
+    // 阻止冒泡到document
+    // document上已经preventDefault
+    stopPropagation(e);
+
+    var delta = e.wheelDelta || e.detail || 0;
+    var box = $(this).get(0);
+
+    if($(box).height() + box.scrollTop &gt;= box.scrollHeight){
+        if(delta &lt; 0) {
+            preventDefault(e);
+            return false;
+        }
+    }
+    if(box.scrollTop === 0){
+        if(delta &gt; 0) {
+            preventDefault(e);
+            return false;
+        }
+    }
+    // 会阻止原生滚动
+    // return false;
+}
+
+$(&apos;#popupLayer&apos;).on(&apos;mousewheel&apos;, innerScroll);
+</code></pre><p>代码很简单，关于<code>scrollTop</code> <code>scrollHeight</code>等解释<a href="http://segmentfault.com/blog/kidsamong/1190000002545307?utm_source=Weibo&amp;utm_medium=shareLink&amp;utm_campaign=socialShare" target="_blank" rel="noopener">请看这篇文章</a>。这里唯一要注意的是对鼠标滚动值<code>wheelDelta</code>的获取可能要做兼容性处理，实在有问题的话可以使用<a href="https://github.com/jquery/jquery-mousewheel" target="_blank" rel="noopener">jquery-mousewheel</a>去获取鼠标的滚动量。</p>
+<p>上面这段代码是PC上的判断滚动边界的处理，那手机上又该怎么做的，手机上没有鼠标，如何获取到滚动量delta？</p>
+<h3 id="IScroll的启发"><a href="#IScroll的启发" class="headerlink" title="IScroll的启发"></a>IScroll的启发</h3><p>我想起“局部滚动”界的大佬——IScroll，<a href="https://github.com/cubiq/iscroll/blob/master/src/core.js" target="_blank" rel="noopener">可以去看下源码</a>，细节很复杂但是大体结构是很清晰的。</p>
+<pre><code>_start: function (e) {
+
+    this.startX    = this.x;
+    this.startY    = this.y;
+    this.absStartX = this.x;
+    this.absStartY = this.y;
+    this.pointX    = point.pageX;
+    this.pointY    = point.pageY;
+
+    this._execEvent(&apos;beforeScrollStart&apos;);
+},
+
+_move: function (e) {
+
+    var point        = e.touches ? e.touches[0] : e,
+        deltaX        = point.pageX - this.pointX,
+        deltaY        = point.pageY - this.pointY;
+
+    this.pointX        = point.pageX;
+    this.pointY        = point.pageY;
+
+},
+</code></pre><p>这是iscroll中的一小段代码，这就是获取touchmove滚动量的办法。于是我们就能写出类似上面<code>innerScroll</code>适用于手机上的判断滚动边界的办法了。</p>
+<pre><code>// 移动端touch重写
+var startX, startY;
+
+$(&apos;#popupLayer&apos;).on(&apos;touchstart&apos;, function(e){
+    startX = e.changedTouches[0].pageX;
+    startY = e.changedTouches[0].pageY;
+});
+
+// 仿innerScroll方法
+$(&apos;#popupLayer&apos;).on(&apos;touchmove&apos;, function(e){
+    e.stopPropagation();
+
+    var deltaX = e.changedTouches[0].pageX - startX;
+    var deltaY = e.changedTouches[0].pageY - startY;
+
+    // 只能纵向滚
+    if(Math.abs(deltaY) &lt; Math.abs(deltaX)){
+        e.preventDefault();
+        return false;
+    }
+
+    var box = $(this).get(0);
+
+    if($(box).height() + box.scrollTop &gt;= box.scrollHeight){
+        if(deltaY &lt; 0) {
+            e.preventDefault();
+            return false;
+        }
+    }
+    if(box.scrollTop === 0){
+        if(deltaY &gt; 0) {
+            e.preventDefault();
+            return false;
+        }
+    }
+    // 会阻止原生滚动
+    // return false;
+});
+</code></pre><p>这里要注意的是，我加了一条判断，弹出层内部的滚动只能纵向滚，即 deltaY 要大于 deltaX。因为我发现个bug，当没有这条判断时，弹出层内部可以横向滚，滚出的都是空白，大家可以自己试下。还有这里到底使用<code>e.changedTouches[0]</code>还是像iscroll里的<code>e.touches[0]</code>获取当前滚动的手指，其实都OK，<a href="http://www.cnblogs.com/aaronjs/p/4778020.html" target="_blank" rel="noopener">可以看下这篇文章</a></p>
+<p><a href="/demo/popup-scroll/inner2up.html">最后请看demo</a>，<del>手机请扫二维码，效果棒棒的！</del></p>
+<p><img src="/images/captures/20151010_05.png"></p>
+<p>注：一年前做这个demo时，我手机 ( Meizu Android 4.4.2 ) 上效果是OK的，在 <a href="https://segmentfault.com/" target="_blank" rel="noopener">SegmentFault</a> 论坛上不止一个人回复说上面的方案有问题，有一半机率是不行的，快速滑的时候肯定不行。</p>
+<h3 id="来自SF网友的方案"><a href="#来自SF网友的方案" class="headerlink" title="来自SF网友的方案"></a>来自SF网友的方案</h3><p>网友 <a href="https://segmentfault.com/u/jiehwa520" target="_blank" rel="noopener">jiehwa</a> 的提到不需要重写事件那么麻烦，通过几个 css属性 控制即可。</p>
+<ul>
+<li>弹出层父元素设置属性 <code>overflow-y: scroll</code></li>
+<li>弹窗弹出时，用js控制底层元素的 position 属性置为 <code>fixed</code></li>
+<li>弹窗关闭时，用js控制底层元素的 position 属性置为 <code>static</code></li>
+<li>在 iOS 端，为了弹窗里面的滚动效果看起来顺滑，需要设置弹窗层的包裹元素属性：<code>-webkit-overflow-scrolling: touch</code></li>
+</ul>
+<p><a href="/demo/popup-scroll/inner3.html">css方案的demo</a>（感谢 SegmentFault 网友）</p>
+<p><img src="/images/captures/20151010_06.png"></p>
+<p>可以看到有瑕疵，当强行将底层元素置为 <code>fixed</code> 后，由于 fixed 定位会让元素脱离正常的DOM文档流，所以原本位于页面底部的元素就一下子顶上来了。还有当底层元素滑动一段距离后再打开弹出层，底层元素又被 fixed 定位重置了，看着也很别扭。</p>
+<p>仔细阅读后发现我误解了，控制底层元素的 fixed 定位应该作用在 <code>&lt;body&gt;</code> 的一级子元素，而弹出层的包裹元素也是 <code>&lt;body&gt;</code> 的一级子元素，于是 <a href="/demo/popup-scroll/inner3up.html">改进后的 demo</a> 如下</p>
+<p><img src="/images/captures/20151010_07.png"></p>
+<p>现在“页面底部”这几个字不会顶上来了，但是滑动一段距离后再打开弹出层时的页面底层还是会抖动，这个暂时也想不出很好的解决方案</p>
+<p><img src="/images/photos/wulian.jpg"></p>
+<p>最后感谢<a href="http://www.cnblogs.com/yexiaochai/" target="_blank" rel="noopener">叶小钗</a>，最近一直在看他关于移动端事件原理的博客，有点学会了他那种 代码实验 -&gt; 猜测解释 -&gt; 验证原理 -&gt; 改进问题 这样的学习方法。本文也花了很大力气写代码实验，疏漏之处望多多指正，谢谢耐心的看完</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="http://www.zhihu.com/question/21865401" target="_blank" rel="noopener">知乎上的一个讨论</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/css/" rel="tag"># css</a>
+          
+            <a href="/tags/mobile/" rel="tag"># mobile</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/10/touch-event-and-defect.html" rel="next" title="也来说说touch事件与点击穿透问题">
+                <i class="fa fa-chevron-left"></i> 也来说说touch事件与点击穿透问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/11/iweb-nanjing-notes.html" rel="prev" title="iWeb南京2015峰会笔记">
+                iWeb南京2015峰会笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#页面滚动原理"><span class="nav-number">1.</span> <span class="nav-text">页面滚动原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#滚动禁用"><span class="nav-number">2.</span> <span class="nav-text">滚动禁用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#overflow"><span class="nav-number">2.1.</span> <span class="nav-text">overflow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁用事件"><span class="nav-number">2.2.</span> <span class="nav-text">禁用事件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#弹出层滚动需求"><span class="nav-number">3.</span> <span class="nav-text">弹出层滚动需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#先看overflow"><span class="nav-number">3.1.</span> <span class="nav-text">先看overflow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件禁用与恢复"><span class="nav-number">3.2.</span> <span class="nav-text">事件禁用与恢复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进的内部滚动"><span class="nav-number">4.</span> <span class="nav-text">改进的内部滚动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IScroll的启发"><span class="nav-number">4.1.</span> <span class="nav-text">IScroll的启发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#来自SF网友的方案"><span class="nav-number">4.2.</span> <span class="nav-text">来自SF网友的方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

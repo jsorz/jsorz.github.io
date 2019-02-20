@@ -1,0 +1,1270 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="web组件,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="一 产品：小哥哥在么？我想临时加个小小小小的需求~~ 小明：不在。 产品：很简单的哈，就在原来的页面上加个小功能…… 产品：帮帮忙，求你了哥哥，我请你吃星爸爸~ 小明：先说吧。。要是改动大的话，请海底捞都没用。。 产品：不会的！就是在我们的活动后台页面上，想加个活动预告的功能，大概这个样子……">
+<meta name="keywords" content="web组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="再也不想写表单了">
+<meta property="og:url" content="http://jsorz.cn/blog/2018/10/no-form-any-more.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="一 产品：小哥哥在么？我想临时加个小小小小的需求~~ 小明：不在。 产品：很简单的哈，就在原来的页面上加个小功能…… 产品：帮帮忙，求你了哥哥，我请你吃星爸爸~ 小明：先说吧。。要是改动大的话，请海底捞都没用。。 产品：不会的！就是在我们的活动后台页面上，想加个活动预告的功能，大概这个样子……">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20181031_prd1.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20181031_prd2.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20181031_prd3.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20181031_json_form.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20181031_code1.jpg">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.850Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="再也不想写表单了">
+<meta name="twitter:description" content="一 产品：小哥哥在么？我想临时加个小小小小的需求~~ 小明：不在。 产品：很简单的哈，就在原来的页面上加个小功能…… 产品：帮帮忙，求你了哥哥，我请你吃星爸爸~ 小明：先说吧。。要是改动大的话，请海底捞都没用。。 产品：不会的！就是在我们的活动后台页面上，想加个活动预告的功能，大概这个样子……">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20181031_prd1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2018/10/no-form-any-more.html">
+
+
+
+
+
+  <title>再也不想写表单了 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2018/10/no-form-any-more.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">再也不想写表单了</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T00:00:00+08:00">
+                2018-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发/" itemprop="url" rel="index">
+                    <span itemprop="name">开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>一</strong></p>
+<p>产品：小哥哥在么？我想临时加个小小小小的需求~~</p>
+<p>小明：不在。</p>
+<p>产品：很简单的哈，就在原来的页面上加个小功能……</p>
+<p>产品：帮帮忙，求你了哥哥，我请你吃星爸爸~</p>
+<p>小明：先说吧。。要是改动大的话，请海底捞都没用。。</p>
+<p>产品：不会的！就是在我们的活动后台页面上，想加个活动预告的功能，大概这个样子……</p>
+<a id="more"></a>
+<p><img src="/images/captures/20181031_prd1.png"></p>
+<p>产品：是不是很简单哈~</p>
+<p>小明：哦。还行吧</p>
+<p>于是小明打开了项目，找到了相应的页面，Oh shit！</p>
+<p>以前的代码谁写的，写完就跑路了么！还好现在加的“活动预告”功能跟其他部分不相干，可以单独抽离出去。小明感觉机智如我，很快就写好了，简直是空手薅羊毛。</p>
+<p>小明：加好了（来杯抹茶拿铁）</p>
+<p><strong>二</strong></p>
+<p>产品：小哥哥在么？昨天加的小需求后来业务说需要有个“立即生效”的按钮。。。</p>
+<p>产品：实在对对对对对不起 &gt;_&lt; 我在原来的图上稍微加了点，求哥哥帮忙改一下下</p>
+<p><img src="/images/captures/20181031_prd2.png"></p>
+<p>产品：是这样的，“立即生效”选“是”时，选日期的就不要了，选“否”时才有“生效日期”</p>
+<p>……</p>
+<p>产品：哥 你看到了吗？</p>
+<p>小明：你说完了吗？全都说完我再一起改</p>
+<p>产品：说完了！谢谢 O(∩_∩)O</p>
+<p>由于小明先见之明，一开始就把“活动预告”部分抽离出去了，所以根本不用 care 其他代码，也很快就改好了。</p>
+<p><strong>三</strong></p>
+<p>产品：小哥哥……我已经跪下了</p>
+<p>产品：又跟业务聊了，他们自己一开始都没理清，现在捋清楚了</p>
+<p>产品：1. 类型为”拉新“与”冲单“时，活动还支持按条件的生效方式，条件支持”活动人数“、”活动天数“、”峰值“（三者为且的关系）</p>
+<p>产品：2. 类型为”回馈“时，活动只支持立即生效和按时间生效两种方式</p>
+<p><img src="/images/captures/20181031_prd3.png"></p>
+<p>产品：不会再改了！不然我就请吃海底捞</p>
+<p>小明：再见。</p>
+<h2 id="日常"><a href="#日常" class="headerlink" title="日常"></a>日常</h2><p>在日常工作中，经常出现上面故事中的影子，公司的业务不会停下，需求必然要跟着业务而不断演化，一个看似简单的页面表单也会变得越来越臃肿。</p>
+<p>项目交接了N手，各人都按各自的风格写代码；产品也交接了好几手，各按各的套路提需求。根本原因是代码的维护成本与业务不断变化之间的矛盾。</p>
+<p>正如上面故事中的例子，再往后发展，有可能“活跃人数”的条件需要支持多个区间，甚至出现“生效条件”与表单中的其他项发生耦合，需求千变万化，怎么预知得了。</p>
+<p>究其原因，就是当表单中出现联动的需求，或者跨行之间发生制约关系时，表单代码的复杂度就会上升，随着业务需求的演变，如果代码处理的不好，会变得越来越难维护。</p>
+<h2 id="配置型表单"><a href="#配置型表单" class="headerlink" title="配置型表单"></a>配置型表单</h2><p>表单本质上是什么？表单用来承载业务需求的交互逻辑，表单的最终目的是提交一些特定格式的数据。那么从其目的出发，从数据的角度，表单就是一堆 key 与 value 的映射，key 就是接口调用时的参数，value 就是 key 所对应的表单控件的用户输入值。</p>
+<p>理想状态下，可以用如下的 JSON 结构来定义一个表单。</p>
+<p><img src="/images/captures/20181031_json_form.png"></p>
+<p>数组中的每项都对应表单中的一项，<code>type</code> 即表单控件的类型，<code>key</code> 即表单提交时的数据参数。如上图，表单提交时会发送以下数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  act_type: <span class="string">''</span>,</span><br><span class="line">  instant: <span class="string">''</span>,</span><br><span class="line">  range: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个 <code>key</code> 到底会输出什么类型的数据，取决于它对应的表单控件是什么。</p>
+<h3 id="应对联动需求"><a href="#应对联动需求" class="headerlink" title="应对联动需求"></a>应对联动需求</h3><p>上面说到表单中的联动是罪恶的根源，在 JSON 配置中能否处理好这个关系呢？我们先翻下业务项目中的代码，是否经常出现这样随意的代码。</p>
+<p><img src="/images/captures/20181031_code1.jpg"></p>
+<p>以 Vue 为例，<code>v-if</code> 条件渲染确实是处理联动的办法，但满屏的 <code>v-if</code> 以及枚举值的 magic number，动不动就几百行的表单，模板中又耦合着逻辑，维护起来真是个又脏又累的活儿。</p>
+<p>根据实际需求，整理了下常见联动的套路</p>
+<ul>
+<li>第1类：A 为特定值时，B 不显示；或 A 为特定值时，B 才显示</li>
+<li>第2类：A 为特定值时，B 只能为特定范围内的值（或不能为某些值）</li>
+<li>第3类：A 为特定值时，B 也只能为特定值</li>
+</ul>
+<p>借鉴 <code>v-if</code> 的思想，在配置型表单的 JSON 中也可以尝试条件渲染。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'活动类型'</span>,</span><br><span class="line">    key: <span class="string">'act_type'</span>,</span><br><span class="line">    type: <span class="string">'radio'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'立即生效'</span>,</span><br><span class="line">    key: <span class="string">'instant'</span>,</span><br><span class="line">    type: <span class="string">'radio'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'生效日期'</span>,</span><br><span class="line">    key: <span class="string">'range'</span>,</span><br><span class="line">    type: <span class="string">'dates'</span>,</span><br><span class="line">    ifRender(form) &#123;</span><br><span class="line">      <span class="keyword">return</span> form.instant == <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>配置中的 <code>ifRender</code> 是一个函数，入参即当前表单的数据状态，可以在函数中判断渲染的条件，以达到与 <code>v-if</code> 等价的效果。通过这种方式，就可以实现第1类联动。</p>
+<h3 id="应对动态取值范围"><a href="#应对动态取值范围" class="headerlink" title="应对动态取值范围"></a>应对动态取值范围</h3><p>在上面的 JSON 配置中，其实省略了一点，就是单选控件的选项，它属于控件内部的属性，因此可以统一定义一个 <code>props</code> 字段来表示组件内部的属性。下面完整定义了产品最初需求中的“活动类型”这一行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'活动类型'</span>,</span><br><span class="line">    key: <span class="string">'act_type'</span>,</span><br><span class="line">    type: <span class="string">'radio'</span>,</span><br><span class="line">    props: &#123;</span><br><span class="line">      options: &#123; <span class="number">1</span>: <span class="string">'拉新'</span>, <span class="number">2</span>: <span class="string">'冲单'</span>, <span class="number">3</span>: <span class="string">'回馈'</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>有了这个基础后，对于第2类联动，A 为特定值时，B 只能为特定范围内的值（或不能为某些值），就迎刃而解了。很容易想到，让 <code>props</code> 支持函数，入参同样是当前表单的数据状态。</p>
+<p>对于需求3中，类型为”回馈“时，活动只支持立即生效和按时间生效两种方式，就可以通过以下 JSON 配置来定义清楚。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'活动类型'</span>,</span><br><span class="line">    key: <span class="string">'act_type'</span>,</span><br><span class="line">    type: <span class="string">'radio'</span>,</span><br><span class="line">    props: &#123;</span><br><span class="line">      options: &#123; <span class="number">1</span>: <span class="string">'拉新'</span>, <span class="number">2</span>: <span class="string">'冲单'</span>, <span class="number">3</span>: <span class="string">'回馈'</span> &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'生效方式'</span>,</span><br><span class="line">    key: <span class="string">'effect_type'</span>,</span><br><span class="line">    type: <span class="string">'radio'</span>,</span><br><span class="line">    props(form) &#123;</span><br><span class="line">      <span class="keyword">const</span> map = &#123; <span class="number">1</span>: <span class="string">'立即'</span>, <span class="number">2</span>: <span class="string">'按时间'</span>, <span class="number">3</span>: <span class="string">'按条件'</span> &#125;;</span><br><span class="line">      <span class="keyword">if</span> (form.act_type === <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="keyword">delete</span> map[<span class="number">3</span>];</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">options</span>: map &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>当然你可能会嫌弃 magic number，那就定义个枚举常量好了。总的来说这样定义的表单联动逻辑，集中又清晰。</p>
+<h3 id="应对限制特定值"><a href="#应对限制特定值" class="headerlink" title="应对限制特定值"></a>应对限制特定值</h3><p>细心的你可以会注意到，第3类联动还没法实现，A 为特定值时，B 也只能为特定值。</p>
+<p>这种情况，我们先来看看原先业务代码中会怎么写。一般两种套路：1是 watch 表单状态中的 A 字段，当它为特定值时，将 B 字段也赋成特定值；2是监听 A 字段所对应表单控件的 change 事件，当它 change 成特定值时，将 B 字段也赋成特定值。可以想象，这两种代码给 B 赋值时与 B 的声明处都隔的比较远，而且每个人都有自己的习惯，有的人喜欢写在模板里，有的人喜欢写在逻辑里，有的人可能喜欢单独抽个函数。</p>
+<p>在上面的配置型表单中，同样可以做这个事情，可以通过给 <code>props</code> 增加个 <code>value</code> 字段用来特指该表单控件的数据。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'活动类型'</span>,</span><br><span class="line">    key: <span class="string">'act_type'</span>,</span><br><span class="line">    type: <span class="string">'radio'</span>,</span><br><span class="line">    props: &#123;</span><br><span class="line">      options: &#123; <span class="number">1</span>: <span class="string">'拉新'</span>, <span class="number">2</span>: <span class="string">'冲单'</span>, <span class="number">3</span>: <span class="string">'回馈'</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    title: <span class="string">'生效方式'</span>,</span><br><span class="line">    key: <span class="string">'effect_type'</span>,</span><br><span class="line">    type: <span class="string">'radio'</span>,</span><br><span class="line">    props(form) &#123;</span><br><span class="line">      <span class="keyword">const</span> value;</span><br><span class="line">      <span class="keyword">const</span> map = &#123; <span class="number">1</span>: <span class="string">'立即'</span>, <span class="number">2</span>: <span class="string">'按时间'</span>, <span class="number">3</span>: <span class="string">'按条件'</span> &#125;;</span><br><span class="line">      <span class="keyword">if</span> (form.act_type === <span class="number">3</span>) &#123;</span><br><span class="line">        value = <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> &#123; </span><br><span class="line">        value: value,</span><br><span class="line">        options: map </span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>当然，除了通过 <code>props</code> 来限制特定值外，也可以设计个 <code>watch</code> 观察者回调函数来对表单数据状态中的某个字段来赋值，取决于这套 JSON 表单配置怎么设计。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>通过 JSON 配置来定义一个表单是可行的，相较于以往的业务代码，省去了模板，不会出现模板与逻辑混在一起的情况。对于表单中令人讨厌的联动需求，列举了3类常见的联动套路，并且尝试了通过 JSON 配置来满足联动需求的可行性。</p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>既然说配置型表单省去了模板，模板其实被屏蔽了，配置中的每个表单控件的 <code>title</code> 和 <code>type</code> 足以表达模板了。<code>title</code> 即表单一行中的 label，而 <code>type</code> 则映射到具体的组件，是 checkbox 还是 select。</p>
+<h3 id="使用姿势"><a href="#使用姿势" class="headerlink" title="使用姿势"></a>使用姿势</h3><p>上面啰嗦了这么多配置型表单的 JSON 示例，我们希望封装一个表单，只需传入 JSON 配置。以 Vue 为例，希望可以这样指定表单。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;json-form v-model=&quot;formModel&quot; :config=&quot;formItems&quot;/&gt;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>formItems</code> 就是上文介绍的 JSON 配置，是一个数组，数组中的每项代表一个表单控件。</p>
+<h3 id="映射到组件"><a href="#映射到组件" class="headerlink" title="映射到组件"></a>映射到组件</h3><p>从表单配置中的 <code>type</code> 映射到一个真正的组件，是这套表单方案的核心。</p>
+<p>为了降低基础组件的开发成本，我们可以先选择一套成熟的组件库，比如 <a href="https://github.com/ElemeFE/element" target="_blank" rel="noopener">Element</a>，通过简单的 <code>type</code> 与组件 tag 的映射，就能实现组件映射。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="comment">// 默认输入类型</span></span><br><span class="line">  text: &#123;</span><br><span class="line">    <span class="comment">// 对应到 Element 中的组件 tag</span></span><br><span class="line">    component: <span class="string">'el-input'</span>,</span><br><span class="line">    <span class="comment">// 传递给 Element 组件的默认 props</span></span><br><span class="line">    props: &#123;</span><br><span class="line">      clearable: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上，我们定义了一个映射表，key 即表单配置中的 <code>type</code>，例如 <code>type: &#39;text&#39;</code> 则会映射到 Element 中的 <code>el-input</code> 组件，并且这里给出的 <code>props</code> 会作为默认属性传递给 Element 中的相应组件。这样，就以一种低成本的方式实现了从表单配置 <code>type</code> 到真正的表单组件之间的映射。</p>
+<h3 id="Form-封装"><a href="#Form-封装" class="headerlink" title="Form 封装"></a>Form 封装</h3><p>只有上面的映射表，还不够组成完整的表单，因为一个表单会包含多个组件，并且在上文介绍的几类联动也需要在表单层来实现。</p>
+<p>好在 Vue 中有个神奇的<a href="https://cn.vuejs.org/v2/guide/components-dynamic-async.html" target="_blank" rel="noopener">动态组件</a>，可以很方便的帮助我们生成映射后的组件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;el-form :model=&quot;formModel&quot;&gt;</span><br><span class="line">  &lt;el-form-item</span><br><span class="line">    v-for=&quot;(input, i) in formItems&quot;</span><br><span class="line">    v-if=&quot;input._ifRender&quot;</span><br><span class="line">    :key=&quot;input.key + &apos;_&apos; + i&quot;</span><br><span class="line">    :rules=&quot;input.rules&quot;</span><br><span class="line">    :prop=&quot;input.key || null&quot;</span><br><span class="line">    :label=&quot;input.title&quot;</span><br><span class="line">  &gt;</span><br><span class="line">    &lt;component</span><br><span class="line">      ref=&quot;component&quot;</span><br><span class="line">      :is=&quot;input.tag&quot;</span><br><span class="line">      v-model=&quot;form[input.key]&quot;</span><br><span class="line">      v-bind=&quot;input.props || &#123;&#125;&quot;</span><br><span class="line">    /&gt;</span><br><span class="line">  &lt;/el-form-item&gt;</span><br><span class="line">&lt;/el-form&gt;</span><br></pre></td></tr></table></figure>
+<p>如上代码所示，<code>formInputs</code> 是从表单接收到的 JSON config 转化而来，它会根据组件映射表得到了相应的组件 tag 和 props，并且处理条件渲染的配置 <code>ifRender</code> 函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.formInputs = (<span class="keyword">this</span>.config || []).map(<span class="function"><span class="params">item</span> =&gt;</span> computeFormItem(item, <span class="keyword">this</span>.formModel))</span><br></pre></td></tr></table></figure>
+<p>可以看到核心就是这个 <code>computeFormItem</code> 函数，它将表单配置进行转换，并且以当前的表单数据 model 作为入参。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">computeFormItem</span>(<span class="params">&#123; config, form &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 返回结构体</span></span><br><span class="line">  <span class="keyword">const</span> item = &#123; ...config &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 表单控件的类型</span></span><br><span class="line">  <span class="keyword">let</span> type = item.type || <span class="string">'text'</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 对应到组件映射表</span></span><br><span class="line">  <span class="keyword">let</span> def = ElementMapping[type];</span><br><span class="line"></span><br><span class="line">  item.tag = def.component;</span><br><span class="line">  item.props = merge(&#123;&#125;, def.props, item.props);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取动态 props</span></span><br><span class="line">  <span class="keyword">if</span> (isFunction(item.getProps)) &#123;</span><br><span class="line">    item.props = <span class="built_in">Object</span>.assign(&#123;&#125;, item.props, item.getProps(form));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 条件渲染</span></span><br><span class="line">  item._ifRender = isFunction(item.ifRender) ? !!item.ifRender(form) : <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 防止表单提交时存在多余 key</span></span><br><span class="line">  <span class="keyword">if</span> (!item._ifRender) &#123;</span><br><span class="line">    <span class="keyword">delete</span> form[item.key];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// form-item 配置</span></span><br><span class="line">  <span class="keyword">return</span> item;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>它首先根据配置类型，读取组件映射表，得到真正的组件 tag，并合并配置中的 props、映射表中组件的默认 props，以及依赖表单 model 的动态 props（用于实现上文中第2类联动）。最后处理条件渲染，执行配置中的 <code>ifRender</code> 函数，得到一个布尔值，用以表单模板中 <code>v-if</code> 判断。</p>
+<h2 id="告别表单"><a href="#告别表单" class="headerlink" title="告别表单"></a>告别表单</h2><p>上文说配置型表单省去了模板，因为模板已经被标准化，并且被封装在了 Form 中，即下面的 <code>&lt;json-form&gt;</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">json-form</span> <span class="attr">v-model</span>=<span class="string">"formModel"</span> <span class="attr">:config</span>=<span class="string">"formItems"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>对使用者来说只需要写好 JSON 配置就可以了。由此带来的好处显而易见，那就是表单需求中的业务逻辑只需要关注数据层面，即某个表单控件对应的数据 key 是什么，以及它对应的组件类型。并且当处理表单联动需求时，只需在配置中写上一些函数，这样逻辑更集中，因为你不需要在原先的页面模板以及代码逻辑中寻找有哪些耦合了。</p>
+<p>更远地来说，配置型表单可以轻松应对底层的变化。比如现在 Element 组件库需要升级大版本了，必然有不兼容的坑，你就不必在所有页面中翻来覆去地寻找到底哪些属性要改。只需要搞定封装后的 Form，在不兼容的 props 之间做一层映射，业务代码部分是无需改动的。</p>
+<p>读到这里，是不是以为会有广告？是为了安利某个轮子😇 </p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>然而并没有……</p>
+<p>本文从实际的需求出发，讨论了配置型表单的可行性，并整理了常见的表单联动场景。通过配置型的表单可以降低业务代码的开发和维护成本。</p>
+<p>已经在公司的后台业务中尝试了数十个页面，还有很多配置项及实现细节没有列出，比如扩展自定义组件、渲染自定义模板、表单生命周期以及表单 API 的设计等。</p>
+<p>结合真实的业务场景，使用配置来组织表单甚至组织整个页面，是一条路子。它降低了代码的复杂度，却无形中提高了理解配置的复杂度。因为业务场景千变万化，众口难调，你必须在其中抽离出相似的东西，将其设计成配置。配置项既要通用，又不能限太死，必要时要能提供可自定义和扩展的方式。</p>
+<p>配置的设计是最难的，也最容易纠结，真正去实现这么一套表单配置也是挺有意思的呢！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web组件/" rel="tag"># web组件</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2018/04/future-rolls-on.html" rel="next" title="2018未来在哪儿">
+                <i class="fa fa-chevron-left"></i> 2018未来在哪儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/12/interesting-event-loop.html" rel="prev" title="“滑稽”的事件循环">
+                “滑稽”的事件循环 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#日常"><span class="nav-number">1.</span> <span class="nav-text">日常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置型表单"><span class="nav-number">2.</span> <span class="nav-text">配置型表单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#应对联动需求"><span class="nav-number">2.1.</span> <span class="nav-text">应对联动需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应对动态取值范围"><span class="nav-number">2.2.</span> <span class="nav-text">应对动态取值范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应对限制特定值"><span class="nav-number">2.3.</span> <span class="nav-text">应对限制特定值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">2.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现原理"><span class="nav-number">3.</span> <span class="nav-text">实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用姿势"><span class="nav-number">3.1.</span> <span class="nav-text">使用姿势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#映射到组件"><span class="nav-number">3.2.</span> <span class="nav-text">映射到组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Form-封装"><span class="nav-number">3.3.</span> <span class="nav-text">Form 封装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#告别表单"><span class="nav-number">4.</span> <span class="nav-text">告别表单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

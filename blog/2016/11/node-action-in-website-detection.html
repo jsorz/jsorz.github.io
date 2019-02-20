@@ -1,0 +1,1329 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="nodejs,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="（拖了近一年的文章）去年这个时候接了一个心力交瘁的项目，大体目标是：1、为用户的网站提供安全监测的服务，用户在我们的管理端系统中添加一个站点并勾选要检测的项；2、然后由后台爬虫系统完成用户站点链接的入库，并定时针对站内链接执行各种检测任务；3、再由前端系统给用户交付网站监测报表。在中间这一步，最重要的爬虫系统，我第一次学习用 Nodejs 来做。">
+<meta name="keywords" content="nodejs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网站安全监测 - Node实战">
+<meta property="og:url" content="http://jsorz.cn/blog/2016/11/node-action-in-website-detection.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="（拖了近一年的文章）去年这个时候接了一个心力交瘁的项目，大体目标是：1、为用户的网站提供安全监测的服务，用户在我们的管理端系统中添加一个站点并勾选要检测的项；2、然后由后台爬虫系统完成用户站点链接的入库，并定时针对站内链接执行各种检测任务；3、再由前端系统给用户交付网站监测报表。在中间这一步，最重要的爬虫系统，我第一次学习用 Nodejs 来做。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20161121_create_task_1.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20161121_create_task_2.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20161121_create_task_3.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20161121_project_architecture.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20161121_producer_and_runner.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20161121_runner_task_pipe.png">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.843Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网站安全监测 - Node实战">
+<meta name="twitter:description" content="（拖了近一年的文章）去年这个时候接了一个心力交瘁的项目，大体目标是：1、为用户的网站提供安全监测的服务，用户在我们的管理端系统中添加一个站点并勾选要检测的项；2、然后由后台爬虫系统完成用户站点链接的入库，并定时针对站内链接执行各种检测任务；3、再由前端系统给用户交付网站监测报表。在中间这一步，最重要的爬虫系统，我第一次学习用 Nodejs 来做。">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20161121_create_task_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2016/11/node-action-in-website-detection.html">
+
+
+
+
+
+  <title>网站安全监测 - Node实战 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2016/11/node-action-in-website-detection.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">网站安全监测 - Node实战</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-21T00:00:00+08:00">
+                2016-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node/" itemprop="url" rel="index">
+                    <span itemprop="name">node</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>（拖了近一年的文章）去年这个时候接了一个心力交瘁的项目，大体目标是：1、为用户的网站提供安全监测的服务，用户在我们的管理端系统中添加一个站点并勾选要检测的项；2、然后由后台爬虫系统完成用户站点链接的入库，并定时针对站内链接执行各种检测任务；3、再由前端系统给用户交付网站监测报表。在中间这一步，最重要的爬虫系统，我第一次学习用 Nodejs 来做。</p>
+<a id="more"></a>
+<h2 id="Node起步"><a href="#Node起步" class="headerlink" title="Node起步"></a>Node起步</h2><p>安装</p>
+<ul>
+<li><p>nvm</p>
+<pre><code>curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.2/install.sh | bash
+</code></pre></li>
+<li><p>node 0.12.x</p>
+<pre><code>nvm install 0.12
+</code></pre></li>
+<li><p>cnpm 镜像</p>
+<pre><code>npm install --registry=http://r.cnpmjs.org -g cnpm
+</code></pre></li>
+<li><p>debug 工具</p>
+<pre><code>cnpm install -g node-inspector
+node-debug yourApp.js
+</code></pre></li>
+</ul>
+<p>教程</p>
+<ul>
+<li><a href="https://github.com/alsotang/node-lessons" target="_blank" rel="noopener">Node.js 包教不包会</a></li>
+<li><a href="https://davidcai1993.gitbooks.io/nodejs-api-doc-in-chinese/content/" target="_blank" rel="noopener">中文API文档</a></li>
+</ul>
+<p>一些库</p>
+<ul>
+<li><p>用于爬虫</p>
+<ul>
+<li><a href="http://visionmedia.github.io/superagent/" target="_blank" rel="noopener">superagent</a> 处理请求的模块</li>
+<li><a href="https://github.com/request/request" target="_blank" rel="noopener">request</a> 另一个处理请求的模块，比起 superagent，语法配置项更多一些。如果说 superagent 是 <code>$.post()</code>，那 request 就是 <code>$.ajax()</code></li>
+<li><a href="https://github.com/cheeriojs/cheerio" target="_blank" rel="noopener">cheerio</a> 用于DOM解析，提供与 jquery 选择器类似的接口</li>
+</ul>
+</li>
+<li><p>异步流程控制</p>
+<ul>
+<li><a href="https://github.com/kriskowal/q" target="_blank" rel="noopener">Q in Github</a> Promise 化的一种实现，promise 不是万能，改造复杂的动态决定的执行链是比较烦的事情</li>
+<li><a href="https://github.com/caolan/async" target="_blank" rel="noopener">async</a> 点赞数很高的库，有人说有毒，我觉着很好用</li>
+<li><a href="https://github.com/JacksonTian/eventproxy" target="_blank" rel="noopener">eventproxy</a> @朴灵的基于事件的流程控制，我觉着和 promise 或 async 搭配着使用很好用</li>
+</ul>
+</li>
+</ul>
+<h2 id="主程序设计"><a href="#主程序设计" class="headerlink" title="主程序设计"></a>主程序设计</h2><p>在摘要中已经提到，这个项目的目标分为3步：添加检测任务 =&gt; 爬虫执行任务 =&gt; 前端报表展现。但在具体实现时，需要对爬虫进行细分，最终会有6步过程。</p>
+<h3 id="1、添加要监测的站点"><a href="#1、添加要监测的站点" class="headerlink" title="1、添加要监测的站点"></a>1、添加要监测的站点</h3><p><img src="/images/captures/20161121_create_task_1.png"></p>
+<p>在web端添加一个站点任务，输入客户的摘要信息以及要监控的站点列表，然后可以更改检测类别的周期以及具体检测项等配置。</p>
+<p><img src="/images/captures/20161121_create_task_2.png"></p>
+<p><img src="/images/captures/20161121_create_task_3.png"></p>
+<p>“可用性”检测主要是网站的一些基本信息，通常都在首页的 http 头中就能找到。而“内容检测”需要对网站中的所有页面进行检测，因此会有一个“检测深度”和“最大页数”的配置，页面深度越深，页面数目会呈指数级增长，这对爬虫服务器是巨大的压力。</p>
+<p>此外还有一个“安全检测”的模块，具体检测项有：ActiveX挂马，iframe挂马，js挂马，WebShell后门，暗链，以及后台地址检测。由于我对安全方面了解太少，在这个系统中实现得也很simple，就不多说了。。。</p>
+<h3 id="2、站点入库"><a href="#2、站点入库" class="headerlink" title="2、站点入库"></a>2、站点入库</h3><p>由于上面“内容检测”和“安全检测”都需要对网站首页下的其他页面全部检测，因此我们需要维护一个 <code>site</code> 表和 <code>site_link</code> 表，记录下网站的域名和 ip 信息，并且存下每个页面链接的信息，包括该页面相对于首页的深度层级，该页面的链接是 <code>同源</code>、<code>同域</code> 还是 <code>外链</code>，以及页面的发现时间、状态信息等。</p>
+<p>另外注意的是，从首页开始取链接，然后再对链接再取它的后继链接，整个过程应采用“广度优先”的策略。而“检测深度”和“最大页数”也是在这个时候进行限制的，如果当前页面深度为 N，<code>N + 1 &gt; 检测深度</code>，那么该页面就不再往爬取队列中 push 后继链接了。</p>
+<h3 id="3、周期性生成检测任务"><a href="#3、周期性生成检测任务" class="headerlink" title="3、周期性生成检测任务"></a>3、周期性生成检测任务</h3><p>站点任务配置完，站点链接也入完库，这时候就可以根据上面配置的检测周期来定时产生任务。例如当内容检查的周期到来时，需要取出该站点下所有符合的页面链接，对每个页面的每个检测项都生成1个检测任务。</p>
+<p>需要注意生成任务时，要按照页面链接的顺序来遍历，而不是先遍历检测项。这样的好处是当具体爬虫执行时，相同 url 的检测任务在队列中会连续挨着，这样可以给爬虫做爬取的合并，同样的 url 只需要爬取1遍，就可以给不同的检测任务去执行。</p>
+<h3 id="4、爬虫执行检测任务"><a href="#4、爬虫执行检测任务" class="headerlink" title="4、爬虫执行检测任务"></a>4、爬虫执行检测任务</h3><p>如果说第3步生成任务是“生产者”，那么现在就轮到“消费者”。爬虫系统要支持并发，多机器 + 多线程。在1台机器上，1次从任务队列中取100个出来，如第3步所说检测任务是按相同url连续排列的，那么这100个检测任务可以抽出20个任务组（举个例子），每个任务组都可以只爬取1个页面，然后将内容传递给各检测项去执行。而每个检测项的执行结果都以 log 的形式存储。</p>
+<p>如果爬虫的机器不是那种“树莓派”微型机器，那可以先将 log 以文件形式存到本地，留出带宽给爬虫。或者每个检测项的结果 log 都发送到1个指定的地方，这就会多占用带宽，也需要专门搞1台日志服务器。</p>
+<h3 id="5、定时计算日志"><a href="#5、定时计算日志" class="headerlink" title="5、定时计算日志"></a>5、定时计算日志</h3><p>爬虫的任务执行过程是很连续又很离散的，连续是因为做完1个就要做下1个，离散是说日志的离散，单独1个页面的1个检测项的1次执行日志并没有太大意义，要整合到整个站点和时间段、检测类别的维度来看才有价值。从前面的步骤可以看到，站点链接的入库以及周期性的生成任务时，会有一定的“顺序”控制，并且只有全部入完库才会进入下一步骤。而爬虫系统是很离散的，它可能分布到多台机器上，只要任务队列中有东西，它就会取出来执行，也不会区分任务是来自哪个站点哪个类别的。</p>
+<p>因此，如果 log 分布在各爬虫机器上，那就需要一个定时的脚本对其进行汇总计算后传回数据中心。而如果有统一的日志服务器，那同样需要将原始日志计算成有效的数据。</p>
+<h3 id="6、前端报表查询"><a href="#6、前端报表查询" class="headerlink" title="6、前端报表查询"></a>6、前端报表查询</h3><p>前端系统直接查数据中心，可以得到站点级和检测类别级的报告。前面“生产者”生成检测任务时，会在数据库中打上一些任务模块的时间信息，前端系统也能够查到一些调度状态信息。</p>
+<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><p>整个系统分为4个部分：前端系统、任务Producer、爬虫系统、日志计算同步进程。架构图如下，可以看到箭头就代表着数据流的方向。</p>
+<p><img src="/images/captures/20161121_project_architecture.png"></p>
+<p>而爬虫调度和执行是典型的“生产者-消费者”模式，这里生产者只有1个，而有N个消费者爬虫进程。</p>
+<p><img src="/images/captures/20161121_producer_and_runner.png"></p>
+<p>所谓的检测任务队列，实际就是数据库中的一张表，多个爬虫进程或多台爬虫机器都共享这张表，只要保证从表的顶部开始读取，读完后就要重置状态位，防止被其他进程重复读取。而当任务执行失败后，会将该检测任务的记录移到 table 的队尾，并设置1个失败次数的字段。</p>
+<h2 id="爬虫实现思路"><a href="#爬虫实现思路" class="headerlink" title="爬虫实现思路"></a>爬虫实现思路</h2><h3 id="技术框架"><a href="#技术框架" class="headerlink" title="技术框架"></a>技术框架</h3><p>在本文第一节中就列出了一些库，在页面爬取方面，使用 <a href="http://visionmedia.github.io/superagent/" target="_blank" rel="noopener">superagent</a> 获取页面内容，使用 <a href="https://github.com/cheeriojs/cheerio" target="_blank" rel="noopener">cheerio</a> 做文档解析。而对于一些不需要解析内容的爬取任务（比如查询某个页面的 header 信息，或是检查某个页面是否 200 状态），使用 <a href="https://github.com/request/request" target="_blank" rel="noopener">request</a> 来发请求。</p>
+<p>对于爬虫系统中最关键的异步流控制，我在实现时做了多种风格的尝试，在数据库读写层面使用 promise 风格，在检测项内部使用 <a href="https://github.com/caolan/async" target="_blank" rel="noopener">async</a>，而在爬虫的实例中使用 <a href="https://github.com/JacksonTian/eventproxy" target="_blank" rel="noopener">eventproxy</a> 来进行流控制。</p>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><ul>
+<li>base/  跟继承和通用相关的</li>
+<li>conf/  各种配置项（检测项的配置、规则的配置）</li>
+<li>constant/  各种常量的定义和配置</li>
+<li>database/  数据库配置和连接池</li>
+<li>models/  数据库表对应的 json schema</li>
+<li>dao/  与 model 相应的 Dao 增删改查封装</li>
+<li><p>util/  通用数据的helper</p>
+</li>
+<li><p>factory/  工厂封装类，统一任务的组建过程</p>
+</li>
+<li>modules/  具体检测项 (爬虫上搭载的具体task实现)<ul>
+<li>basic/  基础信息 可用性检测</li>
+<li>content/  内容检测大类</li>
+<li>secure/  安全检测大类</li>
+<li>common/  站点入库、链接入库，以及抓取页面内容也抽象成1个通用task</li>
+</ul>
+</li>
+<li>crawler/  爬虫对象与池管理（1个crawler实例只负责1次页面请求）</li>
+<li><p>scheduler/  监控和调度进程 (每隔一段时间就执行一轮)</p>
+<ul>
+<li>runner.js  用来执行检测任务 (任务消费者)</li>
+<li>siteRunner.js  针对“站点链接入库”的 runner</li>
+</ul>
+</li>
+<li><p>app.js  主程序，用来启动 runner</p>
+</li>
+<li>appSite.js  主程序之一，用来启动 SiteRunner</li>
+<li>appPath.js  用来启动低频高请求量的检测任务（详见下面的地址型检测类）</li>
+</ul>
+<h2 id="爬虫实现流程"><a href="#爬虫实现流程" class="headerlink" title="爬虫实现流程"></a>爬虫实现流程</h2><p>由上面的结构可以看到，程序运行时的调用过程是：app.js =&gt; runner.js =&gt; crawler =&gt; 具体检测项。</p>
+<h3 id="app-js"><a href="#app-js" class="headerlink" title="app.js"></a>app.js</h3><p>其中 app.js 只是个程序入口，里面构造了一些参数给 runner，代表性的参数有：runner 每轮执行时取出的任务数量（即1个消费者每次消耗的数量），以及每轮执行之间的间隔时间（因为执行1轮任务时会有 N 个请求，如果不做间隔时间的限制，同时等待请求响应的线程太多会爆）。</p>
+<h3 id="runner-js"><a href="#runner-js" class="headerlink" title="runner.js"></a>runner.js</h3><p>runner.js 首先提供1个支持间隔时间的循环执行接口，这里使用 async 库来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">RunnerBase.prototype = &#123;</span><br><span class="line">    start: function()&#123;</span><br><span class="line">        var that = this;</span><br><span class="line">        that._count = 0;</span><br><span class="line"></span><br><span class="line">        async.whilst(</span><br><span class="line">            function()&#123;</span><br><span class="line">                if(that.loopCount)&#123;</span><br><span class="line">                    return that._count &lt; that.loopCount;</span><br><span class="line">                &#125;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;,</span><br><span class="line">            function (callback)&#123;</span><br><span class="line">                // 第一次立即执行</span><br><span class="line">                if(!that._count)&#123;</span><br><span class="line">                    that._count = 1;</span><br><span class="line">                    that.run();</span><br><span class="line">                    callback(null, that._count);</span><br><span class="line">                &#125;</span><br><span class="line">                else&#123;</span><br><span class="line">                    that._count++;</span><br><span class="line">                    setTimeout(function()&#123;</span><br><span class="line">                        that.run();</span><br><span class="line">                        callback(null, that._count);</span><br><span class="line">                    &#125;, that.loopInterval || 10000);  // 默认10秒间隔</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            function (n)&#123;</span><br><span class="line">                console.log(&apos;Runner with [n=&apos; + n + &apos;]&apos;);</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>而 runner 中的<code>run()</code>方法就是每轮具体要执行的操作，它其实整体是个串行过程，有以下步骤：</p>
+<ul>
+<li>1、取出数据库中的任务队列中靠前的 N 个任务</li>
+<li>2、如果取出为空，直接跳到第6步</li>
+<li>3、将任务状态标为 <code>PROCESSING</code></li>
+<li>4、对 N 个任务按检测的 url 重新分组，比如得到 M 个组，则构造 M 个 Crawler 实例（<strong>这里设计的准则就是1个 Crawler 实例只爬取1个页面</strong>）</li>
+<li>5、使用 <code>async.parallel</code> 并行执行 M 个 Crawler 的 <code>run()</code> 方法</li>
+<li>6、一轮 runner 执行结束</li>
+</ul>
+<p>这里整体是串行，使用了 eventproxy 来进行流程控制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Runner.prototype.run = function(cb)&#123;</span><br><span class="line">	var that = this;</span><br><span class="line">	var ep = new EventProxy();</span><br><span class="line"></span><br><span class="line">    // 统一错误处理 TODO</span><br><span class="line">    ep.fail(function (err)&#123;</span><br><span class="line">        console.log(err);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">	// 各步骤一起调用，通过 event信号 等待</span><br><span class="line">	Runner.steps.forEach(function (fn)&#123;</span><br><span class="line">		fn.call(that, ep, cb);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而其中最关键的步骤是并行执行 M 个 Crawler，其实现原理如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">function (ep)&#123;</span><br><span class="line">	var that = this;</span><br><span class="line"></span><br><span class="line">	ep.on(&apos;crawlerReady&apos;, function (crawlers)&#123;</span><br><span class="line">		// 构造 async.parallel 的执行函数</span><br><span class="line">		var threads = crawlers.map(function (crawler)&#123;</span><br><span class="line">			return function (callback)&#123;</span><br><span class="line">				// run前的累计</span><br><span class="line">				that.crawlerCount++;</span><br><span class="line"></span><br><span class="line">				crawler.run(function (err)&#123;</span><br><span class="line">                    // run完的累计</span><br><span class="line">                    that.crawlerCountDone++;</span><br><span class="line">					if (err)&#123;</span><br><span class="line">						console.log(err);</span><br><span class="line">						callback(err);</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						callback(null);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		async.parallel(threads, function (err, res)&#123;</span><br><span class="line">			console.log(&apos;[OK] 并行Crawler[len=&apos; + threads.length + &apos;]执行完毕&apos;);</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		// 这里释放信号不能放在 async.parallel 的回调里，以防有爬虫挂了就卡死了</span><br><span class="line">		// 直接到最后1步，可在每轮的最后看到爬虫累计的页面数目，and 爬虫监控池 TODO</span><br><span class="line">		ep.emit(&apos;crawlerDone&apos;);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">function (ep, cb)&#123;</span><br><span class="line">	var that = this;</span><br><span class="line"></span><br><span class="line">	ep.on(&apos;crawlerDone&apos;, function()&#123;</span><br><span class="line">		console.log(&apos;[OK] 消费者1轮, &apos; +</span><br><span class="line">			&apos;累计爬了 &apos; + that.crawlerCount + &apos; 个页面, &apos; +</span><br><span class="line">			&apos;累计结束 &apos; + that.crawlerCountDone + &apos; 个页面&apos;);</span><br><span class="line">		cb &amp;&amp; cb();</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="crawler-js"><a href="#crawler-js" class="headerlink" title="crawler.js"></a>crawler.js</h3><p>上面已经提到了多次：1个 <code>Crawler</code> 对象只负责 <code>1次</code> 页面请求，在 Crawler 对象中主要记录着分组后的任务数组，它们有着同样的目标 url。先请求页面 url，得到页面文档后将内容依次传递给各检测项去各自执行任务。所以总的来说，这里也是一个串行过程，具体步骤如下：</p>
+<ul>
+<li>1、将分组后的任务，通过任务类型的 key，反射到具体的类，得到可执行的任务对象的数组。</li>
+<li>2、调用请求页面内容的通用检测项，作为 starter</li>
+<li>3、将页面内容的文档作为 context 入参，依次调用各任务对象的数组</li>
+<li>4、任务全部完成后，在数据库中将其移出队列；若失败，则先移除，计失败次数+1，然后重新插入队尾</li>
+</ul>
+<p>这里也是用 eventproxy 控制流程的，其中关键的 context 传参调用各任务对象，实现如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function (ep)&#123;</span><br><span class="line">	var that = this;</span><br><span class="line"></span><br><span class="line">	// 使 task.run() 结果按顺序排列</span><br><span class="line">	ep.after(&apos;oneTaskFinished&apos;, that.tasks.length, function (results)&#123;</span><br><span class="line">		ep.emit(&apos;allTasksFinished&apos;, results);	</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	ep.on(&apos;starterFinished&apos;, function (context)&#123;</span><br><span class="line">		that.tasks.forEach(function (task)&#123;</span><br><span class="line">			task.run(context, ep.group(&apos;oneTaskFinished&apos;));</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>注意，使用 <code>ep.group()</code> 方法可以保证得到的执行结果的顺序是与调用顺序一致的，而各 task 的执行是并行的。</p>
+<h2 id="检测项工作模式"><a href="#检测项工作模式" class="headerlink" title="检测项工作模式"></a>检测项工作模式</h2><h3 id="反射原理"><a href="#反射原理" class="headerlink" title="反射原理"></a>反射原理</h3><p>在上面讲 crawler 的第1步中提到：将分组后的任务，通过任务类型的key，反射到具体的类。因为从数据库任务队列取来的检测任务只会含有 <code>模板url</code> / <code>检测大类</code> / <code>检测项小类</code> 这样的数据，所以就要反射到具体的检测类来构造对象。</p>
+<p>“反射”是强类型编程语言中的概念（我最早是在 Java 中了解的），而 js 天然的弱类型和动态特性，很容易实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 根据命名规则，取检测模块的引用</span><br><span class="line">getModuleFromCrawlTask: function(crawlTask)&#123;</span><br><span class="line">	var modulePath = ModuleConf.getPath(crawlTask[&apos;item_key&apos;]);</span><br><span class="line">	return require(modulePath);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里每个检测项任务都会带有 <code>item_key</code> 字段，表示具体的检测项，其实还有 <code>mod_key</code>，对应到系统的3大类检测：可用性，内容检测，安全检测。具体见下一段。</p>
+<h3 id="检测项分类"><a href="#检测项分类" class="headerlink" title="检测项分类"></a>检测项分类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 表明这个TaskItem属于哪一大类 (通用的除外)</span><br><span class="line">var modDict = &#123;</span><br><span class="line">	COMMON_CRAWL: &apos;COMMON_CRAWL&apos;,		// 通用爬取方法 如请求页面document, 取链接等</span><br><span class="line">	BASIC_DETECT: &apos;BASIC_DETECT&apos;,		// 可用性检测</span><br><span class="line">	CONTENT_DETECT: &apos;CONTENT_DETECT&apos;,	// 内容检测 合并了篡改检测</span><br><span class="line">	SECURE_DETECT: &apos;SECURE_DETECT&apos;		// 安全检测</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 表明这个TaskItem能否与其他合并, 能否共用1次请求</span><br><span class="line">var typeDict = &#123;</span><br><span class="line">	EXCLUSIVE: &apos;EXCLUSIVE&apos;,				// 排它性 (独占 request 的任务)</span><br><span class="line">	INCLUSIVE: &apos;INCLUSIVE&apos;				// 可合并性 (只需传递 context)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 表明这个TaskItem应该在哪个表中, 应该交给哪个Runner处理</span><br><span class="line">var runnerTypeDict = &#123;</span><br><span class="line">	COMMON: &apos;COMMON_TASK&apos;,				// 普通任务 -&gt; Runner -&gt; app.js</span><br><span class="line">	SITE: &apos;SITE_TASK&apos;,					// 站点入库类 -&gt; SiteRunner  -&gt; appSite.js</span><br><span class="line">	PATH: &apos;PATH_TASK&apos;					// 路径检测类 -&gt; Runner -&gt; appPath.js</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里定义了两种表示任务属性的类型：<code>INCLUSIVE</code> 表示该任务是可以与同目标 url 的其他任务合并的，只需要请求1次页面，传递页面内容的 context 即可，详见 crawler.js 的部分实现代码。而 <code>EXCLUSIVE</code> 表示该任务内部要自己发请求，比如查 Whois 信息，或者要检测是否存在某些后门路径，这类任务是不可以合并的。</p>
+<p>而 <code>runnerType</code> 又是另一个层面的另一种分类，在<a href="#section">第二节主程序设计</a>中提到过站点链接入库。我在实现时做了一层抽象，将“站点入库”和“链接入库”也视为一种检测项任务，任务放在单独的一个队列表中。这样就能共用一些 crawler 和 runner 的逻辑。</p>
+<p>此外对于路径类检测，比如 Webshell 地址检测，或是敏感路径检测，由于规则的字典很大，1个检测项可能会有上千次请求。因此对于这类“低频”又“高请求量”的检测项，我也单独将任务放在另一个独立的队列表中，也由另一个程序入口启动。</p>
+<h3 id="并行与管道"><a href="#并行与管道" class="headerlink" title="并行与管道"></a>并行与管道</h3><p>总结整个爬虫调度与检测项的工作流程，是“串行”与“并行”同时存在着。</p>
+<p><img src="/images/captures/20161121_runner_task_pipe.png"></p>
+<p>由 runner 执行时每轮会取出一堆任务，生成多个 crawler 实例，这是并行的。而在每个 crawler 内部可以理解为像工厂的流水线模式，先请求页面 url，然后将页面内容一个个传递给各检测项去完成相应的提取或检测工作。每个检测项内部都会去写各自的 log 文件，最后所有检测任务都完成后，间隔一段时间后会进入下一轮 runner 的执行。</p>
+<p>注意的是，检测项是根据目标 url 来分组的，搭载在 crawler 实例上执行的，同一组的检测项都执行完后，相应的 crawler 实例也应该销毁。而 runner 对象的实例是始终存在的，它像一个定时器一样每隔十来秒就会再触发1轮执行。同时，1个 runner 实例应该对应1个进程，多个 runner 实例应该跑在多台爬虫服务器上。</p>
+<h2 id="总结与不足"><a href="#总结与不足" class="headerlink" title="总结与不足"></a>总结与不足</h2><p>这个项目从去年11月开始需求分析，做界面 demo，到任务分解和组装过程的设计，再到爬虫的实现，也是从零开始学 nodejs，整个过程最初都只有我1个人，对自己的挑战提升很大。熬了两三个月后才有人手帮我做日志的回收计算以及前端的报表部分，之后项目就交给他们了，他们后来做了一些安全检测项方面的强化以及多机器的部署和通信。</p>
+<p>我在单机（Mac Air Book @2012）上运行的效率平均1小时，爬取近1万个页面，并完成剩余的内容检测项部分。在前面图中一轮取出的任务数量以及并行 Crawler 的数目，对机器的性能和网速都有要求，如果入不敷出（每轮间隔时间内都只有少数的 crawler 执行完），最终会产生很多内存错误，或者 TCP 连接数过多，也得不到结果。</p>
+<p>我尝试后得到的经验参数是，<strong>每隔 10 秒，取 50 个任务</strong>，根据目标 url 合并完后大约有 20~30 个任务组。注：用的是云服务器，内存 2G，带宽 2M。</p>
+<h3 id="还是简单粗暴"><a href="#还是简单粗暴" class="headerlink" title="还是简单粗暴"></a>还是简单粗暴</h3><p>这个爬虫系统和检测项都还比较简陋，可以从以下方面改进：</p>
+<ul>
+<li>nodejs 的 cluster 尝试，能否对爬取效率有性能提升</li>
+<li>数据库“同步写”的锁问题，多台爬虫机器共用同一个数据库的任务队列，有性能瓶颈（或者说集中式存储的通病）</li>
+<li>内容检测方面的篡改识别算法，目前仅用 content-length 和 md5 来判别页面更改</li>
+<li>引入 <a href="/blog/2014/06/use-phantomjs-to-capture-webpage.html">phantomJS</a> 来做网页截图，警示页面恶意篡改</li>
+<li>加强安全检测方面的力度，对各种挂马和暗链的代码模式的识别</li>
+<li>支持对检测项的扩展，能让更有经验的安全工程师编写的 python 代码也接入到系统中</li>
+</ul>
+<h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><ul>
+<li><p>在开发过程中还记录了一些遇到的问题，<a href="/blog/2016/03/blackholes-in-node-crawler.html">nodejs爬虫实现中遇到的坑</a> 后续会慢慢整理补充</p>
+</li>
+<li><p>有时间再抽象出一个业务无关的可配置的“生产者-消费者”模式的网站检测框架，供学习交流</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nodejs/" rel="tag"># nodejs</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2016/10/code-patterns-of-sticky-position.html" rel="next" title="常用模式片段之 sticky position">
+                <i class="fa fa-chevron-left"></i> 常用模式片段之 sticky position
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2016/12/code-patterns-of-js-raf.html" rel="prev" title="常用模式片段之 RAF">
+                常用模式片段之 RAF <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Node起步"><span class="nav-number">1.</span> <span class="nav-text">Node起步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主程序设计"><span class="nav-number">2.</span> <span class="nav-text">主程序设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、添加要监测的站点"><span class="nav-number">2.1.</span> <span class="nav-text">1、添加要监测的站点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、站点入库"><span class="nav-number">2.2.</span> <span class="nav-text">2、站点入库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、周期性生成检测任务"><span class="nav-number">2.3.</span> <span class="nav-text">3、周期性生成检测任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、爬虫执行检测任务"><span class="nav-number">2.4.</span> <span class="nav-text">4、爬虫执行检测任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、定时计算日志"><span class="nav-number">2.5.</span> <span class="nav-text">5、定时计算日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、前端报表查询"><span class="nav-number">2.6.</span> <span class="nav-text">6、前端报表查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#架构图"><span class="nav-number">3.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫实现思路"><span class="nav-number">4.</span> <span class="nav-text">爬虫实现思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#技术框架"><span class="nav-number">4.1.</span> <span class="nav-text">技术框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目录结构"><span class="nav-number">4.2.</span> <span class="nav-text">目录结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫实现流程"><span class="nav-number">5.</span> <span class="nav-text">爬虫实现流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#app-js"><span class="nav-number">5.1.</span> <span class="nav-text">app.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runner-js"><span class="nav-number">5.2.</span> <span class="nav-text">runner.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#crawler-js"><span class="nav-number">5.3.</span> <span class="nav-text">crawler.js</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测项工作模式"><span class="nav-number">6.</span> <span class="nav-text">检测项工作模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反射原理"><span class="nav-number">6.1.</span> <span class="nav-text">反射原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检测项分类"><span class="nav-number">6.2.</span> <span class="nav-text">检测项分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并行与管道"><span class="nav-number">6.3.</span> <span class="nav-text">并行与管道</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结与不足"><span class="nav-number">7.</span> <span class="nav-text">总结与不足</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#还是简单粗暴"><span class="nav-number">7.1.</span> <span class="nav-text">还是简单粗暴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TODO"><span class="nav-number">7.2.</span> <span class="nav-text">TODO</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

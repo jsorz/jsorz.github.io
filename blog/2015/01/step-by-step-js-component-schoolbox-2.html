@@ -1,0 +1,1444 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="javascript,web组件,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="在第一篇中我们已经实现了学校选择器的基本功能，但是当其他页面也需要同样的功能的时候，我们当然不希望大段的复制代码，我们希望能够降低js和页面的耦合，提供一种更简单的初始化和调用方式。">
+<meta name="keywords" content="javascript,web组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一步步做组件-学校选择器(2)">
+<meta property="og:url" content="http://jsorz.cn/blog/2015/01/step-by-step-js-component-schoolbox-2.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="在第一篇中我们已经实现了学校选择器的基本功能，但是当其他页面也需要同样的功能的时候，我们当然不希望大段的复制代码，我们希望能够降低js和页面的耦合，提供一种更简单的初始化和调用方式。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.832Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一步步做组件-学校选择器(2)">
+<meta name="twitter:description" content="在第一篇中我们已经实现了学校选择器的基本功能，但是当其他页面也需要同样的功能的时候，我们当然不希望大段的复制代码，我们希望能够降低js和页面的耦合，提供一种更简单的初始化和调用方式。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2015/01/step-by-step-js-component-schoolbox-2.html">
+
+
+
+
+
+  <title>一步步做组件-学校选择器(2) | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2015/01/step-by-step-js-component-schoolbox-2.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一步步做组件-学校选择器(2)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-19T00:00:00+08:00">
+                2015-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在第一篇中我们已经实现了学校选择器的基本功能，但是当其他页面也需要同样的功能的时候，我们当然不希望大段的复制代码，我们希望能够降低js和页面的耦合，提供一种更简单的初始化和调用方式。</p>
+<a id="more"></a>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们希望在页面上只需要定义一个父元素，然后直接<code>new</code>一个选择器出来即可。</p>
+<pre><code>var schoolBox = new SchoolBox({
+    appendTo: &apos;#schoolBoxWrapper&apos;
+});
+</code></pre><p>并且<code>SchoolBox</code>只暴露一些必要的供外使用的API，如<code>schoolBox.show()</code>、<code>schoolBox.hide()</code>等。</p>
+<h2 id="封装设计模式"><a href="#封装设计模式" class="headerlink" title="封装设计模式"></a>封装设计模式</h2><p>为了实现“简单”的目标，我们需要先了解下“封装”。其实js提供了非常弱的语法能力，它是弱类型语言，没有class的概念，没有<code>public</code>和<code>private</code>，也没有函数重载。但另一方面，正是它的弱语法，它提供了更高的自由度，利用它本身的closure和prototype的机制，完全可以模拟出“类”和公有/私有属性。</p>
+<pre><code>var Book = (function(){
+    // 私有静态属性
+    var numOfBooks = 0;
+
+    // 私有静态方法
+    function checkIsbn(isbn){
+
+    }
+
+    // 返回真正的构造函数
+    return function(newIsbn, newTitle, newAuthor){
+        // 私有属性
+        var isbn, title, author;
+
+        // 特权方法（每个实例都会有一个方法的备份）
+        this.getIsbn = function(){
+            return isbn;
+        };
+        this.setIsbn = function(newIsbn){
+            if(!checkIsbn(newIsbn)){
+                throw new Error(&apos;Book: ISBN无效&apos;);
+            }
+            isbn = newIsbn;
+        };
+
+        // 执行构造
+        numOfBooks++;
+        if(numOfBooks &gt; 50){
+            throw new Error(&apos;Book: 最多创建50个实例&apos;);
+        }
+
+        this.setIsbn(newIsbn);
+    }
+})();
+
+// 公有静态方法（类的静态方法）
+Book.convertToTitleCase = function(inputString){
+
+};
+
+// 公有非特权方法（每个实例的方法都指向同一个备份）
+Book.prototype = {
+    display: function(){
+
+    }
+};
+</code></pre><p>特权方法能够访问私有属性和方法，但是必须声明在<code>this</code>中。任何不需要直接访问私有属性的方法都可以在<code>prototype</code>中声明。<code>prototype</code>中的方法可以通过访问特权方法来间接访问私有属性。只有那些需要直接访问私有成员的方法才应该被设计为特权方法，但是每个对象实例都会包含所有特权方法的新副本，容易占内存。</p>
+<h2 id="SchoolBox重构"><a href="#SchoolBox重构" class="headerlink" title="SchoolBox重构"></a>SchoolBox重构</h2><p>根据上面的封装模式，我们先搭出<code>SchoolBox</code>的框子。</p>
+<pre><code>(function($){
+
+    var SchoolBox = (function(){
+
+        // 元素copy
+        // 省略...
+
+        // 缓存
+        var provinces = SCHOOL_LIST;
+
+        // 私有静态方法
+        // 省略...
+
+        // 真正的构造函数
+        return function(options){
+            // 初始化特权属性
+            // 初始化生成
+            // 省略...
+        };
+    })();
+
+    SchoolBox.prototype = {
+        init: function(){
+
+        },
+        show: function(){
+
+        },
+        hide: function(){
+
+        }
+    };
+
+    // export
+    window.SchoolBox = SchoolBox;
+
+})(jQuery);
+</code></pre><p>1.将目标元素和元素copy定义成私有静态属性</p>
+<pre><code>var $schoolBoxCopy = $(
+    &apos;&lt;div class=&quot;school-box&quot;&gt;&apos; + 
+        &apos;&lt;div class=&quot;school-box-header&quot;&gt;选择学校&lt;/div&gt;&apos; + 
+        &apos;&lt;div class=&quot;school-box-provinces&quot;&gt;&lt;/div&gt;&apos; + 
+        &apos;&lt;div class=&quot;school-box-schools&quot;&gt;&lt;/div&gt;&apos; + 
+    &apos;&lt;/div&gt;&apos;);
+
+var $provinceCopy = $(&apos;&lt;a href=&quot;javascript:void(0)&quot; class=&quot;province-item&quot;&gt;&lt;/a&gt;&apos;);
+var $schoolCopy = $(&apos;&lt;a href=&quot;javascript:void(0)&quot; class=&quot;school-item&quot;&gt;&lt;/a&gt;&apos;);
+
+// 非实例化缓存
+var provinces = SCHOOL_LIST;
+</code></pre><p>2.将初始化province和school定义成私有静态方法</p>
+<pre><code>var getProvinceById = function(pid){
+    for(var i=0; i&lt;provinces.length; i++){
+        // NOTE: 前置条件province id可以转成数字
+        if(Number(provinces[i][&apos;id&apos;]) == Number(pid)){
+            return provinces[i];
+        }
+    }
+    return undefined;
+};
+
+var initProvinces = function($provinceDiv){
+    for(var i=0; i&lt;provinces.length; i++){
+        var province = provinces[i];
+        var $province = $provinceCopy.clone();
+        $province.attr(&apos;data-province&apos;, province[&apos;id&apos;])
+                    .text(province[&apos;name&apos;]);
+        $provinceDiv.append($province);
+    }
+};
+
+var initSchools = function($schoolDiv, provinceId){
+    var province = getProvinceById(provinceId);
+    if(typeof province !== &apos;undefined&apos;){
+        var schools = province[&apos;school&apos;];
+        $schoolDiv.empty();
+
+        for(var i=0; i&lt;schools.length; i++){
+            var school = schools[i];
+            var $school = $schoolCopy.clone();
+            $school.attr(&apos;data-school&apos;, school[&apos;id&apos;])
+                    .text(school[&apos;name&apos;]);
+            $schoolDiv.append($school);
+        }
+    }
+    return false;
+};
+
+var onProvinceClick = function($provinceDiv, $schoolDiv, cache){
+    cache.lastProvinceIndex = $(this).index();
+    var pid = $(this).attr(&apos;data-province&apos;);
+
+    if(cache.curProvince != pid){
+        // set chosen
+        $provinceDiv.find(&apos;a[data-province=&quot;&apos; + cache.curProvince + &apos;&quot;]&apos;).removeClass(&apos;chosen&apos;);
+        $provinceDiv.find(&apos;a[data-province=&quot;&apos; + pid + &apos;&quot;]&apos;).addClass(&apos;chosen&apos;);
+        // update
+        cache.curProvince = pid;
+        initSchools($schoolDiv, pid);
+    }
+    // 滚动条置顶
+    $schoolDiv.scrollTop(0);
+};
+</code></pre><p>注意这里与先前不一样的是，需要操作元素的方法中得把目标元素作为参数传进去，而实例化的缓存（当前选中的province）也需要作为对象指针传入。</p>
+<p>3.初始化方法及构造函数</p>
+<pre><code>var init = function(instance){
+    // 生成元素
+    var $parent = $(instance.opts.appendTo);
+    var $el = $(&apos;&lt;div class=&quot;school-box-wrapper&quot;&gt;&lt;/div&gt;&apos;);
+
+    $el.append($schoolBoxCopy.clone());
+    $parent.append($el);
+
+    // 初始化学校
+    // NOTE: 这里不能用$el来find（否则live click将失效）
+    var $provinceDiv = $parent.find(&apos;.school-box-provinces&apos;);
+    var $schoolDiv = $parent.find(&apos;.school-box-schools&apos;);
+
+    initProvinces($provinceDiv);
+
+    // 事件
+    $provinceDiv.find(&apos;a&apos;).click(function(event){
+        onProvinceClick.apply(this, [$provinceDiv, $schoolDiv, instance.cache]);
+    });
+
+    // 释放变量
+    // NOTE: $provinceDiv和$schoolDiv不能释放，在事件中还用到
+    $schoolBox = null;
+    $parent = null;
+    $el = null;
+};
+
+// 真正的构造函数
+return function(options){
+    // 默认配置
+    this.opts = $.extend({
+        appendTo: &apos;body&apos;
+    }, options);
+
+    // 实例化的缓存
+    this.cache = {
+        curProvince: -1,
+        lastProvinceIndex: 0  //最后一次点击的index，用于初始化选中
+    };
+
+    // 初始化生成
+    init(this);
+};
+</code></pre><p>4.在<code>prototype</code>中添加对外API</p>
+<pre><code>SchoolBox.prototype = {
+    show: function(){
+        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;).slideDown();
+    },
+    hide: function(){
+        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;).slideUp();
+    }
+};
+</code></pre><p>5.添加学校<code>click</code>事件的外部回调，将这个回调放在构造函数的<code>options</code>中</p>
+<pre><code>var init = function(instance){
+    // 以上省略...
+
+    $schoolDiv.find(&apos;a&apos;).live(&apos;click&apos;, function(event){
+        // 配置里定义的事件回调
+        if(instance.opts.schoolClickCallback){
+            instance.opts.schoolClickCallback.apply(this, []);
+        }
+        // 自动收起
+        instance.hide();
+    });
+
+    // 以下省略...
+};
+</code></pre><p>6.点缀下，初始化<code>SchoolBox</code>时默认选中第一个province，并对外提供<code>init</code>方法</p>
+<pre><code>var SchoolBox = (function(){
+    // 以上省略...
+
+    // 真正的构造函数
+    return function(options){
+        // 以上省略...
+
+        // 初始化生成
+        init(this);
+        this.init();
+    };
+})();
+
+SchoolBox.prototype.init = function(){
+    $(this.opts.appendTo).find(&apos;.school-box-provinces&apos;).find(&apos;a&apos;).first().click();
+};
+</code></pre><p>7.应用层调用</p>
+<pre><code>// 目标元素
+var $schoolInput = $(&apos;#schoolInput&apos;);
+var $schoolId = $(&apos;#schoolId&apos;);
+var $chooseBoxLink = $(&apos;#openSchoolBoxLink&apos;);
+
+// 实例化对象
+var schoolBox = new SchoolBox({
+    appendTo: &apos;#schoolBoxWrapper&apos;,
+    schoolClickCallback: function(){
+        // NOTE: 这里被调用时this指向事件触发的元素
+        $schoolInput.val($(this).text());
+        $schoolId.val($(this).attr(&apos;data-school&apos;));
+        // 动画
+        $chooseBoxLink.show();
+    }
+});
+
+// bind event
+$chooseBoxLink.click(function(){
+    schoolBox.show();
+    $(this).hide();
+});
+</code></pre><p><a href="/demo/SchoolBox/v3/demo.html">学校选择器v3 Demo</a></p>
+<h2 id="到此为止？"><a href="#到此为止？" class="headerlink" title="到此为止？"></a>到此为止？</h2><p>到这里我们已经将学校选择器的基本功能封装成了一个“类”，具体页面使用时，只需要定义它被包裹的父元素，可以直接<code>new</code>一个对象出来，并在构造时的配置变量里定义事件回调。虽然大体上实现了本文一开始的目标，但是仅仅实现了基本的级联功能，而且只能定义一个事件回调。如果页面有多个元素都需要根据选中的学校进行一些改变，那么这些代码都得写在<code>schoolClickCallback</code>中，这部分代码可能操作着来自页面不同部分的元素（甚至是其他组件），这样就会造成一些耦合。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/web组件/" rel="tag"># web组件</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/01/step-by-step-js-component-schoolbox-1.html" rel="next" title="一步步做组件-学校选择器(1)">
+                <i class="fa fa-chevron-left"></i> 一步步做组件-学校选择器(1)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/01/step-by-step-js-component-schoolbox-3.html" rel="prev" title="一步步做组件-学校选择器(3)">
+                一步步做组件-学校选择器(3) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#封装设计模式"><span class="nav-number">2.</span> <span class="nav-text">封装设计模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SchoolBox重构"><span class="nav-number">3.</span> <span class="nav-text">SchoolBox重构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#到此为止？"><span class="nav-number">4.</span> <span class="nav-text">到此为止？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

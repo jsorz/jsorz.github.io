@@ -1,0 +1,1433 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="浏览器,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="这也是公司培训的听课笔记，关于浏览器渲染过程中各个阶段的技术细节，整理的范围比较广，都列了一些点，可作为今后学习这块的提纲。">
+<meta name="keywords" content="浏览器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器渲染原理 (听课笔记)">
+<meta property="og:url" content="http://jsorz.cn/blog/2017/04/notes-of-browser-displaying-a-page.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="这也是公司培训的听课笔记，关于浏览器渲染过程中各个阶段的技术细节，整理的范围比较广，都列了一些点，可作为今后学习这块的提纲。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.846Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浏览器渲染原理 (听课笔记)">
+<meta name="twitter:description" content="这也是公司培训的听课笔记，关于浏览器渲染过程中各个阶段的技术细节，整理的范围比较广，都列了一些点，可作为今后学习这块的提纲。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2017/04/notes-of-browser-displaying-a-page.html">
+
+
+
+
+
+  <title>浏览器渲染原理 (听课笔记) | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2017/04/notes-of-browser-displaying-a-page.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浏览器渲染原理 (听课笔记)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-03T00:00:00+08:00">
+                2017-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发/" itemprop="url" rel="index">
+                    <span itemprop="name">开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这也是公司培训的听课笔记，关于浏览器渲染过程中各个阶段的技术细节，整理的范围比较广，都列了一些点，可作为今后学习这块的提纲。</p>
+<a id="more"></a>
+<h2 id="资源下载"><a href="#资源下载" class="headerlink" title="资源下载"></a>资源下载</h2><p><code>&lt;script&gt;</code> &amp; <code>&lt;link&gt;</code></p>
+<ul>
+<li>css未下载完前，页面不会显示内容（为了体验）</li>
+<li>js未下载完前，是可以正常显示页面的</li>
+</ul>
+<p>服务器端 Response.Flush()</p>
+<ul>
+<li>分块传输，让客户端充分利用下载的间隙做解析，分块解析</li>
+</ul>
+<p>document.write</p>
+<ul>
+<li>页面渲染完后调用它，会使页面变成空白</li>
+<li>【重要】document.write 会使浏览器重新解析DOM树，禁止使用</li>
+</ul>
+<p>new Image().src</p>
+<ul>
+<li>唯一不用添加元素就能发请求的办法</li>
+<li>常用于发送日志</li>
+<li>有些浏览器会报错，因为返回类型不是图片</li>
+</ul>
+<p>defer VS async</p>
+<ul>
+<li>defer 源自IE，保证执行顺序，都会到 domReady 后再执行</li>
+<li>async 现代标准，不保证执行顺序，什么时候下载完就什么时候执行</li>
+</ul>
+<p>资源优先级</p>
+<ul>
+<li>link[rel=stylesheet] / script 第一优先级（没有就没法看）</li>
+<li>object / img / iframe 第二优先级（是页面内容的一部分）</li>
+<li>link[rel=prefetch] 预加载（与当前页面没有关系）</li>
+</ul>
+<p>脚本依赖</p>
+<ul>
+<li>下载阻塞 VS 执行阻塞</li>
+<li>执行阻塞可以并行下载，只需保留执行的顺序，效率更高</li>
+</ul>
+<h3 id="Connection"><a href="#Connection" class="headerlink" title="Connection"></a>Connection</h3><p>并行度</p>
+<ul>
+<li>现代浏览器资源下载并行度是<code>6</code>，旧的IE上是<code>4</code></li>
+<li>服务器压力 VS 客户端效率</li>
+<li>比如</li>
+</ul>
+<p>Socket重用</p>
+<ul>
+<li>TCP三次握手的时间与客户端带宽没有关系</li>
+<li>Connection: keep-alive 保证TCP连接不关闭</li>
+<li>然后何时能够知道文件下载完了<ul>
+<li>Content-Length: 告诉你多长就读多长</li>
+<li>Transfer-Encoding: chuncked 分块，最后一块都是0，表示下载完了</li>
+</ul>
+</li>
+</ul>
+<p>正确性保证</p>
+<ul>
+<li>Content-MD5 意义也不是很大</li>
+</ul>
+<p>断点续传</p>
+<ul>
+<li>Accept-Range 告诉服务器我要哪段的数据，也可用于多线程下载</li>
+<li>Content-Range</li>
+</ul>
+<h3 id="BS架构的精髓-缓存"><a href="#BS架构的精髓-缓存" class="headerlink" title="BS架构的精髓 - 缓存"></a>BS架构的精髓 - 缓存</h3><ul>
+<li>补丁机制 胜过CS软件</li>
+<li>验证型缓存：去问服务器是不是最新的，会有个请求，但省去了下载这个资源<ul>
+<li>Last-Modified &amp; If-Modified-Since / If-Unmodified-Since</li>
+<li>ETag &amp; If-Match / If-None-Match</li>
+<li>If-Range</li>
+</ul>
+</li>
+<li>非验证型缓存：完全不去问服务器，服务器更新了本地也不会知道<ul>
+<li>Cache-Control</li>
+<li>Expires</li>
+</ul>
+</li>
+<li>缓存失效<ul>
+<li>Vary / Via / Date / Age</li>
+<li>比如现在是个代理服务器，Chrome请求资源缓存下来后，IE再请求时要不要使用缓存，通过 Vary 指定</li>
+</ul>
+</li>
+</ul>
+<p>缓存年龄计算</p>
+<ul>
+<li>age_value</li>
+<li>date_value</li>
+<li>缓存过期计算</li>
+</ul>
+<p>max-age=0 VS no-cache 区别</p>
+<ul>
+<li>max-age=0：是用于验证型缓存的，相当于告诉服务器禁止非验证型缓存，</li>
+<li>no-cache：禁止任何缓存</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li>http的超链接特性注定资源之间有关联的依赖</li>
+<li>外部资源位置、类型不同，影响下载时机</li>
+<li>Response.Flush 对下载的影响</li>
+<li>缓存机制复杂但完善</li>
+</ul>
+<h2 id="页面解析"><a href="#页面解析" class="headerlink" title="页面解析"></a>页面解析</h2><p>字符串 –&gt; 序列化 –&gt; 转义 –&gt; 标签匹配</p>
+<p>脚本执行会增加解析的回溯</p>
+<ul>
+<li>DOM 结构的变化</li>
+<li>document.write 会使浏览器解析过程回溯到序列化的状态</li>
+</ul>
+<h3 id="CSS计算"><a href="#CSS计算" class="headerlink" title="CSS计算"></a>CSS计算</h3><ul>
+<li>元素 - 匹配样式</li>
+<li><p>耗内存 &amp; 耗CPU</p>
+</li>
+<li><p>Webkit 特定条件下样式共享（节省内存）</p>
+<ul>
+<li>鼠标状态相同</li>
+<li>没有id</li>
+<li>class 和标签名相同</li>
+<li>….</li>
+</ul>
+</li>
+<li><p>样式计算的过滤（省CPU）</p>
+<ul>
+<li>以最后选择器为依据</li>
+<li>将css规则按最右为 id, class, tag, general 分组</li>
+<li>属性选择器也会归到 general 组里，因此效率低</li>
+</ul>
+</li>
+<li><p>CSS层级</p>
+<ul>
+<li>来源层级<ul>
+<li>浏览器UA样式</li>
+<li>用户样式</li>
+<li>作者样式</li>
+<li>作者样式 !important</li>
+<li>用户样式 !important</li>
+</ul>
+</li>
+<li>样式层级<ul>
+<li>1, 1, 1, 1 算法</li>
+<li>inline(0/1), count(id), count(attribute), count(tag)</li>
+<li>从左到右按位比，数字大就胜出，直接结束比较</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Render-Tree"><a href="#Render-Tree" class="headerlink" title="Render Tree"></a>Render Tree</h3><ul>
+<li>元素没有渲染对象<ul>
+<li>head / meata / script</li>
+</ul>
+</li>
+<li>元素有多个渲染对象<ul>
+<li>html 会包含滚动条</li>
+<li>li 会包含前面的小圆点</li>
+<li>select</li>
+<li>input[type=file]</li>
+</ul>
+</li>
+<li>通过CSS改变渲染对象<ul>
+<li>::before / ::after</li>
+<li>display: none</li>
+</ul>
+</li>
+<li>js 控制DOM树，css 控制渲染树</li>
+</ul>
+<h2 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h2><ul>
+<li>流布局</li>
+<li>HTML三条流<ul>
+<li>文档流、浮动流、定位流</li>
+</ul>
+</li>
+<li><p>其他因素</p>
+<ul>
+<li>display: list-item</li>
+<li>display: run-in</li>
+</ul>
+</li>
+<li><p>table布局</p>
+<ul>
+<li>display: table / inline-table / table-row / ….</li>
+</ul>
+</li>
+<li><p>坐标系</p>
+<ul>
+<li>前端中都以左上角为 0,0 点，右|下 为正坐标</li>
+<li>地图是以左下角为 0,0 点</li>
+</ul>
+</li>
+<li><p>布局是个递归过程</p>
+</li>
+<li>流布局可自左向右、自上而下进行，流中靠后的元素不会影响流中靠前的元素的布局（无回溯）</li>
+<li>table布局需要回溯才能够完成（知道每一个单元格的大小，才能完成整个布局）</li>
+<li><p>流式布局特点是无论如何后面元素都不会影响前面，例如<code>ol</code>中四位数、五位数的预留位置不变，浏览器直接暴力地留了3位数的空间</p>
+</li>
+<li><p>全局reflow</p>
+<ul>
+<li>整个 Render Tree 全部重新计算布局</li>
+<li>全局布局样式变更：body {} / 添加新样式表</li>
+<li>窗口大小变化</li>
+</ul>
+</li>
+<li>局部Reflow<ul>
+<li>仅标识为 needLayout / dirty 的渲染元素计算布局</li>
+<li>Render Tree 中插入新的渲染元素</li>
+<li>渲染元素属性比拿货</li>
+</ul>
+</li>
+<li><p>Reflow 会引起另一个 Reflow：比如 Reflow 导致滚动条位置变化</p>
+</li>
+<li><p>同步Reflow</p>
+<ul>
+<li>全局Reflow通常同步进行</li>
+<li>读取 offsetWidth / offsetHeight 等属性，会产生1次reflow<ul>
+<li>禁止在循环中读取 offsetWidth / offsetHeight</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>异步Reflow</p>
+<ul>
+<li>局部Reflow通常异步进行</li>
+<li>FireFox: Reflow任务进入线程Queue，任务调度器负责执行</li>
+<li>Webkit: 定时器遍历Render Tree，布局所有 needLayout 对象</li>
+</ul>
+</li>
+<li><p>Reflow任务可合并，一次脚本执行过程中多个样式修改仅做1次Reflow，但有limit（大约100~200个）</p>
+</li>
+<li><p>手动Reflow</p>
+<ul>
+<li>把元素先remove，改完一堆样式后再append进去</li>
+<li>循环中使用 fragment</li>
+</ul>
+</li>
+<li><p>文字布局</p>
+<ul>
+<li>text-align: justified</li>
+<li>white-space: nowrap / pre / pre-wrap</li>
+<li>overflow: hidden / visible</li>
+</ul>
+</li>
+<li>换行计算<ul>
+<li>每行一个line-box负责渲染</li>
+<li>当需要换行时，通知父元素….</li>
+</ul>
+</li>
+</ul>
+<h2 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h2><ul>
+<li>transform / filter / z-index / color / visibility …</li>
+<li>Reflow VS Repaint：display none VS visibility hidden</li>
+</ul>
+<p>渲染顺序（CSS2）</p>
+<ul>
+<li>background color</li>
+<li>background image</li>
+<li>border</li>
+<li>children</li>
+<li>outline</li>
+</ul>
+<p>渲染计算的优化</p>
+<ul>
+<li>firefox: display list</li>
+<li>webkit: rectangle storage</li>
+<li>chrome 的 Repaint 在独立进程中</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/浏览器/" rel="tag"># 浏览器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/04/notes-of-bash-commands.html" rel="next" title="bash基础编程 (听课笔记)">
+                <i class="fa fa-chevron-left"></i> bash基础编程 (听课笔记)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/06/auto-tracker-on-h5.html" rel="prev" title="H5无埋点数据采集">
+                H5无埋点数据采集 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#资源下载"><span class="nav-number">1.</span> <span class="nav-text">资源下载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Connection"><span class="nav-number">1.1.</span> <span class="nav-text">Connection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BS架构的精髓-缓存"><span class="nav-number">1.2.</span> <span class="nav-text">BS架构的精髓 - 缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#页面解析"><span class="nav-number">2.</span> <span class="nav-text">页面解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS计算"><span class="nav-number">2.1.</span> <span class="nav-text">CSS计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Render-Tree"><span class="nav-number">2.2.</span> <span class="nav-text">Render Tree</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布局"><span class="nav-number">3.</span> <span class="nav-text">布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渲染"><span class="nav-number">4.</span> <span class="nav-text">渲染</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

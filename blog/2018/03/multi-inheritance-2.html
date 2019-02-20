@@ -1,0 +1,1243 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="javascript,es,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="首先 JavaScript 中不存在多继承，并且也不推荐使用继承。如果你也这么认为的话，那笔者的观点也就写完啦 233333…. 如果还想回顾下 JavaScript 中“继承”的前世今生，以及对“多继承”的讨论，不妨看下去。 （接上一篇）">
+<meta name="keywords" content="javascript,es">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript中的“多继承”(2)">
+<meta property="og:url" content="http://jsorz.cn/blog/2018/03/multi-inheritance-2.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="首先 JavaScript 中不存在多继承，并且也不推荐使用继承。如果你也这么认为的话，那笔者的观点也就写完啦 233333…. 如果还想回顾下 JavaScript 中“继承”的前世今生，以及对“多继承”的讨论，不妨看下去。 （接上一篇）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20180316_diamond_inherit.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20180316_mro_example.png">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.849Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript中的“多继承”(2)">
+<meta name="twitter:description" content="首先 JavaScript 中不存在多继承，并且也不推荐使用继承。如果你也这么认为的话，那笔者的观点也就写完啦 233333…. 如果还想回顾下 JavaScript 中“继承”的前世今生，以及对“多继承”的讨论，不妨看下去。 （接上一篇）">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20180316_diamond_inherit.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2018/03/multi-inheritance-2.html">
+
+
+
+
+
+  <title>JavaScript中的“多继承”(2) | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2018/03/multi-inheritance-2.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JavaScript中的“多继承”(2)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-16T00:00:00+08:00">
+                2018-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>首先 JavaScript 中<strong>不存在多继承</strong>，并且也不推荐使用继承。如果你也这么认为的话，那笔者的观点也就写完啦 233333…. 如果还想回顾下 JavaScript 中“继承”的前世今生，以及对“多继承”的讨论，不妨看下去。</p>
+<p>（接上一篇）</p>
+<a id="more"></a>
+<h2 id="试试多继承"><a href="#试试多继承" class="headerlink" title="试试多继承"></a>试试多继承</h2><p>贪心是人之常情，有了“继承”后，我们就会想要“多继承”。即使在后端语言中，也没有几个语言能真正实现多继承，笔者只知道 C++ 和 python 提供了多继承的语法，而像 Java 只允许继承一个父类，但可以同时 <code>implements</code> 多个接口类，也算一种变相的多继承吧。</p>
+<h3 id="多继承要考虑的问题"><a href="#多继承要考虑的问题" class="headerlink" title="多继承要考虑的问题"></a>多继承要考虑的问题</h3><p>多继承并没有想象的那么美好，首先是对 <code>instanceof</code> 提出了更高的要求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class A &#123;&#125;</span><br><span class="line">class B &#123;&#125;</span><br><span class="line">// 假定有支持多继承的语法</span><br><span class="line">class C extends A, B &#123;&#125;</span><br><span class="line">// 那么 C 的实例对象，应该同时也是 A 和 B 的 instance</span><br><span class="line">let c = new C()</span><br><span class="line">c instanceof C  // true</span><br><span class="line">c instanceof A  // true</span><br><span class="line">c instanceof B  // true</span><br></pre></td></tr></table></figure>
+<p>如上示例，在多继承中必须将所有的父类标识记录在子类中，才能让 <code>instanceof</code> 实现上面的效果。而 JavaScript 中只有 <code>prototype</code> 链，该死的还约束了一个对象只能指定一个 <code>prototype</code>，所以还得另外想办法去模拟 <code>instanceof</code></p>
+<p>这还不算啥，请看下一张图</p>
+<p><img src="/images/captures/20180316_diamond_inherit.png"></p>
+<p>这是多继承中典型的问题，称为 Diamond Problem，当 A, B, C 中都定义了一个相同名称的函数时，而在 D 的实例对象中调用这个函数时，究竟应该去执行谁。。。</p>
+<h3 id="间接多继承"><a href="#间接多继承" class="headerlink" title="间接多继承"></a>间接多继承</h3><p>先退而求其次，我们借鉴了 Java 中的思路，实际只继承一个类，通过其他方式将其他类的功能融入。Java 中可以用 <code>Interface</code> 约束一个类应该拥有的行为，当然 JavaScript 也可以这么做，实现 interface 的语法糖，检查“类”中有没有重写 interface 中的所有函数。但这样的话，interface 除了做校验之用，没有实际意义，不如直接 mixin 的方式来的实在。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">const mixinClass = (base, ...mixins) =&gt; &#123;</span><br><span class="line">  const mixinProps = (target, source) =&gt; &#123;</span><br><span class="line">    Object.getOwnPropertyNames(source).forEach(prop =&gt; &#123;</span><br><span class="line">      if (/^constructor$/.test(prop)) &#123; return; &#125;</span><br><span class="line">      Object.defineProperty(target, prop, Object.getOwnPropertyDescriptor(source, prop));</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  let Ctor;</span><br><span class="line">  if (base &amp;&amp; typeof base === &apos;function&apos;) &#123;</span><br><span class="line">    Ctor = class extends base &#123;</span><br><span class="line">      constructor(...props) &#123;</span><br><span class="line">        super(...props);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    mixins.forEach(source =&gt; &#123;</span><br><span class="line">      mixinProps(Ctor.prototype, source.prototype);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    Ctor = class &#123;&#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  return Ctor;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class A &#123;</span><br><span class="line">  methodA() &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B &#123;</span><br><span class="line">  methodB() &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">class C extends mixinClass(A, B) &#123;</span><br><span class="line">  methodA() &#123; console.log(&apos;methodA in C&apos;); &#125;</span><br><span class="line">  methodC() &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let c = new C();</span><br><span class="line">c instanceof C  // true</span><br><span class="line">c instanceof A  // true</span><br><span class="line">c instanceof B  // false</span><br></pre></td></tr></table></figure>
+<p>这样就简单模拟了间接多继承，通过构造一个中间类，让中间类直接继承 A，并且 mixin 了 B 的原型成员，然后再让 C 去继承这个中间类。由于 B 是通过 mixin 方式浅拷贝了一份，<code>B.prototype</code> 并不在 C 的原型链上（<code>C.__proto__.__proto__</code>），所以 <code>c instanceof B</code> 为 false。</p>
+<p>要想修正 instanceof，只能自己另外实现一套 <code>isInstanceOf()</code> 的逻辑，在继承时将所有的父类引用记录下来，再去比对。</p>
+<h3 id="MRO算法"><a href="#MRO算法" class="headerlink" title="MRO算法"></a>MRO算法</h3><p>针对多继承考虑的第2个问题，前面提到的 Diamond Problem，需要引入一个定义。</p>
+<p>Method Resolution Order (MRO) 指的是在继承结构中确定类的线性顺序，例如 <code>C =&gt; B =&gt; A</code> 表示 C 继承 B，B 继承 A，那么 C 的 MRO 就是 <code>C B A</code>，也就意味着当调用 C 实例中的一个函数时，会按照 <code>C B A</code> 的优先级顺序去“寻找”该函数。在单继承的结构中自然没有问题，而在多继承中 MRO 发挥着其作用。</p>
+<p>常用的<a href="https://en.wikipedia.org/wiki/C3_linearization" target="_blank" rel="noopener">C3算法</a>就是用来计算 MRO，在 python 文档中有对其的完整描述，这里用一个例子简述下算法流程。</p>
+<p>假设现在有这样的多继承结构</p>
+<p><img src="/images/captures/20180316_mro_example.png"></p>
+<p>首先引入类的线性顺序的表示方法，在上图中可以看到 <code>B =&gt; Y =&gt; O</code> 这一部分是单继承的结构，显然 B 的 MRO 为 <code>B Y O</code>，记为 L(B) = BYO</p>
+<p>然后还要引入几个符号，在 MRO 的线性顺序中，用 head 表示第一个元素，用 tail 表示余下部分。例如，<code>B Y O</code> 中的 head 就是 <code>B</code>，tail 则是 <code>Y O</code>。MRO 中只有一个元素，如图中的 O 元素，head 为<code>O</code>，tail 则是空。</p>
+<p>接下来是最关键的，图中 A 的 MRO 记为 L(A(X, Y))，A(X, Y) 表示 A 同时继承了 X 和 Y，那么</p>
+<p>L(A(X, Y)) = A + merge(L(X), L(Y), XY)</p>
+<p>其中 merge 的规则如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">取出第一个序列的 head</span><br><span class="line">如果，该 head 不在其它序列的 tail 中</span><br><span class="line">	则把这个 head 添加到结果中并从所有的序列中移除它</span><br><span class="line">否则，用下一个序列的 head 重复上一步</span><br><span class="line">直到所有序列中的所有元素都被移除（或者无法找到一个符合的head）</span><br></pre></td></tr></table></figure>
+<p>最后我们来计算下上图中各个类的线性顺序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">L(O) = O</span><br><span class="line">L(X) = X + L(O) = XO</span><br><span class="line">L(Y) = Y + L(O) = YO</span><br><span class="line">L(A) = A + merge(L(X), L(Y), XY)</span><br><span class="line">	 = A + merge(XO, YO, XY)</span><br><span class="line">	 = AX + merge(O, YO, Y)</span><br><span class="line">	 = AXY + merge(O, O)</span><br><span class="line">	 = AXYO</span><br><span class="line">L(B) = B + L(Y) = BYO</span><br><span class="line">L(C) = C + merge(L(A), L(B), AB)</span><br><span class="line">	 = C + merge(AXYO, BYO, AB)</span><br><span class="line">	 = CA + merge(XYO, BYO, B)</span><br><span class="line">	 = CAX + merge(YO, BYO, B)</span><br><span class="line">	 = CAXB + merge(YO, YO)</span><br><span class="line">	 = CAXBYO</span><br></pre></td></tr></table></figure>
+<p>上述多继承结构的 python 示例可参见 <a href="https://glot.io/snippets/ez5bqslav2" target="_blank" rel="noopener">https://glot.io/snippets/ez5bqslav2</a>  输出了 C 这个类的 MRO 即 <code>C A X B Y O</code></p>
+<p>当然C3算法也有 bad case，会导致上述的 merge 在中途失败，也就是无法求出 MRO 的 case。关于 MRO 的更多细节可参考 <a href="https://www.python.org/download/releases/2.3/mro/" target="_blank" rel="noopener">https://www.python.org/download/releases/2.3/mro/</a>  总之不推荐设计出过于复杂的多继承结构 =_=</p>
+<h3 id="模拟多继承"><a href="#模拟多继承" class="headerlink" title="模拟多继承"></a>模拟多继承</h3><p>有了上面的基础后，我们来模拟实现下多继承：</p>
+<ul>
+<li>为每个“类”提供独立的 <code>isInstanceOf()</code> 函数以解决 <code>instanceof</code> 的问题</li>
+<li>同时引入 Method Resolution Order (MRO) 的C3算法，将每个“类”的 MRO 线性序列存在 meta 数据中</li>
+<li>将多继承中的第一个父类，使用原型链的方式继承，而剩下的父类则使用 mixin 的方式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">const mixinProps = (target, source) =&gt; &#123;</span><br><span class="line">  Object.getOwnPropertyNames(source).forEach(prop =&gt; &#123;</span><br><span class="line">    if (/^(?:constructor|isInstanceOf)$/.test(prop)) &#123; return; &#125;</span><br><span class="line">    Object.defineProperty(target, prop, Object.getOwnPropertyDescriptor(source, prop));</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const mroMerge = (list) =&gt; &#123;</span><br><span class="line">  if (!list || !list.length) &#123;</span><br><span class="line">    return [];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  for (let items of list) &#123;</span><br><span class="line">    let item = items[0];</span><br><span class="line">    let valid = true;</span><br><span class="line"></span><br><span class="line">    for (let items2 of list) &#123;</span><br><span class="line">      if (items2.indexOf(item) &gt; 0) &#123;</span><br><span class="line">        valid = false;</span><br><span class="line">        break;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (valid) &#123;</span><br><span class="line">      let nextList = [];</span><br><span class="line">      for (let items3 of list) &#123;</span><br><span class="line">        let _index = items3.indexOf(item);</span><br><span class="line">        if (_index &gt; -1) &#123;</span><br><span class="line">          items3.splice(_index, 1);</span><br><span class="line">        &#125;</span><br><span class="line">        items3.length &amp;&amp; nextList.push(items3);</span><br><span class="line">      &#125;</span><br><span class="line">      return [item, ...mroMerge(nextList)];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  throw new Error(&apos;Unable to merge MRO&apos;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const c3mro = (ctor, bases) =&gt; &#123;</span><br><span class="line">  if (!bases || !bases.length) &#123;</span><br><span class="line">    return [ctor];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  let list = bases.map(b =&gt; b._meta.bases.slice());</span><br><span class="line">  list = list.concat([bases]);</span><br><span class="line"></span><br><span class="line">  let res = mroMerge(list);</span><br><span class="line">  return [ctor, ...res];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const createClass = (parents, props) =&gt; &#123;</span><br><span class="line">  const isMulti = parents &amp;&amp; Array.isArray(parents);</span><br><span class="line">  const superCls = isMulti ? parents[0] : parents;</span><br><span class="line">  const mixins = isMulti ? parents.slice(1) : [];</span><br><span class="line"></span><br><span class="line">  const Ctor = function(...args) &#123;</span><br><span class="line">    // TODO: call each parent&apos;s constructor</span><br><span class="line">    if (props.constructor) &#123;</span><br><span class="line">      props.constructor.apply(this, args);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  // save c3mro into _meta</span><br><span class="line">  let bases = [superCls, ...mixins].filter(item =&gt; !!item);</span><br><span class="line">  Ctor._meta = &#123; bases: c3mro(Ctor, bases) &#125;;</span><br><span class="line"></span><br><span class="line">  // inherit first parent through proto chain</span><br><span class="line">  if (superCls &amp;&amp; typeof superCls === &apos;function&apos;) &#123;</span><br><span class="line">    Ctor.prototype = Object.create(superCls.prototype);</span><br><span class="line">    Ctor.prototype.constructor = Ctor;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // mix other parents into prototype according to [Method Resolution Order]</span><br><span class="line">  // NOTE: Ctor._meta.bases[0] always stands for the Ctor itself</span><br><span class="line">  if (Ctor._meta.bases.length &gt; 1) &#123;</span><br><span class="line">    let providers = Ctor._meta.bases.slice(1).reverse();</span><br><span class="line">    providers.forEach(provider =&gt; &#123;</span><br><span class="line">      // TODO: prototype of superCls is already inherited by __proto__ chain</span><br><span class="line">      (provider !== superCls) &amp;&amp; mixinProps(Ctor.prototype, provider.prototype);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  mixinProps(Ctor.prototype, props);</span><br><span class="line"></span><br><span class="line">  Ctor.prototype.isInstanceOf = function(cls) &#123;</span><br><span class="line">    let bases = this.constructor._meta.bases;</span><br><span class="line">    return bases.some(item =&gt; item === cls) || (this instanceof cls);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return Ctor;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>接着来测试一下如图3中的多继承结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">const O = createClass(null, &#123;&#125;);</span><br><span class="line">const X = createClass([O], &#123;&#125;);</span><br><span class="line">const Y = createClass([O], &#123;</span><br><span class="line">  methodY() &#123; return &apos;Y&apos;; &#125;</span><br><span class="line">&#125;);</span><br><span class="line">const A = createClass([X, Y], &#123;</span><br><span class="line">  testName() &#123; return &apos;A&apos;; &#125;</span><br><span class="line">&#125;);</span><br><span class="line">const B = createClass([Y], &#123;</span><br><span class="line">  testName() &#123; return &apos;B&apos;; &#125;</span><br><span class="line">&#125;);</span><br><span class="line">const C = createClass([A, B], &#123;</span><br><span class="line">  constructor() &#123;</span><br><span class="line">    this._name = &apos;custom C&apos;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">let obj = new C();</span><br><span class="line">console.log(obj.isInstanceOf(O)); // true</span><br><span class="line">console.log(obj.isInstanceOf(X)); // true</span><br><span class="line">console.log(obj.isInstanceOf(Y)); // true</span><br><span class="line">console.log(obj.isInstanceOf(A)); // true</span><br><span class="line">console.log(obj.isInstanceOf(B)); // true</span><br><span class="line">console.log(obj.isInstanceOf(C)); // true</span><br><span class="line"></span><br><span class="line">console.log(obj.testName());</span><br><span class="line">console.log(obj.methodY());</span><br></pre></td></tr></table></figure>
+<p>以上代码仅供学习，还有很多不足，比如构造函数中只能调用自身的 <code>constructor</code> 函数，无法调用父类的<code>constructor</code>。这是由于 JavaScript 限制了无法通过 <code>X.prototype.constructor.apply()</code> 的方式调用其他类的构造函数（<code>constructor</code> 只能在 new 的时候调用），想绕开这个问题的话，只能换个函数名，叫 initializtion、init 之类的名字都行。</p>
+<p><a href="https://glot.io/snippets/ez7tm0d4up" target="_blank" rel="noopener">demo 代码在这里</a>，多改变下参数试试，尝试理解前面所说的 C3 MRO 算法。</p>
+<h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><p>上面的代码，为了模拟多继承，只将第一个父类放入了子类的原型链中，而其他父类只能通过 mixin 的方式将其 prototype 中的属性拷贝到子类的 prototype 中。这受限于 JavaScript 原型链的机制，即图1中 <code>__proto__</code> 只能指向一个目标。所以既然这样实现的，肯定是与真正的多继承相悖的，像 C++ 中有<a href="https://en.wikipedia.org/wiki/Virtual_method_table" target="_blank" rel="noopener">虚函数表</a>的机制，在多继承中调用函数时，会去查表找出真正的函数地址。而我们模拟出的 JavaScript 多继承，是将所有父类中的函数都揉到了一个 prototype 中（只不过按照 MRO 优先级顺序来依次揉入）。</p>
+<p>仔细看上面代码的话会发现，<code>c.testName()</code> 输出的与 Method Resolution Order 中所述的算法不符。在那一节中，我们知道 C 的 MRO 应该为 <code>C A X B Y O</code>，示例代码中按理来说应该优先调用 A 中的 <code>testName()</code> 函数，实际却输出了”B”……卧槽，这代码有毒的吧？？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// inherit first parent through proto chain</span><br><span class="line">if (superCls &amp;&amp; typeof superCls === &apos;function&apos;) &#123;</span><br><span class="line">  Ctor.prototype = Object.create(superCls.prototype);</span><br><span class="line">  Ctor.prototype.constructor = Ctor;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// mix other parents into prototype according to [Method Resolution Order]</span><br><span class="line">// NOTE: Ctor._meta.bases[0] always stands for the Ctor itself</span><br><span class="line">if (Ctor._meta.bases.length &gt; 1) &#123;</span><br><span class="line">  let providers = Ctor._meta.bases.slice(1).reverse();</span><br><span class="line">  providers.forEach(provider =&gt; &#123;</span><br><span class="line">    // TODO: prototype of superCls is already inherited by __proto__ chain</span><br><span class="line">    (provider !== superCls) &amp;&amp; mixinProps(Ctor.prototype, provider.prototype);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意代码里有句 <code>(provider !== superCls)</code> 的过滤，你可以把它去了再试下 demo。。笔者这里也纠结，因为 <code>superCls</code> 是第一个父类，已经在原型链上继承了，而在根据 MRO 顺序 mixin 其他父类时，按理应该将第一个父类过滤掉。然而一旦加上了 <code>(provider !== superCls)</code> 条件后，其他父类 prototype 上的属性都被拷贝到了 <code>Ctor.prototype</code> 上，而第一个父类中的原型却在 Ctor 的原型链上，显然 <code>Ctor.prototype</code> 上的函数优先级更高。</p>
+<p>那我们将这个条件干掉！然而仍有 bad case。。 因为它将所有父类中的 prototype 都拷贝到了自己身上（它明明不应该有的），而当别人再继承它时，别人会误以为它定义了那么多函数，就会出现函数覆盖时的顺序与 MRO 计算出的顺序不一致的问题了。</p>
+<p>归根到底还是“没有查函数表”的锅！或者我们在使用方式上做强约束，多继承中的所有函数调用都必须经过统一的形如 <code>invoke(methodName, args)</code> 的接口，在 invoke 时根据 MRO 的优先级顺序，依次查找有无 methodName 的函数，再真正调用。</p>
+<h2 id="为什么不建议继承"><a href="#为什么不建议继承" class="headerlink" title="为什么不建议继承"></a>为什么不建议继承</h2><p>说了那么多，笔者的体会是<strong>不要想着继承</strong>，<strong>不要想着继承</strong>，<strong>不要想着继承</strong>。。。</p>
+<p>JavaScript 本身就不是面向对象的语言，干嘛要让它做它不擅长的事情 =_=  虽然语法糖已经提供了“类”的支持，那是照顾有面向对象想法的人，但它本质上不同于其他语言中的继承。不要把他人的宽容当作放任的理由，能模拟继承就不错了，就别再惦记“多继承”了。</p>
+<p>再回过头来想一想，我们为什么需要继承？继承是一种强耦合关系，到底是否有必要用继承，可以考虑下在应用场景中是否需要用父类型去接收子类型的实例，即子类向父类的向上转型。在 JavaScript 中不会出现这样的需求，应该更多使用组合的方式以代替继承，以及函数式编程也许是更好的方案。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文从 JavaScript 对“类”的语言机制出发，回顾了随着语言的进步，“继承”在 JavaScript 中变得越来越方便。然后讨论了“多继承”时需要考虑的问题，介绍了 Method Resolution Order (MRO)，并尝试在 JavaScript 中模拟“多继承”。</p>
+<p>然而，JavaScript 本质上不存在继承的概念，这种通过 prototype 模拟出来的“多继承”不会很完美，体验上比原生支持继承或多继承的语言要差的多。因此不要想着多继承，JavaScript 中也不建议使用继承。</p>
+<p>【2018.4.4更新】</p>
+<p>看了知乎网友的评论，推荐了一篇文章 <a href="https://medium.com/@dan_abramov/how-to-use-classes-and-sleep-at-night-9af8de78ccb4" target="_blank" rel="noopener">How to use classes and sleep at night</a>，读完后更是觉得以前自己使用多层继承（非多继承）是多么 naive 了，文中主要给出了这几点建议：</p>
+<ul>
+<li>对外提供API时不要直接暴露 class。因为这样你不知道别人会怎么用你的类，会让你今后升级API时出现很多 break changes</li>
+<li>不要使用多层继承。嗯…我在以往的工作中就这么做，最后陷入了找 bug 的坑中，都不知道真正执行的函数在哪一层</li>
+<li>不要调用 <code>super</code> 中的函数，直接覆盖它们。again…我在以往的工作中也犯了同样的错误，为了重用 super 中的逻辑，但又有部分逻辑不同，不得不继续拆分更细粒度的函数，以满足可以复用 <code>super</code>。结果一样，最后陷入了找 bug 的坑中。。。</li>
+<li>不建议对外提供类，即使不得以这么做，提供方也要做好类型校验和对“可见性”的保护，防止使用方滥用。要提供更加明确的API，让使用方传入一个函数作为参数来满足自定义需求，而不是让使用方来 override</li>
+<li>尝试入坑 Functional Programming</li>
+</ul>
+<p>Good Night</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%26%20object%20prototypes/ch4.md" target="_blank" rel="noopener">You-Dont-Know-JS</a></p>
+<p><a href="https://docs.oracle.com/javase/tutorial/java/IandI/polymorphism.html" target="_blank" rel="noopener">Java Doc - Polymorphism</a></p>
+<p><a href="https://www.python.org/download/releases/2.3/mro/" target="_blank" rel="noopener">Python Doc - MRO</a></p>
+<p><a href="https://en.wikipedia.org/wiki/C3_linearization" target="_blank" rel="noopener">C3 linearization</a></p>
+<p><a href="https://github.com/dojo/dojo/blob/master/_base/declare.js#L554" target="_blank" rel="noopener">Class declare in dojo</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/es/" rel="tag"># es</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2018/03/multi-inheritance-1.html" rel="next" title="JavaScript中的“多继承”(1)">
+                <i class="fa fa-chevron-left"></i> JavaScript中的“多继承”(1)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/04/babel-preset.html" rel="prev" title="babel preset ≠ polyfill">
+                babel preset ≠ polyfill <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#试试多继承"><span class="nav-number">1.</span> <span class="nav-text">试试多继承</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多继承要考虑的问题"><span class="nav-number">1.1.</span> <span class="nav-text">多继承要考虑的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#间接多继承"><span class="nav-number">1.2.</span> <span class="nav-text">间接多继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRO算法"><span class="nav-number">1.3.</span> <span class="nav-text">MRO算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟多继承"><span class="nav-number">1.4.</span> <span class="nav-text">模拟多继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存在的问题"><span class="nav-number">1.5.</span> <span class="nav-text">存在的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么不建议继承"><span class="nav-number">2.</span> <span class="nav-text">为什么不建议继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1411 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="javascript,plugins,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="经常做信息管理类的网站，分页可以说是最常见的功能之一了。纵然网上可以找到一堆jquery分页插件，但我还是想手把手自己写一个分页，更清楚自己需要怎样的分页功能，不想包含过于复杂的功能。说到分页，我能想到3种：直接刷新页面；Ajax刷新分页；伪分页。伪分页其实就是对页面数据的过滤，页面包含了所有的数据的元素，只不过“一页”仅显示部分数据的元素。Ajax分页则是局部刷新页面上的数据元素。我先实现最简单">
+<meta name="keywords" content="javascript,plugins">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自己写的jquery分页插件">
+<meta property="og:url" content="http://jsorz.cn/blog/2015/03/step-by-step-jquery-plugin-pagination-1.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="经常做信息管理类的网站，分页可以说是最常见的功能之一了。纵然网上可以找到一堆jquery分页插件，但我还是想手把手自己写一个分页，更清楚自己需要怎样的分页功能，不想包含过于复杂的功能。说到分页，我能想到3种：直接刷新页面；Ajax刷新分页；伪分页。伪分页其实就是对页面数据的过滤，页面包含了所有的数据的元素，只不过“一页”仅显示部分数据的元素。Ajax分页则是局部刷新页面上的数据元素。我先实现最简单">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20150303_01.jpg">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20150303_02.jpg">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.835Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自己写的jquery分页插件">
+<meta name="twitter:description" content="经常做信息管理类的网站，分页可以说是最常见的功能之一了。纵然网上可以找到一堆jquery分页插件，但我还是想手把手自己写一个分页，更清楚自己需要怎样的分页功能，不想包含过于复杂的功能。说到分页，我能想到3种：直接刷新页面；Ajax刷新分页；伪分页。伪分页其实就是对页面数据的过滤，页面包含了所有的数据的元素，只不过“一页”仅显示部分数据的元素。Ajax分页则是局部刷新页面上的数据元素。我先实现最简单">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20150303_01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2015/03/step-by-step-jquery-plugin-pagination-1.html">
+
+
+
+
+
+  <title>自己写的jquery分页插件 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2015/03/step-by-step-jquery-plugin-pagination-1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自己写的jquery分页插件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-03-03T00:00:00+08:00">
+                2015-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>经常做信息管理类的网站，<strong>分页</strong>可以说是最常见的功能之一了。纵然网上可以找到一堆jquery分页插件，但我还是想手把手自己写一个分页，更清楚自己需要怎样的分页功能，不想包含过于复杂的功能。说到分页，我能想到3种：直接刷新页面；Ajax刷新分页；伪分页。伪分页其实就是对页面数据的过滤，页面包含了所有的数据的元素，只不过“一页”仅显示部分数据的元素。Ajax分页则是局部刷新页面上的数据元素。我先实现最简单的分页方式，即直接刷新页面。</p>
+<a id="more"></a>
+<h2 id="jquery插件写法"><a href="#jquery插件写法" class="headerlink" title="jquery插件写法"></a>jquery插件写法</h2><p>jquery中提供了<code>fn</code>扩展属性，任何写到<code>fn</code>中的函数，都可以被jquery DOM元素直接调用。</p>
+<pre><code>$.fn.sayHello = function(){
+    return this.each(function(){
+        alert(this);
+    });
+};
+</code></pre><p>有了这个扩展函数，可以直接对元素这样<code>$(&#39;#someElement&#39;).sayHello()</code>调用，也可以同时作用在多个元素上，像<code>$(&#39;.some-class&#39;).sayHello()</code>这样。</p>
+<p>注意<code>sayHello</code>中两个<code>this</code>是有区别的，函数进来的第一个<code>this</code>就是指调用<code>sayHello()</code>的元素，而且这里的<code>this</code>就已经是jquery的元素了，不需要再多此一举<code>$(this)</code>了。而<code>this.each()</code>表示对所有调用<code>sayHello()</code>的元素均进行如下操作。<code>each(function(){})</code>里面的<code>this</code>表示的是单个调用<code>sayHello()</code>的元素，注意这里的<code>this</code>是原生DOM元素，如要使用jquery的函数，则需要先<code>$(this)</code>一下。</p>
+<p>完善后的<code>sayHello</code>代码如下。</p>
+<pre><code>$.fn.sayHello = function(){
+    return this.each(function(){
+        $(this).bind(&apos;click&apos;, function(){
+            alert(&apos;hello &apos; + $(this).prop(&apos;tagName&apos;));
+        });
+    });
+};
+</code></pre><p>即这个sayHello插件会为元素绑定一个<code>click</code>事件，点击后会弹出该元素的标签名。效果如下。</p>
+<p><img src="/images/captures/20150303_01.jpg"></p>
+<h2 id="分页插件设计"><a href="#分页插件设计" class="headerlink" title="分页插件设计"></a>分页插件设计</h2><p>令这个分页插件（扩展函数）叫做<code>jqPagination</code>，我们希望它使用起来非常简单，在页面中只需要定义一个<code>&lt;div&gt;</code>，无需定义任何子元素，只需要<code>jqPagination()</code>一下，就会生成一个好看的分页按钮出来。由于页数是不确定的，不可能把所有页码在界面上都显示出来（体验太差），它只显示第一页、最后一页，以及当前页的前后两页。</p>
+<p><img src="/images/captures/20150303_02.jpg"></p>
+<p>可以看到，它有点类似一个“滑动窗口”，窗口大小是5（当前页和前后2页），未显示的页码用“…”显示。</p>
+<p>由于在页面中只定义一个<code>&lt;div&gt;</code>，那么当前的页码和总页数</p>
+<ol>
+<li><p>要么写在<code>&lt;div&gt;</code>的自定义属性中</p>
+</li>
+<li><p>要么当作参数传给<code>jqPagination</code></p>
+</li>
+</ol>
+<p>这就是这个分页插件的对外接口设计。<code>&lt;div&gt;</code>中支持<code>data-pn</code>和<code>data-tpn</code>两个属性，分别表示当前页码和总页数。</p>
+<pre><code>&lt;div id=&quot;pagination1&quot; data-pn=&quot;5&quot; data-tpn=&quot;12&quot;&gt;&lt;/div&gt;
+</code></pre><p>同时<code>jqPagination</code>也支持配置参数，如下。</p>
+<pre><code>$(&apos;#pagination1&apos;).jqPagination({
+    pn: 5,
+    tpn: 12
+});
+</code></pre><h2 id="插件实现"><a href="#插件实现" class="headerlink" title="插件实现"></a>插件实现</h2><p>大体实现思路就是：</p>
+<ol>
+<li><p>为<code>&lt;div&gt;</code>添加一些子元素，不涉及具体页码。</p>
+</li>
+<li><p>生成带“滑动窗口”的具体页码，并为页码添加是否active的样式。</p>
+</li>
+<li><p>为每个页码添加链接，即点击该页则直接刷新页面。</p>
+</li>
+<li><p>为“前一页”和“后一页”绑定点击事件。</p>
+</li>
+</ol>
+<p><strong>Step 1</strong></p>
+<pre><code>$.fn.jqPagination = function(options){
+
+    var generatePages = function($el){
+
+        var $list = $(&apos;&lt;ul class=&quot;&apos; + CLASS_PAGE_LIST + &apos;&quot;&gt;&lt;/ul&gt;&apos;);
+        // prePage
+        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PRE_PAGE + &apos;&quot;&gt;&apos; + TEXT_PRE_PAGE + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
+        // firstPage
+        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_ACTIVE + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PAGE + &apos;&quot; data-page=&quot;1&quot;&gt;1&lt;/a&gt;&lt;/li&gt;&apos;);
+        // preOmit
+        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PRE_OMIT + &apos;&quot;&gt;&apos; + TEXT_OMIT + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
+        // nextOmit
+        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_NEXT_OMIT + &apos;&quot;&gt;&apos; + TEXT_OMIT + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
+        // lastPage
+        $list.append(&apos;&lt;li class=&quot;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PAGE + &apos;&quot; data-page=&quot;&quot;&gt;&apos; + TEXT_EMPTY + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
+        // nextPage
+        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_NEXT_PAGE + &apos;&quot;&gt;&apos; + TEXT_NEXT_PAGE + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
+        // append to list
+        $el.empty().append($list);
+
+    };
+
+    var init = function($el){
+        $el.addClass(CLASS_PAGINATION);
+        generatePages($el);
+    };
+
+    return init(this);
+};
+</code></pre><p>这里直接为几个特殊的元素占好“坑”，分别是：上一页，第1页，滑动窗口向前的省略，滑动窗口向后的省略，最后一页（页码为空），下一页。具体的页码元素都是有<code>data-page</code>属性的，这里第一页和最后一页也属于具体页码。然后在Step 2中生成其他具体页码，并为这里占的“坑”设置active、disabled或hide。</p>
+<p><strong>Step 2</strong></p>
+<pre><code>var generatePages = function($el){
+    // 以上省略...
+
+    var $dummies = $list.children(&apos;li&apos;);
+    var dummyLen = $dummies.length;
+
+    // targets reference
+    var $firstPage = $dummies.eq(1);
+    var $lastPage = $dummies.eq(dummyLen-2);
+    var $prePage = $dummies.first();  // eq(0)
+    var $nextPage = $dummies.last();  // eq(dummyLen-1)
+    var $preOmitted = $dummies.eq(2);
+    var $nextOmitted = $dummies.eq(dummyLen-3);
+
+    // a copy for dynamic page, initial
+    var $pageCopy = $firstPage.clone().removeAttr(&apos;class&apos;);
+
+    // page number region
+    var pn = Number(opts.pn);
+    var tpn = Number(opts.tpn);
+    var lowerPn = Math.max(pn-2, 2);  // 第1页已写在html中
+    var upperPn = Math.min(pn+2, tpn-1);  // 最后1页已写在html中
+
+    // generate new specific pages（当前页的前后2页）
+    for(var i=lowerPn; i&lt;=upperPn; i++){
+        var $newPage = $pageCopy.clone();
+        $newPage.find(&apos;a&apos;).attr(&apos;data-page&apos;, i).text(i);
+        $newPage.insertBefore($nextOmitted);
+        // add current page flag
+        i == pn &amp;&amp; $newPage.addClass(CLASS_ACTIVE);
+    }
+
+    // check first page
+    $firstPage.removeClass(CLASS_ACTIVE);
+    pn == 1 &amp;&amp; $firstPage.addClass(CLASS_ACTIVE);
+
+    // check last page
+    $lastPage.find(&apos;a&apos;).attr(&apos;data-page&apos;, tpn).text(tpn);
+    $lastPage.removeClass(CLASS_ACTIVE);
+    pn == tpn &amp;&amp; $lastPage.addClass(CLASS_ACTIVE);
+
+    // check if last page equals first page
+    $lastPage.removeClass(CLASS_HIDE)
+    tpn == 1 &amp;&amp; $lastPage.addClass(CLASS_HIDE);
+
+    // check Previous page
+    $prePage.attr(&apos;class&apos;, CLASS_DISABLED);
+    pn &gt; 1 &amp;&amp; $prePage.removeClass(CLASS_DISABLED);
+
+    // check Next page
+    $nextPage.attr(&apos;class&apos;, CLASS_DISABLED);
+    pn &lt; tpn &amp;&amp; $nextPage.removeClass(CLASS_DISABLED);
+
+    // check pre omitted
+    $preOmitted.removeClass(CLASS_HIDE);
+    lowerPn &lt;= 2 &amp;&amp; $preOmitted.addClass(CLASS_HIDE);
+
+    // check next omitted
+    $nextOmitted.removeClass(CLASS_HIDE);
+    upperPn == tpn-1 &amp;&amp; $nextOmitted.addClass(CLASS_HIDE);
+};
+</code></pre><p>这里的滑动窗口的页码范围为<code>Math.max(pn-2, 2)</code>到<code>Math.min(pn+2, tpn-1)</code>，因为第1页和最后1页已经在Step 1中占好“坑”了。生成的具体页码即当前页的前后2页，添加好<code>data-page</code>属性，插入到“坑”的相应位置。然后就是根据<code>pn</code>（当前页码）和<code>tpn</code>（总页数）对那些“坑”进行可见性的检查，该disabled的和该hide的。</p>
+<p><strong>Step 3 &amp; 4</strong></p>
+<pre><code>var bindPageEvents = function($el){
+    // Previous page
+    $el.find(&apos;.&apos; + CLASS_PRE_PAGE).click(function(){
+        if($(this).parent().hasClass(CLASS_DISABLED)){
+            return false;
+        }
+        var $target = $el.find(&apos;li.&apos; + CLASS_ACTIVE).prev();
+        // omitted patch
+        if($target.hasClass(CLASS_DISABLED)){
+            $target = $target.prev();
+            if($target.hasClass(CLASS_DISABLED)){
+                $target = $target.prev();
+            }
+        }
+        targetClick($target);
+    });
+
+    // Next page
+    $el.find(&apos;.&apos; + CLASS_NEXT_PAGE).click(function(){
+        if($(this).parent().hasClass(CLASS_DISABLED)){
+            return false;
+        }
+        var $target = $el.find(&apos;li.&apos; + CLASS_ACTIVE).next();
+        // omitted patch
+        if($target.hasClass(CLASS_DISABLED)){
+            $target = $target.next();
+            if($target.hasClass(CLASS_DISABLED)){
+                $target = $target.next();
+            }
+        }
+        targetClick($target);
+    });
+
+    // specific pages
+    $el.find(&apos;a.&apos; + CLASS_PAGE).each(function(){
+        $(this).attr(&apos;href&apos;, getPageHref($(this).attr(&apos;data-page&apos;)));
+    });
+};
+</code></pre><p>这里就是为具体页码和“前一页”“后一页”添加点击效果。每个具体页码都是个带有<code>href</code>属性的<code>&lt;a&gt;</code>标签，以直接刷新页面，这里有个<code>getPageHref</code>方法稍后描述。而点击“前一页”“后一页”实则是去找到相对于当前页的具体页码元素，然后调用<code>targetClick</code>去模拟点击，也在稍后描述。</p>
+<h2 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h2><p>除了前面提到的<code>pn</code>和<code>tpn</code>两个参数外，我们还需要添加两个参数。因为是直接刷新页面以获取新的分页数据，那url中肯定要有个参数表示页码，那么这个参数的key叫什么。我们提供一个默认的名字，就叫<code>page</code>，即url都长成这样<code>/some/to/?page=2</code>，当然这个参数的名字也可以自定义。还有就是，分页刷新页面默认就是当前的url，只不过<code>page</code>参数的值不同，这个url也可以自定义。</p>
+<pre><code>$.fn.jqPagination = function(options){
+
+    // default option values
+    var opts = $.extend({
+        &apos;pn&apos;: this.attr(&apos;data-pn&apos;) || 1,
+        &apos;tpn&apos;: this.attr(&apos;data-tpn&apos;) || 1,
+        &apos;name&apos;: &apos;page&apos;
+    }, options);
+
+    // default value of &apos;pageHref&apos;
+    var defaultHref = window.location.pathname + &apos;?&apos; + opts.name + &apos;=&apos;;
+    if(/\?(\w+)=/.test(window.location.href)){
+        // 如果已经有参数
+        defaultHref = window.location.href + 
+            (eval(&apos;/&apos; + opts.name + &apos;=/&apos;).test(window.location.href) ? &apos;&apos; : &apos;&amp;&apos; + opts.name + &apos;=&apos;);
+    }
+
+    opts[&apos;pageHref&apos;] = opts[&apos;pageHref&apos;] || defaultHref;
+
+    // 以下省略...
+};
+</code></pre><p>由此，前面提到的<code>getPageHref</code>就是去替换url里的<code>page</code>参数的值。</p>
+<pre><code>var getPageHref = function(pageNo){
+    return opts.pageHref.replace(eval(&apos;/&apos; + opts.name + &apos;=\\d*/&apos;), opts.name + &apos;=&apos; + pageNo);
+};
+</code></pre><p>当然那个模拟点击页码的<code>targetClick</code>就是直接刷新<code>window.location.href</code>咯</p>
+<pre><code>var targetClick = function($li){
+    var $link = $li.find(&apos;a.&apos; + CLASS_PAGE);
+    if(!$link.hasClass(CLASS_ACTIVE) 
+        &amp;&amp; !$link.hasClass(CLASS_DISABLED) 
+        &amp;&amp; !$link.hasClass(CLASS_HIDE)){
+        // 是否刷页面
+        /^\/|((http|https|svn|ftp|file):\/\/)/.test($link.prop(&apos;href&apos;)) ? 
+            (window.location.href = $link.prop(&apos;href&apos;)) : $link.click();
+    }
+};
+</code></pre><h2 id="插件使用"><a href="#插件使用" class="headerlink" title="插件使用"></a>插件使用</h2><p>提供3种使用方式，最基本的就是</p>
+<pre><code>&lt;div id=&quot;pagination1&quot; data-pn=&quot;5&quot; data-tpn=&quot;12&quot;&gt;&lt;/div&gt;
+
+$(&apos;#pagination1&apos;).jqPagination();
+</code></pre><p>要手动设置pn和tpn，以及分页参数名称，就像这样</p>
+<pre><code>$(&apos;#pagination2&apos;).jqPagination({
+    pn: 5,
+    tpn: 12,
+    name: &apos;p&apos;
+});
+</code></pre><p>要自定义分页url的就像这样</p>
+<pre><code>$(&apos;#pagination3&apos;).jqPagination({
+    pageHref: &apos;http://www.baidu.com?from=fuxiaode.cn&amp;page=&apos;
+});
+</code></pre><p><a href="/demo/Pagination/v1/demo.html">完整Demo</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/plugins/" rel="tag"># plugins</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/02/qq-history-message-converter.html" rel="next" title="QQ消息记录转码">
+                <i class="fa fa-chevron-left"></i> QQ消息记录转码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/03/css-box-model.html" rel="prev" title="CSS盒模型">
+                CSS盒模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#jquery插件写法"><span class="nav-number">1.</span> <span class="nav-text">jquery插件写法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分页插件设计"><span class="nav-number">2.</span> <span class="nav-text">分页插件设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插件实现"><span class="nav-number">3.</span> <span class="nav-text">插件实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置参数"><span class="nav-number">4.</span> <span class="nav-text">配置参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插件使用"><span class="nav-number">5.</span> <span class="nav-text">插件使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

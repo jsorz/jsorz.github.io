@@ -1,0 +1,1250 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="jquery, class实现, gulp构建">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="前面忙了三个多月，从11月开始前期的计划和调研，到12月开始每天早起，到年后2月底差不多小结。除了正常的需求迭代开发之外，全都投在了这一件事，把系统的前端做了个大重构。这是这半年的代码量统计，实际没那么多，因为是重构，insertions 和 deletions 都会被录入代码行数。真的体会了把重构是个体力活儿，起步阶段会比较快，但后面会越来越陷入debug，这和开发是一样的。。">
+<meta name="keywords" content="jquery, class实现, gulp构建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="现在还在重构jquery...">
+<meta property="og:url" content="http://jsorz.cn/blog/2017/03/upgrade-to-jquery-seems-outdated.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="前面忙了三个多月，从11月开始前期的计划和调研，到12月开始每天早起，到年后2月底差不多小结。除了正常的需求迭代开发之外，全都投在了这一件事，把系统的前端做了个大重构。这是这半年的代码量统计，实际没那么多，因为是重构，insertions 和 deletions 都会被录入代码行数。真的体会了把重构是个体力活儿，起步阶段会比较快，但后面会越来越陷入debug，这和开发是一样的。。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20170305_code_stats.png">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.845Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="现在还在重构jquery...">
+<meta name="twitter:description" content="前面忙了三个多月，从11月开始前期的计划和调研，到12月开始每天早起，到年后2月底差不多小结。除了正常的需求迭代开发之外，全都投在了这一件事，把系统的前端做了个大重构。这是这半年的代码量统计，实际没那么多，因为是重构，insertions 和 deletions 都会被录入代码行数。真的体会了把重构是个体力活儿，起步阶段会比较快，但后面会越来越陷入debug，这和开发是一样的。。">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20170305_code_stats.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2017/03/upgrade-to-jquery-seems-outdated.html">
+
+
+
+
+
+  <title>现在还在重构jquery... | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2017/03/upgrade-to-jquery-seems-outdated.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">现在还在重构jquery...</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-02T00:00:00+08:00">
+                2017-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发/" itemprop="url" rel="index">
+                    <span itemprop="name">开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面忙了三个多月，从11月开始前期的计划和调研，到12月开始每天早起，到年后2月底差不多小结。除了正常的需求迭代开发之外，全都投在了这一件事，把系统的前端做了个大重构。这是这半年的代码量统计，实际没那么多，因为是重构，insertions 和 deletions 都会被录入代码行数。真的体会了把重构是个体力活儿，起步阶段会比较快，但后面会越来越陷入debug，这和开发是一样的。。</p>
+<a id="more"></a>
+<p><img src="/images/captures/20170305_code_stats.png"></p>
+<h2 id="业务背景"><a href="#业务背景" class="headerlink" title="业务背景"></a>业务背景</h2><p>上图是我最近半年的代码提交统计，近三个月的提交激增，正是因为重构。简单罗列下这项工作的背景</p>
+<ul>
+<li>公司这个产品最初是用了一个开源框架实现的，但去年下半年该框架已宣布停止维护</li>
+<li>此前的代码夹杂着原生js和框架js实现的逻辑，但是产品业务的发展不允许我们停下手头的工作来重做此前的业务功能</li>
+<li>有个兄弟产品已经完成了旧代码和新业务齐头并进的整改，将旧代码重构的同时，加了一些新业务或新UI元素进去</li>
+</ul>
+<p>因此团队决定从兄弟产品中抽取可复用的组件元素，形成我们俩产品通用的组件库，而在这基础上再将我们的产品代码迁移成新代码。</p>
+<p>说了这么多废话，其实这套“新代码”仍是jquery，因为以前我们连jquery都用不起。。虽然这项重构工作是实实在在的体力活，但经历过后又让我重新思考以前对所谓的“组件”的认识，因为这个过程中走了不少弯路。</p>
+<h2 id="做了啥"><a href="#做了啥" class="headerlink" title="做了啥"></a>做了啥</h2><p>简单罗列下我所做的事情</p>
+<ul>
+<li>从兄弟产品中抽取可复用的组件和交互元素，形成组件库的base<ul>
+<li>要保证组件中没有业务强相关的逻辑，有则必须抽离出去，作为自定义参数或回调函数的方式实现</li>
+<li>保证组件库中的组件都是可以复用到相似产品的，同时尽量不要破坏组件原有的参数格式</li>
+<li>组件库中的组件都是可以再二次扩展的，可以使用继承或组合的方式，揉入业务强相关逻辑</li>
+</ul>
+</li>
+<li>业务特有的组件就放在业务的代码库中，或者称为<code>业务库组件</code><ul>
+<li>业务页面中会同时依赖组件库中的组件和业务库组件</li>
+<li>业务库组件可能是基于组件库组件做二次开发而形成的，也可能是独立的新组件</li>
+</ul>
+</li>
+<li>使用 gulp 进行打包，并做成可复用的<code>build模块</code><ul>
+<li>可由业务指定“我只需要组件库中的哪些组件”</li>
+<li>组件库的组件和业务库的同名组件，可通过不同的 namespace 区分</li>
+<li><em>可自动判断一个页面中所需组件的最小集，只将最少代码打包到页面中</em></li>
+</ul>
+</li>
+</ul>
+<p>最后，利用这套框架，将旧的业务代码逐页面迁移过来。。虽然最后这步是纯粹的体力活儿，但其中踩了不少坑，也反映了一些设计问题，会在本文最后一部分中一起来review。</p>
+<h2 id="组件库"><a href="#组件库" class="headerlink" title="组件库"></a>组件库</h2><h3 id="class-js-实现"><a href="#class-js-实现" class="headerlink" title="class.js 实现"></a>class.js 实现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">define(function () &#123;</span><br><span class="line">    var initializing = false;</span><br><span class="line">    var fnTest = /xyz/.test(function () &#123;var xyz; &#125;) ? /\b_super\b/ : /.*/;</span><br><span class="line">    // The base Class implementation (does nothing)</span><br><span class="line">    var Class = function () &#123;&#125;;</span><br><span class="line">    // Create a new Class that inherits from this class</span><br><span class="line">    Class.extend = function (prop) &#123;</span><br><span class="line">        var superProto = this.prototype;</span><br><span class="line">        // Instantiate a base class (but only create the instance,</span><br><span class="line">        // don&apos;t run the init constructor)</span><br><span class="line">        initializing = true;</span><br><span class="line">        var prototype = new this();</span><br><span class="line">        initializing = false;</span><br><span class="line">        // Copy the properties over onto the new prototype</span><br><span class="line">        for (var name in prop) &#123;</span><br><span class="line">            // Check if we&apos;re overwriting an existing function</span><br><span class="line">            prototype[name] = typeof prop[name] === &apos;function&apos;</span><br><span class="line">                &amp;&amp; typeof superProto[name] === &apos;function&apos; &amp;&amp; fnTest.test(prop[name])</span><br><span class="line">                ? (function (name, fn) &#123;</span><br><span class="line">                    return function () &#123;</span><br><span class="line">                        var tmp = this._super;</span><br><span class="line">                        // Add a new ._super() method that is the same method</span><br><span class="line">                        // but on the super-class</span><br><span class="line">                        this._super = superProto[name];</span><br><span class="line">                        // The method only need to be bound temporarily, so we</span><br><span class="line">                        // remove it when we&apos;re done executing</span><br><span class="line">                        var ret = fn.apply(this, arguments);</span><br><span class="line">                        this._super = tmp;</span><br><span class="line">                        return ret;</span><br><span class="line">                    &#125;;</span><br><span class="line">                &#125;)(name, prop[name])</span><br><span class="line">                : prop[name];</span><br><span class="line">        &#125;</span><br><span class="line">        // The dummy class constructor</span><br><span class="line">        function Class() &#123;</span><br><span class="line">            // All construction is actually done in the init method</span><br><span class="line">            if (!initializing &amp;&amp; this.init) &#123;</span><br><span class="line">                this.init.apply(this, arguments);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        // Populate our constructed prototype object</span><br><span class="line">        Class.prototype = prototype;</span><br><span class="line">        // Enforce the constructor to be what we expect</span><br><span class="line">        Class.prototype.constructor = Class;</span><br><span class="line">        // And make this class extendable</span><br><span class="line">        Class.extend = arguments.callee;</span><br><span class="line">        return Class;</span><br><span class="line">    &#125;;</span><br><span class="line">    return Class;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>特点：</p>
+<ul>
+<li>类式继承</li>
+<li>继承的链式调用</li>
+<li>提供<code>_super</code>调用父类函数的方式</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>使用这套方式定义的类，实例化后对象的<code>constructor</code>都指向了上面的<code>Class</code>函数，丢失了面向对象中重要的<code>instanceof</code>信息。</li>
+</ul>
+<p>注：在<a href="/blog/2014/03/js-pattern-part5-code-reuse-pattern.html#阶段7-Klass">Javascript模式之五-代码复用模式</a>写过另一种实现，保留了<code>constructor</code></p>
+<h3 id="类层次结构"><a href="#类层次结构" class="headerlink" title="类层次结构"></a>类层次结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">                      Class</span><br><span class="line">                        |</span><br><span class="line">        --------------------------------</span><br><span class="line">       |                |               |</span><br><span class="line">   ClassBase          UIBase        ChartBase</span><br><span class="line">       |                |</span><br><span class="line">    -------          --------</span><br><span class="line">   |       |        |        |</span><br><span class="line">RecordTarget 等   Dialog, Table 等</span><br></pre></td></tr></table></figure>
+<p>定义了三种 base class，分别代表非UI组件，UI组件和绘图组件，具体组件再依次继承。</p>
+<h3 id="私有成员保护"><a href="#私有成员保护" class="headerlink" title="私有成员保护"></a>私有成员保护</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">UIBase.extend(&#123;</span><br><span class="line">    options: &#123;</span><br><span class="line">    </span><br><span class="line">    &#125;,</span><br><span class="line">    __private: &#123;</span><br><span class="line">        _items: null,</span><br><span class="line">        _selectedItems: null</span><br><span class="line">    &#125;,</span><br><span class="line">    type: &apos;&apos;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>由于通过<code>Class.extend</code>，会将所有属性挂到<code>prototype</code>上，所以必须将实例属性区分开，这里约定将<code>__private</code>里面的属性直接挂在实例上。（在 UIBase 的 init 函数里操作）</p>
+<h3 id="组件扩展"><a href="#组件扩展" class="headerlink" title="组件扩展"></a>组件扩展</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">define(function (require) &#123;</span><br><span class="line">    var Table = require(&apos;sawse/component/Table&apos;);</span><br><span class="line"></span><br><span class="line">    return Table.extend(&#123;</span><br><span class="line">    	// 覆盖父类方法</span><br><span class="line">        render: function (table) &#123;</span><br><span class="line">        	// 调用父类的同名方法</span><br><span class="line">            this._super(table);</span><br><span class="line">            // do something else</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="构建打包"><a href="#构建打包" class="headerlink" title="构建打包"></a>构建打包</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gulp [task] [--dir=PROJECT_DIR] [--config=CONFIG_FILE]</span><br></pre></td></tr></table></figure>
+<p>使用 gulp 来组织构建，对库代码和业务代码分别配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    // 组件库打包</span><br><span class="line">    libPackConf: &#123;</span><br><span class="line">        febase: &#123;</span><br><span class="line">            baseDir: &apos;fe-base/js/&apos;,         // 相对于 src 的路径</span><br><span class="line">            patternsInCopy: [&apos;**/*.js&apos;],    // 以下路径都 相对于 baseDir</span><br><span class="line">            ignoresInCopy: [&apos;dep/**/*.js&apos;], // 在 copy 时过滤</span><br><span class="line">            prependsInPack: [],             // 在 pack 时追加在开头，以保证优先顺序</span><br><span class="line">            patternsInPack: [&apos;**/*.js&apos;],    // 要 pack 的文件，可包含 prependsInPack 的文件</span><br><span class="line">            ignoresInPack: [],              // 在 pack 时过滤</span><br><span class="line">            namespace: &apos;sawse&apos;,             // 组件定义时追加的命名前缀</span><br><span class="line">            outputName: &apos;sawse.js&apos;,         // 打包产物的文件名</span><br><span class="line">            outputDir: &apos;js/&apos;                // 打包产物的相对于 webroot 的目录</span><br><span class="line">        &#125;,</span><br><span class="line">        febaseCss: &#123;</span><br><span class="line">            baseDir: &apos;fe-base/sass/&apos;,       // 相对于 src 的路径</span><br><span class="line">            patternsInCopy: [               // 以下路径都 相对于 baseDir</span><br><span class="line">                &apos;**/*.scss&apos;,</span><br><span class="line">                &apos;**/*.css&apos;,</span><br><span class="line">                &apos;decorator/**/*&apos;            // css 图片要一起 copy 过来</span><br><span class="line">            ],</span><br><span class="line">            ignoresInCopy: [                // 在 copy 时过滤</span><br><span class="line">                &apos;base/normalize.css&apos;,</span><br><span class="line">                &apos;base/reset.css&apos;</span><br><span class="line">            ],</span><br><span class="line">            prependsInPack: [</span><br><span class="line">                &apos;base/sprite_def.css&apos;,      // sprite 先定义在开头</span><br><span class="line">                &apos;base/*.css&apos;                // css 合并时要保证优先顺序</span><br><span class="line">            ],</span><br><span class="line">            patternsInPack: [&apos;**/*.css&apos;],   // 只打包编译后的 css 文件</span><br><span class="line">            ignoresInPack: [],              // 在打包时才过滤</span><br><span class="line">            outputName: &apos;sawse.css&apos;,        // 输出打包的文件名（不含路径）</span><br><span class="line">            outputDir: &apos;css/sawse/&apos;         // 作为 css/ 下的完整子目录（保证图片引用正确）</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上只列了组件库的一些配置项，还有对业务库、页面的打包配置，具体的实现抽成了一个独立模块，细节这里略过。</p>
+<p>使用 glulp 就是很多事情得自己做，在 stream 里做字符串处理，拼接文件等操作。。。</p>
+<h2 id="上线考虑"><a href="#上线考虑" class="headerlink" title="上线考虑"></a>上线考虑</h2><p>简单来说就是得兼容，因为重构和迁移是逐步推进的，线上会存在一个过渡期，通过路由字典指明哪些是走新页面，哪些走旧页面。而且新旧页面的产物必须在两个完全隔离的目录下，便于发布和回滚。（旧页面也可能在这个过渡期有bugfix发布）</p>
+<h2 id="总结思考"><a href="#总结思考" class="headerlink" title="总结思考"></a>总结思考</h2><p><strong>1、动态类型一时爽，代码重构火葬场</strong></p>
+<ul>
+<li>真理！特别是面对好几年前的N手代码，看着很正规的函数在调用时都会防不胜防</li>
+<li>需要好好评估重构的代价，重构之后一两年内是否还需要重构，长痛不如短痛的<code>重做</code>还是<code>重构</code></li>
+</ul>
+<p>2、使用什么库并不是第一位的重要，业务组件的梳理和规范性才是页面实现时的瓶颈</p>
+<ul>
+<li>不管用什么库，把业务通用的组件梳理出来并规范几种使用场景，这是项目需要沉淀出的base，在这之上做需求会很快</li>
+</ul>
+<p>3、<strong>不要轻易将一个产品中的组件去统一到另一个产品</strong></p>
+<ul>
+<li>即本文开头列的<code>从兄弟产品中抽取可复用的组件和交互元素，形成组件库的base</code>，现在感觉是件很傻的事情，经验不足</li>
+<li>不同产品必定有不同的交互思路，想要从其他产品抽出的组件库作为base组件，势必还要再包一层改造成自己产品的业务组件</li>
+<li>只有纯粹的组件库是可取的，比如 Bootstrap、ElementUI、AntDesign，可以在其上包装成自己的业务组件</li>
+</ul>
+<p>4、工欲善其事必先利其器</p>
+<ul>
+<li>gulp 的自动化程度还不够，很多特性比如子页面的打包，比如组件及样式的分批合并，需要在 stream 手写很多。。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web组件/" rel="tag"># web组件</a>
+          
+            <a href="/tags/AMD/" rel="tag"># AMD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/02/common-usage-of-git.html" rel="next" title="常用git命令">
+                <i class="fa fa-chevron-left"></i> 常用git命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/04/techniques-for-making-presentations.html" rel="prev" title="做PPT报告的表达技巧 (by 林大班)">
+                做PPT报告的表达技巧 (by 林大班) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#业务背景"><span class="nav-number">1.</span> <span class="nav-text">业务背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#做了啥"><span class="nav-number">2.</span> <span class="nav-text">做了啥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件库"><span class="nav-number">3.</span> <span class="nav-text">组件库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#class-js-实现"><span class="nav-number">3.1.</span> <span class="nav-text">class.js 实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类层次结构"><span class="nav-number">3.2.</span> <span class="nav-text">类层次结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#私有成员保护"><span class="nav-number">3.3.</span> <span class="nav-text">私有成员保护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件扩展"><span class="nav-number">3.4.</span> <span class="nav-text">组件扩展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建打包"><span class="nav-number">4.</span> <span class="nav-text">构建打包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上线考虑"><span class="nav-number">5.</span> <span class="nav-text">上线考虑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结思考"><span class="nav-number">6.</span> <span class="nav-text">总结思考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

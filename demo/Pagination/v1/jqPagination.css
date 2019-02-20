@@ -1,0 +1,49 @@
+.jqPagination{
+    margin: 25px auto;
+    text-align: center;
+    width: 100%;
+}
+.jqPagination .pages{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.jqPagination .pages li{
+    display: inline-block;
+    margin: 0 2px;
+}
+.jqPagination .pages li.prev{
+    margin-right: 15px;
+}
+.jqPagination .pages li.nex{
+    margin-left: 15px;
+}
+.jqPagination .pages li a{
+    background: url(img/pagination.png) repeat-x 0 0;
+    border: 1px solid #d5d5d5;
+    color: #666666;
+    font-size: 11px;
+    font-weight: bold;
+    height: 25px;
+    padding: 4px 8px;
+    text-decoration: none;
+}
+.jqPagination .pages li a:hover{
+    background: #efefef;
+}
+.jqPagination .pages li.active a{
+    background-position: 0 -26px;
+    border-color: #687282;
+    color: #fff;
+    cursor: default;
+}
+.jqPagination .pages li.active a:hover{
+    background: #687282;
+}
+.jqPagination .pages li.disabled a{
+    cursor: default;
+}
+.jqPagination .pages li.disabled a:hover{
+    background: url(img/pagination.png) repeat-x 0 0;
+}
+.jqPagination .pages li.hide{
+    display: none;
+}

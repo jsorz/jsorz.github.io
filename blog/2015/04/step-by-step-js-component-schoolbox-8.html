@@ -1,0 +1,1349 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="javascript,web组件,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="最近面试经常拿这个学校选择器作为例子来讲自己的JS学习过程，有位工程师哥哥直接打开这里“注册”里的第二步，就是我这个功能最初应用的地方。跟他讨论实现模态时事件的unbind这种方式是不是不好时，他给了我一点启发，于是我回过头来重新思考。">
+<meta name="keywords" content="javascript,web组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一步步做组件-学校选择器(8)">
+<meta property="og:url" content="http://jsorz.cn/blog/2015/04/step-by-step-js-component-schoolbox-8.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="最近面试经常拿这个学校选择器作为例子来讲自己的JS学习过程，有位工程师哥哥直接打开这里“注册”里的第二步，就是我这个功能最初应用的地方。跟他讨论实现模态时事件的unbind这种方式是不是不好时，他给了我一点启发，于是我回过头来重新思考。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.837Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一步步做组件-学校选择器(8)">
+<meta name="twitter:description" content="最近面试经常拿这个学校选择器作为例子来讲自己的JS学习过程，有位工程师哥哥直接打开这里“注册”里的第二步，就是我这个功能最初应用的地方。跟他讨论实现模态时事件的unbind这种方式是不是不好时，他给了我一点启发，于是我回过头来重新思考。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2015/04/step-by-step-js-component-schoolbox-8.html">
+
+
+
+
+
+  <title>一步步做组件-学校选择器(8) | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2015/04/step-by-step-js-component-schoolbox-8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一步步做组件-学校选择器(8)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-04T00:00:00+08:00">
+                2015-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近面试经常拿这个<a href="/blog/2015/02/step-by-step-js-component-schoolbox-collections.html">学校选择器</a>作为例子来讲自己的JS学习过程，有位工程师哥哥直接打开<a href="http://mooctest.net/" target="_blank" rel="noopener">这里</a>“注册”里的第二步，就是我这个功能最初应用的地方。跟他讨论实现模态时事件的unbind<a href="/blog/2015/02/step-by-step-js-component-schoolbox-7.html#对象共享">这种方式</a>是不是不好时，他给了我一点启发，于是我回过头来重新思考。</p>
+<a id="more"></a>
+<h2 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h2><p>假设页面上有这么三行元素</p>
+<pre><code>&lt;div&gt;
+    &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
+    &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
+    &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
+    &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
+&lt;/div&gt;
+</code></pre><p>想要对每行都“选择学校”，并将选中的值填回该行中的<code>input</code>元素中，最早代码是酱紫的。</p>
+<pre><code>$(&apos;.choose-school&apos;).click(function(event){
+    var $source = $(this);
+
+    // 监听自定义事件
+    schoolBox.on(&apos;schoolChosen&apos;, function(data){
+        $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
+        $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
+    });
+
+    schoolBox.show();
+});
+</code></pre><p>当点一个元素时没问题，但是点了两个三个元素后，就会发现每次“选择学校”后都会一起刷新。原因就在于这三个元素都把各自的回调加绑到了<code>schoolChosen</code>事件中，而<code>schoolBox</code>的<code>schoolChosen</code>被触发时，它会依次调用绑到它身上的handlers。</p>
+<p>在SchoolBox内部的实现中，使用一个map来记录所有的事件回调，key是事件名称，而value是监听该事件的回调函数的数组。</p>
+<pre><code>SchoolBox.prototype = {
+    on: function(type, handler){
+        if(typeof this.handlers[type] === &apos;undefined&apos;){
+            this.handlers[type] = [];
+        }
+        this.handlers[type].push(handler);
+    },
+    fire: function(type, data){
+        if(this.handlers[type] instanceof Array){
+            var handlers = this.handlers[type];
+            for(var i=0, len=handlers.length; i&lt;len; i++){
+                handlers[i](data);
+            }
+        }
+    }
+};
+</code></pre><p>因此以上实现代码是有弊端的，页面上多个元素共享同一个模态对话框时，无法正确地响应事件。</p>
+<p>在上一篇<a href="/blog/2015/02/step-by-step-js-component-schoolbox-7.html#对象共享">一步步做组件-学校选择器(7)</a>中使用了一种暴力的解决办法，每次click时都对SchoolBox对象unbind掉所有的事件，然后重新监听，以保证每次打开SchoolBox时handlers map中该事件类型的回调函数只有唯一的一个。很明显这种做法不是很妥。</p>
+<h2 id="从监听上入手"><a href="#从监听上入手" class="headerlink" title="从监听上入手"></a>从监听上入手</h2><p>由于上面的代码在监听时只绑定事件名称，不区分监听者元素，因此很容易想到在<code>on</code>监听时把当前操作的元素ID连同回调函数一起传入。这样的话，SchoolBox内部的handlers的map格式要稍微改下，即<code>{ eventType1: { sourceId1: function(){} } }</code>这样的格式。</p>
+<pre><code>SchoolBox.prototype = {
+    on: function(type, sourceId, handler){
+        if(typeof this.handlers[type] === &apos;undefined&apos;){
+            this.handlers[type] = {};
+        }
+        this.handlers[type][sourceId] = handler;
+    },
+    fire: function(type, data){
+        var handler = this.handlers[type][this.curSourceId];
+        handler &amp;&amp; handler(data);
+    }
+};
+</code></pre><p>这里<code>on</code>时由<code>type + sourceId</code>来确定handler，注意这里<code>fire</code>时根据<code>type + this.curSourceId</code>来取出相应的handler回调函数。而这个<code>this.curSourceId</code>需要在SchoolBox每次被打开的时候更新，每次被关闭的时候清空其值。</p>
+<pre><code>SchoolBox.prototype.show = function(sourceId){
+    // 记录当前打开SchoolBox的触发元素
+    if(sourceId){
+        this.curSourceId = sourceId;
+    }
+
+    //以下省略...
+};
+
+SchoolBox.prototype.hide = function(){
+    // 清空sourceId触发元素
+    if(this.curSourceId){
+        this.curSourceId = null;
+    }
+
+    //以下省略...
+};
+</code></pre><p>最后应用层的监听代码就像这样</p>
+<pre><code>$(&apos;.choose-school&apos;).click(function(){
+    var $source = $(this);
+    var id = $source.attr(&apos;id&apos;);
+
+    // 监听自定义事件
+    schoolBox.on(&apos;schoolChosen&apos;, id, function(data){
+        $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
+        $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
+    });
+
+    schoolBox.show(id);
+});
+</code></pre><p>虽然每次show时都要传入当前元素的ID，但是肯定比每次click都先unbind全部，再重新bind要好。</p>
+<p><a href="/demo/SchoolBox/v9/demo.html">学校选择器v9 Demo</a></p>
+<h2 id="看起来是没错"><a href="#看起来是没错" class="headerlink" title="看起来是没错"></a>看起来是没错</h2><p>像上面的应用层代码，在监听时判断的话，每个监听者元素被click时，都会重新去执行schoolBox的<code>on</code>方法，反复地生成同一个匿名的回调函数并绑定到同一个位置（<code>handlers[type][id]</code>）。显然上面的代码能够改成这样。</p>
+<pre><code>var $source;
+
+var callback = function(data){
+    $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
+    $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
+};
+
+$(&apos;.choose-school&apos;).each(function(){
+    // 监听自定义事件
+    schoolBox.on(&apos;schoolChosen&apos;, $(this).attr(&apos;id&apos;), callback);
+});
+
+$(&apos;.choose-school&apos;).click(function(){
+    $source = $(this);
+    schoolBox.show($source.attr(&apos;id&apos;));
+});
+</code></pre><p>引入了一个全局的<code>$source</code>变量去记录当前click的元素（以使回调中能够正确操作相应的元素），虽然这样很矬，但是至少避免了每次click时都去执行schoolBox的<code>on</code>方法，而且在循环中使用了<code>callback</code>函数的引用，避免了重复生成相同的匿名函数。总的来说，虽然长得丑，但是效率上是有提高的。</p>
+<h3 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h3><p>但是对于其中这小段代码</p>
+<pre><code>$(&apos;.choose-school&apos;).each(function(){
+    // 监听自定义事件
+    schoolBox.on(&apos;schoolChosen&apos;, $(this).attr(&apos;id&apos;), callback);
+});
+</code></pre><p>我开始怀疑自己，<em>为什么在一个循环中反复去为不同的元素ID监听同一个事件类型，更可笑的是使用同一个回调函数？</em>于是我开始反思当初设计监听者回调函数的初衷。</p>
+<p>最早在<a href="/blog/2015/01/step-by-step-js-component-schoolbox-2.html#schoolbox重构">一步步做组件-学校选择器(2)</a>中我是这样使用回调的。</p>
+<pre><code>var schoolBox = new SchoolBox({
+    appendTo: &apos;#schoolBoxWrapper&apos;,
+    schoolClickCallback: function(){
+        // 省略...
+    }
+});
+</code></pre><p>这样的缺点是，如果页面中有多个不同的元素都要对“学校选中”做出响应，那么这部分响应代码都得写在这个<code>schoolClickCallback</code>这里。如果需要响应的那些元素来自页面的不同区域，负责完全不同的功能，这样把响应代码都揉在一个地方的话，会造成一定的耦合。</p>
+<p>所以出于这样的考虑，我想到使用观察者模式（即自定义事件），不同的元素各自监听自己需要的事件，自己维护自己如何响应。</p>
+<pre><code>$(&apos;.choose-school&apos;).each(function(){
+    // 监听自定义事件
+    schoolBox.on(&apos;schoolChosen&apos;, $(this).attr(&apos;id&apos;), callback);
+});
+</code></pre><p>而这段代码似乎与这个初衷有点走歪路了，首先它们确实是不同的元素，但也是相似的元素，而它们监听的事件类型也相同，对事件响应的方式也相似。如此“强行”为不同的元素各自监听，是不是有点生搬硬套的意思了？</p>
+<h2 id="在回调时判断"><a href="#在回调时判断" class="headerlink" title="在回调时判断"></a>在回调时判断</h2><p>我从<a href="/blog/2014/12/js-pattern-part7-browser-pattern.html#事件委托">事件委托</a>那里得到了启发，为何不为相似的元素统一监听一个事件，并且只有唯一一个回调函数。具体做法就是在<code>fire</code>事件时加入“由哪个元素触发”，以避免对所有元素都做出响应。</p>
+<pre><code>SchoolBox.prototype = {
+    on: function(type, handler){
+        if(typeof this.handlers[type] === &apos;undefined&apos;){
+            this.handlers[type] = [];
+        }
+        this.handlers[type].push(handler);
+    },
+    fire: function(type, data){
+        // 加入sourceId给回调参数
+        if(this.curSourceId){
+            data[&apos;sourceId&apos;] = this.curSourceId;
+        }
+
+        if(this.handlers[type] instanceof Array){
+            var handlers = this.handlers[type];
+            for(var i=0, len=handlers.length; i&lt;len; i++){
+                handlers[i](data);
+            }
+        }
+    }
+};
+</code></pre><p>这里对<code>on</code>不做改变，<code>this.handlers</code>还是原来的<code>{ eventType1: [ function(){} ]}</code>格式。在<code>fire</code>内部，在handlers回调前，把当前的<code>this.curSourceId</code>（当前打开SchoolBox的触发元素ID）也塞到回调参数data中。</p>
+<p>这里同样要为SchoolBox的<code>show</code>和<code>hide</code>方法里加入<code>curSourceId</code>的判断，代码同<a href="#section-1">从监听上入手</a>。</p>
+<p>然后应用层具体的回调函数中只需要加入对<code>sourceId</code>的判断。</p>
+<pre><code>// 监听自定义事件
+schoolBox.on(&apos;schoolChosen&apos;, function(data){
+    if(data.sourceId){
+        var $source = $(&apos;#&apos; + data.sourceId);
+        $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
+        $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
+    }
+});
+
+$(&apos;.choose-school&apos;).click(function(event){
+    schoolBox.show($(this).attr(&apos;id&apos;));
+});
+</code></pre><p>在回调时找到“打开SchoolBox”的触发元素，然后只对相应的元素做出响应。正如事件委托比“为所有子元素都绑定事件”要好一样，这里“在回调时判断”也比“在监听时判断”效率要高。</p>
+<p><a href="/demo/SchoolBox/v10/demo.html">学校选择器v10 Demo</a></p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>这个系列的文章从第1篇到现在第8篇，前后跨度2个半月，而最早在项目中做这部分功能已经是半年前了。经过这段反复审视代码和写博客的过程，自己得到了不少的提高，把以前看书看别人博客所记下的一堆零碎的知识融合了起来。也正是这个项目和这个博客，在我找实习面试的时候帮我加了很多分。</p>
+<p>我会继续坚持走下去，回头看看走过的路和踩过的坑。谢谢~~（本系列完结）</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/web组件/" rel="tag"># web组件</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/04/some-interview-questions-of-css.html" rel="next" title="几道CSS面试题">
+                <i class="fa fa-chevron-left"></i> 几道CSS面试题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/04/some-interview-questions-of-javascript-1.html" rel="prev" title="几道JS面试题-基础篇">
+                几道JS面试题-基础篇 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题来源"><span class="nav-number">1.</span> <span class="nav-text">问题来源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从监听上入手"><span class="nav-number">2.</span> <span class="nav-text">从监听上入手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#看起来是没错"><span class="nav-number">3.</span> <span class="nav-text">看起来是没错</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反思"><span class="nav-number">3.1.</span> <span class="nav-text">反思</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在回调时判断"><span class="nav-number">4.</span> <span class="nav-text">在回调时判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后"><span class="nav-number">5.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1706 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="泛型编程,Mooctest,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="慕测平台（简称mooctest），这个项目致力于编程类考试和练习的服务平台，教师可以轻松监管考试流程，学生可以自由练习编程。系统负责编程练习的自动化评估及可视化展现，配合当下红火的MOOC慕课课程，慕测平台将是学生自学编程的好帮手。目前已支持的编程类型有：Java覆盖测试，Java测试驱动编程，Python统计编程，C++编程，Jmeter性能测试，以及Android应用测试。之所以叫“mooct">
+<meta name="keywords" content="泛型编程,Mooctest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mooctest项目总结">
+<meta property="og:url" content="http://jsorz.cn/blog/2016/01/project-guideline-of-mooctest.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="慕测平台（简称mooctest），这个项目致力于编程类考试和练习的服务平台，教师可以轻松监管考试流程，学生可以自由练习编程。系统负责编程练习的自动化评估及可视化展现，配合当下红火的MOOC慕课课程，慕测平台将是学生自学编程的好帮手。目前已支持的编程类型有：Java覆盖测试，Java测试驱动编程，Python统计编程，C++编程，Jmeter性能测试，以及Android应用测试。之所以叫“mooct">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160124_01.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160124_02.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160124_03.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160124_04.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160124_05.png">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.840Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mooctest项目总结">
+<meta name="twitter:description" content="慕测平台（简称mooctest），这个项目致力于编程类考试和练习的服务平台，教师可以轻松监管考试流程，学生可以自由练习编程。系统负责编程练习的自动化评估及可视化展现，配合当下红火的MOOC慕课课程，慕测平台将是学生自学编程的好帮手。目前已支持的编程类型有：Java覆盖测试，Java测试驱动编程，Python统计编程，C++编程，Jmeter性能测试，以及Android应用测试。之所以叫“mooct">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20160124_01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2016/01/project-guideline-of-mooctest.html">
+
+
+
+
+
+  <title>mooctest项目总结 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2016/01/project-guideline-of-mooctest.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mooctest项目总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-24T00:00:00+08:00">
+                2016-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发/" itemprop="url" rel="index">
+                    <span itemprop="name">开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://mooctest.net" target="_blank" rel="noopener">慕测平台</a>（简称mooctest），这个项目致力于编程类考试和练习的服务平台，教师可以轻松监管考试流程，学生可以自由练习编程。系统负责编程练习的自动化评估及可视化展现，配合当下红火的MOOC慕课课程，慕测平台将是学生自学编程的好帮手。目前已支持的编程类型有：Java覆盖测试，Java测试驱动编程，Python统计编程，C++编程，Jmeter性能测试，以及Android应用测试。之所以叫“mooctest”是因为“测试”是我们的主打产品，其中Java覆盖测试、Java Debug分析，以及Android应用测试是我们的核心服务。我们帮助高校的教“软件测试”的老师便捷地组织在线考试，帮助高校的学生接触到工业界真实的app案例，以提高学生的testing能力。</p>
+<a id="more"></a>
+<h2 id="项目概况"><a href="#项目概况" class="headerlink" title="项目概况"></a>项目概况</h2><ul>
+<li><a href="http://mooctest.net" target="_blank" rel="noopener">mooctest</a>于2014.8月下旬开始启动项目，最初开发者只有2位</li>
+<li>2014.11月，完成考试管理平台的基础建设，以及Java覆盖测试的客户端，开始第一轮内测</li>
+<li>2014.12月，参加项目原型展示，收集第二轮内测</li>
+<li>2015.1月，添加对Java覆盖测试的考题分析功能</li>
+<li>2015.3月，正式上线，与网易云课堂合作，开设<a href="http://mooc.study.163.com/course/NJU-1000031001#/info" target="_blank" rel="noopener">《概率论与数理统计》</a>慕课课程，由<a href="http://mooctest.net" target="_blank" rel="noopener">mooctest</a>系统提供“Python统计编程”练习</li>
+<li>2015.5月，项目扩张，不断添加新科目，Java测试驱动编程，Jmeter性能测试，以及Android应用测试也有了雏形</li>
+<li>2015.7月，Android应用测试独立成<a href="http://kikbug.net" target="_blank" rel="noopener">Kikbug系统</a>，完成和<a href="http://mooctest.net" target="_blank" rel="noopener">mooctest</a>系统的对接</li>
+<li>2015.9月，Android应用测试与“阿里”达成合作，获得企业内测的真实app</li>
+<li>2015.10月，正式在南京大学、东南大学、南京邮电大学、南通大学、大连理工等重点高校试点，作为其“软件测试”课程的白盒测试（以Java覆盖测试为例）和黑盒测试（以Android应用测试为例）的练习和考试平台</li>
+<li>2015.11月，再次与网易云课堂合作，开设<a href="http://mooc.study.163.com/course/NJU-1000112002#/info" target="_blank" rel="noopener">《开发者测试》</a>微专业课程，由<a href="http://mooctest.net" target="_blank" rel="noopener">mooctest</a>系统提供“Java覆盖测试”和“Debug调试”的练习</li>
+<li>2015.12月，联合“阿里云测”以及<a href="https://testerhome.com" target="_blank" rel="noopener">TesterHome</a>举办<a href="https://testerhome.com/topics/3873" target="_blank" rel="noopener">阿里云测找 bug 大赛</a>，圆满落幕！</li>
+<li>截至目前，<a href="http://mooctest.net" target="_blank" rel="noopener">mooctest</a>平台上已有近1万名学生和400名老师，来自全国各地500多个高校！</li>
+</ul>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><p>我作为“码农”，还是来说说我更擅长的事，总结下这个项目的技术选型以及组织结构，以便为今后的项目作参考。</p>
+<p>整体上我们就采用了基于Java的<a href="https://www.playframework.com/documentation/1.2.x/home" target="_blank" rel="noopener">Play Framework 1.2.7</a>的版本，之后出的<code>2.0.x</code>以上的版本是基于SCALA的，和<code>1.x.x</code>完全不是一个东西。而Play框架对“从Java学起的软院学生”来说非常友好，比起 Struts 和 Spring 省去了很多繁琐的xml配置和Annotation配置。综合学习成本和项目定位，Play框架是性价比很高的选择。</p>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p>后台部分</p>
+<ul>
+<li>lib/ 存放各种外部jar包</li>
+<li>conf/ Play框架配置文件的目录<ul>
+<li>application.conf 项目系统设置：debug设置、session设置、server设置、数据库设置等，也可存放自定义的系统级变量设置</li>
+<li>routes 路由(url)配置</li>
+<li>messages.en 多语言支持的字典文件(英文)</li>
+<li>messages.zh_CN 多语言支持的字典文件(中文)</li>
+</ul>
+</li>
+<li>app/ Play里叫这个，相当于普通project里的src目录<ul>
+<li>common/ 存放一些项目中用到的定义的常量或枚举量<ul>
+<li>Constants.java 通用常量</li>
+<li>ExamType.java 某个自定义类型的常量</li>
+</ul>
+</li>
+<li>controllers/ MVC中的控制器层，以角色名开头，命名区分；注：只负责request和resonpse，不负责具体业务逻辑<ul>
+<li>AdmAccountController.java 管理员角色的Account模块</li>
+<li>TeaExamController.java 教师角色的Exam模块</li>
+<li>StuExamController.java 学生角色的Exam模块</li>
+</ul>
+</li>
+<li>managers/ 具体业务逻辑的包装，供controller调用<ul>
+<li>admin/ 供管理员角色的</li>
+<li>student/ 供学生角色的</li>
+<li>teacher/ 供教师角色的</li>
+<li>application/ 供系统通用的</li>
+<li>interfaces/ 供对外API的</li>
+</ul>
+</li>
+<li>models/ 与数据库对应的Model，用来做ORM(Object Relational Mapping)</li>
+<li>dao/ 封装对数据库model的原子操作，其中每个具体model的DAO类都继承GenericDao<ul>
+<li>GenericDao.java 泛型DAO，提供通用的增删改查操作</li>
+<li>ExamDao.java 具体的跟Exam相关的DAO</li>
+</ul>
+</li>
+<li>data.structure/ 跟前台交互约定的非数据库model的数据类型<ul>
+<li>Pagination.java 跟分页相关的数据类型</li>
+<li>WrappedExam.java 对Exam结果的包装，方便前台交互</li>
+</ul>
+</li>
+<li>utils/ helper方法<ul>
+<li>application/ 跟应用相关的util<ul>
+<li>DataUtil.java 跟应用和模块相关的数据结构转换方法</li>
+<li>ParamUtil.java 负责处理request的参数转换方法</li>
+<li>ResponseUtil.java 负责对response结果的转换方法</li>
+<li>SessionUtil.java 封装对session的操作和转换方法</li>
+<li>VcodeUtil.java 封装对验证码的操作方法</li>
+</ul>
+</li>
+<li>data/ 跟通用数据相关的util<ul>
+<li>EncryptionUtil.java 加解密处理的转换方法</li>
+<li>ExcelUtil.java 封装对excel格式转换的方法</li>
+</ul>
+</li>
+<li>file/ 跟文件操作相关的util</li>
+<li>mail/ 跟收发邮件相关的util</li>
+</ul>
+</li>
+<li>jobs/ 定时任务相关</li>
+<li>extensions/ 对页面模板语法的扩展</li>
+<li>views/ 前台页面模板，见下面</li>
+</ul>
+</li>
+</ul>
+<p>前台部分</p>
+<ul>
+<li>app/views/<ul>
+<li>Base/ 页面继承的父页面模板<ul>
+<li>base_outer.html 不需要登录的页面父模板</li>
+<li>base_inner.html 需要登录的页面父模板</li>
+<li>base_admin.html 管理员角色的页面父模板，继承自base_inner.html</li>
+<li>base_teacher.html 教师角色的页面父模板，继承自base_inner.html</li>
+</ul>
+</li>
+<li>Application/ 存放不需要登录的页面</li>
+<li>class、exam、exercise 等具体功能包的页面</li>
+<li>tags/ 自定义页面标签的模板，相当于需要被include的页面子块<ul>
+<li>examView.html 管理员和教师都需要用到此页面块，供复用</li>
+<li>passwordView.html 个人资料页面和忘记密码页面都需要用到此页面块</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>public/ 存放前端资源的目录<ul>
+<li>css/<ul>
+<li>common/ 存放应用所有页面通用的css</li>
+<li>bootstrap/ 主题库相关</li>
+<li>jquery-ui/ 主题库相关</li>
+<li>tablesorter/ 插件相关</li>
+<li>others/ 其他小插件的css</li>
+<li>class、exam 等具体功能包的css</li>
+</ul>
+</li>
+<li>file/ 存放页面上供下载的静态文件</li>
+<li>svg/ 存放编程题目源程序控制流图的svg文件</li>
+<li>images/ 存放css的图片<ul>
+<li>bootstrap/ 主题库相关的图片</li>
+<li>jquery-ui/ 主题库相关的图片</li>
+<li>others/ 其他小插件的图片</li>
+</ul>
+</li>
+<li>js/<ul>
+<li>common/ 存放页面通用的js，或者可复用的js</li>
+<li>bootstrap/ 主题库的js</li>
+<li>jquery-ui/ 主题库的js</li>
+<li>tablesorter/ 插件的js</li>
+<li>others/ 其他小插件的js</li>
+<li>class、exam 等具体功能包的js</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据库与ORM"><a href="#数据库与ORM" class="headerlink" title="数据库与ORM"></a>数据库与ORM</h2><p>本系统中使用 MySQL 数据库，Play框架中使用JPA提供ORM(Object Relational Mapping)的功能。</p>
+<p>一个简单的Model类定义如下</p>
+<pre><code>import javax.persistence.*;
+import play.db.jpa.Model;
+
+@Entity
+@Table(name=&quot;exam&quot;)
+public class Exam extends Model {
+
+    @Column(name=&quot;exam_name&quot;)
+    private String examName;
+
+    @ManyToOne
+    @JoinColumn(name=&quot;tea_id&quot;, referencedColumnName=&quot;id&quot;)
+    private Teacher teacher;
+
+    public String getExamName() {
+        return examName;
+    }
+    public void setExamName(String examName) {
+        this.examName = examName;
+    }
+    public Teacher getTeacher() {
+        return teacher;
+    }
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+}
+</code></pre><p>也是通过简单的Annotation来配置数据库字段和成员变量的对应关系，以及一对多/多对多的关系。注意，这里不需要给<code>Exam</code>添加额外的<code>id</code>字段了，因为在<code>Model</code>父类中已经由JPA自带了<code>id</code>字段，格式为<code>Long</code>，所以数据库表里定义id字段时要注意设置“自增”和<code>int(32)</code>。</p>
+<h2 id="DAO事务与泛型编程"><a href="#DAO事务与泛型编程" class="headerlink" title="DAO事务与泛型编程"></a>DAO事务与泛型编程</h2><p>如上面定义了<code>Exam</code>类后，该Model就被注入了JPA提供的增删改查操作了，为了防止职责乱用，我们统一约定由DAO层来封装数据库事务。这样<code>Exam</code>就会有个<code>ExamDao</code>，<code>Teacher</code>就会有个<code>TeacherDao</code>，我们会发现简单的增删改查对所有Model都适用的，为了避免简单操作方法的重复，我们引入“泛型Dao”的概念。</p>
+<p>我在以前的文章中写过关于<a href="/blog/2015/02/generic-dao-for-jpa.html">JPA泛型DAO</a>，需要定义一个泛型的<code>GenericDao</code>类，提供通用的增删改查操作。</p>
+<pre><code>public abstract class GenericDao&lt;T, PK extends Serializable&gt; {
+
+    private Class&lt;T&gt; clazz;
+
+    public GenericDao(){
+        // 反射获取T.class，实参类型
+        clazz = (Class&lt;T&gt;)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    public T findById(PK id){
+        return (T) JPA.em().find(clazz, id);
+    }
+
+    public List&lt;T&gt; findByColumn(String columnName , Object value){
+        String[] columnNames = new String[1];
+        Object[] values = new Object[1];
+
+        columnNames[0] = columnName;
+        values[0] = value;
+
+        return findByColumns(columnNames , values);
+    }
+
+    public List&lt;T&gt; findByColumns(String[] columnNames , Object[] value){
+        String sqlPart = &quot;&quot;;
+        for (int columnIdx = 0 ; columnIdx &lt; columnNames.length ; columnIdx++){
+            sqlPart += &quot;e.&quot; + columnNames[columnIdx] + &quot; = &apos;&quot; + value[columnIdx].toString() + &quot;&apos;&quot;;
+            if (columnIdx &lt; columnNames.length - 1){
+                sqlPart += &quot; and &quot;;
+            }
+        }
+
+        return (List&lt;T&gt;) JPA.em().createQuery(&quot;select e from &quot; + clazz.getName() + &quot; e where &quot; + sqlPart).getResultList();
+    }
+}
+</code></pre><p>而具体Model都有具体的Dao去继承它</p>
+<pre><code>public class ExamDao extends GenericDao&lt;Exam, Long&gt; {
+
+    public Exam findByTeaIdAndExamName(long teaId, String examName) {
+        String[] columns = {&quot;teacher.id&quot; , &quot;examName&quot;};
+        Object[] values = {teaId , examName};
+        List&lt;Exam&gt; list = this.findByColumns(columns, values);
+
+        if (list != null &amp;&amp; list.size() &gt; 0){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public List&lt;Exam&gt; findByTeaOpenid(String teaOpenid) {
+        return this.findByColumn(&quot;teacher.teaOpenid&quot;, teaOpenid);
+    }
+}
+</code></pre><p>关于<code>GenericDao</code>的更多细节请看<a href="/blog/2015/02/generic-dao-for-jpa.html">JPA泛型DAO</a></p>
+<h2 id="后端MVC框架"><a href="#后端MVC框架" class="headerlink" title="后端MVC框架"></a>后端MVC框架</h2><p>从上面的项目结构中已经看到，后端调用层次结构为 <code>Controller</code>-&gt;<code>Manager</code>-&gt;<code>Dao</code>-&gt;<code>Model</code>，<code>Controller</code>最终拿到<code>Model</code>数据传给前端页面，可见这是伪MVC。更准确来说是“分层”结构：上层可以调用下层，下层不能调用上层；同时上层也不能跨层调用。</p>
+<p>我们这里说框架的MVC，更着重于<code>Controller</code>怎么和页面<code>View</code>挂钩起来，并不太涉及<code>Model</code>的事，这里就需要路由(url)配置。</p>
+<h3 id="route配置规范"><a href="#route配置规范" class="headerlink" title="route配置规范"></a>route配置规范</h3><pre><code># 非登录的页面
+GET        /                                        Application.index
+GET        /faq/{category}/{sub}                    Application.{category}{sub}FAQ
+
+# 登录和注册
+POST    /login                                    LoginController.login
+
+# 角色的功能模块
+*        /tea/{action}                            TeacherController.{action}
+*       /tea/exam/{action}                        TeaExamController.{action}
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+</code></pre><p>路由配置支持定义请求方式<code>GET</code> or <code>POST</code>，也可以使用通配符，注意对于“更改”操作一定要使用<code>POST</code>，这是http的规范。url和<code>Controller</code>中的方法一一对应，并且支持变量替代，减少相似的配置条目。</p>
+<h2 id="前端页面继承与复用"><a href="#前端页面继承与复用" class="headerlink" title="前端页面继承与复用"></a>前端页面继承与复用</h2><p>对于前端页面模板，Play框架里同样支持页面继承，Play中使用<a href="https://www.playframework.com/documentation/1.2.x/templates" target="_blank" rel="noopener">Groovy模板引擎</a>。关于页面继承细节可看这篇文章<a href="/blog/2015/12/twisted-way-to-awesome-fe.html#页面继承">前端要给力 — 平凡之路</a>，虽然里面是以Django框架的模板引擎为例，但是原理相同，模板语法略有不同而已。</p>
+<h2 id="前端UI组件的沉淀"><a href="#前端UI组件的沉淀" class="headerlink" title="前端UI组件的沉淀"></a>前端UI组件的沉淀</h2><p>在mooctest这个项目中，前端总体上用页面继承和<a href="https://www.playframework.com/documentation/1.2.x/templates#tags" target="_blank" rel="noopener">自定义页面tags</a>来组织。虽然项目起步时偷懒没有引入<a href="/blog/2015/12/twisted-way-to-awesome-fe.html#模块化开发">RequireJS</a>来组织js，但最终还是拎出了不少js组件，使用最朴素的js类定义和jquery插件的写法来封装代码。</p>
+<h3 id="1、动态图表"><a href="#1、动态图表" class="headerlink" title="1、动态图表"></a>1、动态图表</h3><p><img src="/images/captures/20160124_01.png"></p>
+<p>使用<a href="http://www.hcharts.cn" target="_blank" rel="noopener">Highcharts</a>作图表库，由于项目中大部分图表都是动态从后端取数据的，所以在Highcharts上面封装了一层ajax过程，并且将各图表配置options做了剥离。具体细节可见下面这篇文章：</p>
+<ul>
+<li><a href="/blog/2015/02/ajax-chart-for-highcharts.html">为Highcharts做包装</a></li>
+</ul>
+<h3 id="2、分页插件"><a href="#2、分页插件" class="headerlink" title="2、分页插件"></a>2、分页插件</h3><p><img src="/images/captures/20160124_02.png"></p>
+<p>这是一个jquery插件，可自动生成带“滑动窗口”的分页数目，可支持分页直接刷新页面，或者可自行配置ajax分页替换函数。具体细节可见下面这篇文章：</p>
+<ul>
+<li><a href="/blog/2015/03/step-by-step-jquery-plugin-pagination-1.html">自己写的jquery分页插件</a></li>
+</ul>
+<h3 id="3、学校选择器"><a href="#3、学校选择器" class="headerlink" title="3、学校选择器"></a>3、学校选择器</h3><p><img src="/images/captures/20160124_03.png"></p>
+<p>这是mooctest项目中最复杂的一个前端功能，并且有多处地方需要编辑学校，需要提供搜索和自定义添加学校的功能。具体实现细节可见下面这个系列文章：</p>
+<ul>
+<li><a href="/blog/2015/02/step-by-step-js-component-schoolbox-collections.html">一步步做组件-学校选择器(系列)</a></li>
+</ul>
+<p>这是系列长文，讲述了如何把一段生硬实现的代码一步一步封装和扩展成为一个可配置的UI组件！</p>
+<h2 id="多语言的支持"><a href="#多语言的支持" class="headerlink" title="多语言的支持"></a>多语言的支持</h2><p>前端部分讲完了，我们最后再看个和前端略有挂钩的需求，就是多语言支持。要在首页提供中文和英文的选项，并且默认使用系统语言。</p>
+<h3 id="系统语言判断"><a href="#系统语言判断" class="headerlink" title="系统语言判断"></a>系统语言判断</h3><pre><code>public class Application extends Controller {
+
+    static final String DEFAULT_LANGUAGE = &quot;zh_CN&quot;;
+
+    @Before
+    static void setGlobalLang(){
+        // langAction会将lang存入session
+        String lang = SessionUtil.getLang(session);
+        if(lang == null){
+            // 获取浏览器系统语言
+            List&lt;String&gt; langs = request.acceptLanguage();
+            for(String temp : langs){
+                // 浏览器发送的为 zh-CN
+                if(temp.contains(&quot;zh&quot;)){
+                    temp = DEFAULT_LANGUAGE;
+                }
+                if(Play.langs.contains(temp)){
+                    lang = temp;
+                    break;
+                }
+            }
+            if(lang == null){
+                lang = DEFAULT_LANGUAGE;
+            }
+            // 更新到session
+            SessionUtil.putLang(session, lang);
+        }
+        Lang.set(lang);
+    }
+}
+</code></pre><p>这里使用Play框架里的<strong>拦截器</strong>的概念，即上面Annotation的<code>@Before</code>，使得每个页面的action都会先执行<code>setGlobalLang</code>。语言的判断顺序为：先取session里存的语言，再取浏览器request头里传来的系统支持语言，都取不到时再提供个默认语言。</p>
+<p>此外，还需为首页的中英文切换再提供个额外的action</p>
+<pre><code>public class Application extends Controller {
+
+    /** 多语言 */
+    public static void langAction(){
+        String lang = params.get(&quot;lang&quot;);
+        setLang(lang);
+        index(&quot;&quot;);
+    }
+
+    static void setLang(String lang){
+        if(lang == null || !Play.langs.contains(lang)){
+            lang = DEFAULT_LANGUAGE;
+        }
+        // 更新到session
+        SessionUtil.putLang(session, lang);
+        Lang.set(lang);
+    }
+}
+</code></pre><h3 id="语言字典"><a href="#语言字典" class="headerlink" title="语言字典"></a>语言字典</h3><p>在本文最初提到的项目<a href="#section-2">目录结构</a>中就有关于messages的文件，<code>messages.zh_CN</code>和<code>messages.en</code>就是中英文的字典文件。</p>
+<p>Play框架在这一点方面做的比较简陋，好像一个语言只能有一个字典文件，因此我们需要使用“命名空间”的概念进行分组管理。</p>
+<pre><code>#key格式：页面名.[groupName].xxx
+#通用页面   common.[groupName].xxx
+
+#首页
+################################
+index.links.guide = GUIDE
+index.links.download = DOWNLOADS
+</code></pre><p>这里配置了英文文案，同样也要在<code>messages.zh_CN</code>文件里配置相同key的中文文案。</p>
+<h3 id="后端返回文案"><a href="#后端返回文案" class="headerlink" title="后端返回文案"></a>后端返回文案</h3><p>如果要在后端的<code>Controller</code>里向前端返回错误文案，多语言的支持得使用 <code>play.i18n.Messages</code></p>
+<pre><code>// import play.i18n.Messages;
+
+// 这里的文案key与上面的语言字典中保持一致
+Messages.get(&quot;LoginController.accountNotExist&quot;)
+</code></pre><h3 id="前端的文案"><a href="#前端的文案" class="headerlink" title="前端的文案"></a>前端的文案</h3><p>在前端的页面模板中，直接使用 <code>&amp;{&#39;common.browserTitles.mooctest&#39;}</code> 就可使用语言字典中的key</p>
+<p>但是Play框架只会对模板文件做处理，对其注入通用变量和后端数据，模板文件其实是由后端负责渲染(转成标准html)的。由后端处理的页面模板中可以任意使用 <code>&amp;{&#39;your_text_key&#39;}</code> 语言标记，但是这在<code>.js</code>文件中是不被支持的。</p>
+<p>我们需要在所有页面的base父页面中定义一个内联script，事先定义好所有<code>.js</code>中需要使用到的文案。</p>
+<pre><code>&lt;!-- 全局多语言文案，供通用js使用 --&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+window.LANG_TEXT = {
+    OK: &quot;&amp;{&apos;common.btn.ok&apos;}&quot;,
+    CANCEL: &quot;&amp;{&apos;common.btn.cancel&apos;}&quot;,
+    DONE: &quot;&amp;{&apos;common.btn.done&apos;}&quot;
+};
+&lt;/script&gt;
+</code></pre><p>内联script是在模板文件中的，可以被Play框架处理，于是语言文案就被存在了全局<code>window</code>里。在具体功能的<code>.js</code>文件中可以直接使用<code>window.LANG_TEXT</code>变量。</p>
+<h2 id="邮件队列与定时任务"><a href="#邮件队列与定时任务" class="headerlink" title="邮件队列与定时任务"></a>邮件队列与定时任务</h2><p>最后我再来说一个后端额外的小功能，发送邮件，由第三方EDM(Email Direct Marketing)商提供服务。</p>
+<h3 id="EDM服务购买"><a href="#EDM服务购买" class="headerlink" title="EDM服务购买"></a>EDM服务购买</h3><p>可以在网上找到很多这样的EDM服务商，有的是专门做企业短信和邮件营销的，也有的是域名主机和服务都做的。我这儿就不打广告了，自行找一家有点规模的稳定一点的EDM服务商即可。</p>
+<h3 id="域名配置"><a href="#域名配置" class="headerlink" title="域名配置"></a>域名配置</h3><p>买好EDM账号后，在EDM管理平台上就可发邮件了，但是它们默认会给你分配一个带 <a href="mailto:`edm04621@service.xxx.com" target="_blank" rel="noopener">`edm04621@service.xxx.com</a>` 类似这样的邮箱。这种邮箱发出来的邮件十有八九会被扔进垃圾箱或者被拦截掉，因此我们要配置自己域名的邮箱。</p>
+<p>设置一个域名的mx、txt和cname记录，以example.com域为例：</p>
+<pre><code>edm.example.com CNAME edm.edmcn.cn
+edm.example.com MX sender.f.wsztest.com
+edm.example.com TXT v=spf1 include:spf.ezcdn.cn ~all
+</code></pre><p>域名解析成功后，就可在EDM管理平台使用自己域名验证过的邮箱地址了，比如叫<a href="mailto:`service@edm.mooctest.net" target="_blank" rel="noopener">`service@edm.mooctest.net</a>`，就可以大大减少邮件被扔进垃圾箱的概率。</p>
+<h3 id="SMTP接口"><a href="#SMTP接口" class="headerlink" title="SMTP接口"></a>SMTP接口</h3><p>上面的配置都完成后，确保在EDM管理平台上可以成功发邮件后，就可以去申请开通EDM-SMTP服务。在程序中可以通过<code>javax.mail</code>库去建立邮件Transport协议。</p>
+<pre><code>import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Properties;
+
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
+
+import common.Constants;
+
+public class SimpleMailSender {
+
+    private static final String SMTP_EDM = &quot;smtp.trigger.edmcn.cn&quot;;
+
+    private final transient Properties props = System.getProperties();
+    private transient MailAuthenticator authenticator;
+    private transient Session session;
+
+    public SimpleMailSender(final String smtpHostName, final String username,
+        final String password) {
+        init(username, password, smtpHostName);
+    }
+
+    public SimpleMailSender(final String username, final String password) {
+        String smtpHost;
+        // EDM帐号
+        if(isEDM(username)){
+            smtpHost = SMTP_EDM;
+        }
+        else{
+            smtpHost = &quot;smtp.&quot; + username.split(&quot;@&quot;)[1];
+        }
+
+        init(username, password, smtpHost);
+    }
+
+    private void init(String username, String password, String smtpHostName) {
+        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);
+        props.put(&quot;mail.smtp.host&quot;, smtpHostName);
+        authenticator = new MailAuthenticator(username, password);
+        session = Session.getInstance(props, authenticator);
+    }
+
+    private boolean isEDM(String account){
+        if(account.startsWith(&quot;edmc&quot;) &amp;&amp; !account.contains(&quot;@&quot;)){
+            return true;
+        }
+        return false;
+    }
+
+    private InternetAddress getSenderAddress() throws AddressException, UnsupportedEncodingException{
+        if(isEDM(authenticator.getUsername())){
+            return new InternetAddress(Constants.EDM_SENDER_ADDRESS, Constants.EDM_SENDER_NAME);
+        }
+        return new InternetAddress(authenticator.getUsername(), Constants.DEFAULT_SENDER_NAME);
+    }
+
+    public void send(List&lt;String&gt; recipients, String subject, Object content)
+        throws AddressException, MessagingException, UnsupportedEncodingException {
+        final MimeMessage message = new MimeMessage(session);
+        message.setFrom(getSenderAddress());
+
+        final int num = recipients.size();
+        InternetAddress[] addresses = new InternetAddress[num];
+        for (int i = 0; i &lt; num; i++) {
+            addresses[i] = new InternetAddress(recipients.get(i));
+        }
+        message.setRecipients(RecipientType.TO, addresses);
+
+        message.setSubject(subject);
+        message.setContent(content.toString(), &quot;text/html;charset=utf-8&quot;);
+        Transport.send(message);
+    }
+}
+</code></pre><h3 id="队列设计"><a href="#队列设计" class="headerlink" title="队列设计"></a>队列设计</h3><p>使用过EDM发送邮件的人会知道，就算我们配置了自己域名的邮箱地址，在使用SMTP协议发送时，也会遇到频率过快，或者对方邮箱拒收，等失败情况。因此我们要设计一套容错和重试的机制。</p>
+<pre><code>import javax.persistence.*;
+import play.db.jpa.Model;
+
+@Entity
+@Table(name=&quot;email_task&quot;)
+public class EmailTask extends Model {
+    @Column(name=&quot;receiver&quot;)
+    private String receiver;
+
+    @Column(name=&quot;subject&quot;)
+    private String subject;
+
+    @Column(name=&quot;content&quot;)
+    private String content;
+
+    @Column(name=&quot;try_times&quot;)
+    private Integer tryTimes;
+
+    public EmailTask(){
+        // default
+        this.tryTimes = 0;
+    }
+    // 省略getter和setter
+}
+</code></pre><p>如本文上面提到的<a href="#orm">数据库与ORM</a>所述，这里设计一个<code>EmailTask</code>的Model，记录下收件人、主题和正文内容，再额外存个<code>tryTimes</code>字段。这里我们可以规定，当重试3次仍失败后，就忽略该邮件任务。</p>
+<p>当发送立即邮件时，比如“忘记密码”的邮件，直接使用上面的<code>SimpleMailSender</code>发送邮件，如果失败，则将邮件信息存成<code>EmailTask</code>存到数据库。而当发送非立即的邮件时，比如通知类的邮件，只需将邮件内容生成<code>EmailTask</code>对象存到数据库，供定时任务来调度。</p>
+<h3 id="立即任务与定时任务"><a href="#立即任务与定时任务" class="headerlink" title="立即任务与定时任务"></a>立即任务与定时任务</h3><p>上面的邮件队列设计中所说的“立即邮件”和“非立即邮件”，其实就是“立即任务”和“定时任务”。在Play框架中有<a href="https://www.playframework.com/documentation/1.2.x/jobs" target="_blank" rel="noopener">Jobs</a>来实现任务调度。</p>
+<pre><code>import play.jobs.Job;
+
+public class InstantMailJob extends Job {
+
+    private static EmailTaskDao taskDao = new EmailTaskDao();
+
+    private String receiver;
+    private String subject;
+    private String content;
+
+    public InstantMailJob(String receiver, String subject, String content){
+        this.receiver = receiver;
+        this.subject = subject;
+        this.content = content;
+    }
+
+    public void doJob(){
+        try {
+            MailJobUtil.sendMail(receiver, subject, content);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(&quot;Send mail error for receiver &quot; + receiver);
+
+            // 发送失败，加入task，待下次再发
+            EmailTask task = new EmailTask();
+            task.setReceiver(receiver);
+            task.setSubject(subject);
+            task.setContent(content);
+            // 已失败1次
+            task.setTryTimes(1);
+
+            taskDao.save(task);
+        }
+    }
+}
+</code></pre><p>这就是“立即邮件”任务的Job，得 override <code>doJob</code>方法，邮件发送失败的话就加入<code>EmailTask</code>。使用时如下调用即可</p>
+<pre><code>new InstantMailJob(receiver, subject, content).now();
+</code></pre><p>而对于“非立即邮件”任务，要使用Play框架的定时任务Job，并且设置间隔时间。</p>
+<pre><code>import play.jobs.Every;
+import play.jobs.Job;
+
+@Every(&quot;1mn&quot;)
+public class BackgroundMailJob extends Job {
+
+    private static EmailTaskDao taskDao = new EmailTaskDao();
+
+    public void doJob(){
+        // 避免邮件服务器异常，一次只发前10个
+        List&lt;EmailTask&gt; tasks = taskDao.getTopTasks();
+
+        for(EmailTask task : tasks){
+            try {
+                MailJobUtil.sendMail(task.getReceiver(), task.getSubject(), task.getContent());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(&quot;Send mail error for receiver &quot; + task.getReceiver());
+
+                // 把当前任务加到队尾
+                EmailTask failedTask = new EmailTask();
+                failedTask.setReceiver(task.getReceiver());
+                failedTask.setSubject(task.getSubject());
+                failedTask.setContent(task.getContent());
+                // 累计失败次数
+                failedTask.setTryTimes(task.getTryTimes() + 1);
+
+                taskDao.save(failedTask);
+            }
+
+            // 删除成功的任务
+            taskDao.remove(task);
+        }
+    }
+}
+</code></pre><p>同样也要 override <code>doJob</code>方法，但这里还得设置任务周期 <code>@Every(&quot;1mn&quot;)</code>，这个有点类似linux中的crontab。我这里设置了每1分钟执行一次任务，为了避免邮件SMTP调用频率太快而失败，每次执行Job时只取队列中前几个<code>EmailTask</code>。</p>
+<h3 id="邮件统计数据"><a href="#邮件统计数据" class="headerlink" title="邮件统计数据"></a>邮件统计数据</h3><p>这是一开始在EDM管理平台上批量发送邮件的统计数据，发现软退率不低，查看邮局统计后发现是QQ邮箱普遍网关拦截。</p>
+<p><img src="/images/captures/20160124_04.png"></p>
+<p>而下面是使用了EDM-SMTP协议和邮件队列发送的结果统计，可见成功率稍微高一点。倒数第二条记录软退很高，是因为几乎都是QQ邮箱！</p>
+<p><img src="/images/captures/20160124_05.png"></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>项目能坚持做下去不容易，写文章更不容易，对自己是个总结，也希望可以帮到更多的人。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/泛型编程/" rel="tag"># 泛型编程</a>
+          
+            <a href="/tags/Mooctest/" rel="tag"># Mooctest</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2016/01/multi-git-repo-config.html" rel="next" title="多仓库git配置">
+                <i class="fa fa-chevron-left"></i> 多仓库git配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2016/03/blackholes-in-node-crawler.html" rel="prev" title="nodejs爬虫实现中遇到的坑">
+                nodejs爬虫实现中遇到的坑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目概况"><span class="nav-number">1.</span> <span class="nav-text">项目概况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目结构"><span class="nav-number">2.</span> <span class="nav-text">项目结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目录结构"><span class="nav-number">2.1.</span> <span class="nav-text">目录结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库与ORM"><span class="nav-number">3.</span> <span class="nav-text">数据库与ORM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DAO事务与泛型编程"><span class="nav-number">4.</span> <span class="nav-text">DAO事务与泛型编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后端MVC框架"><span class="nav-number">5.</span> <span class="nav-text">后端MVC框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#route配置规范"><span class="nav-number">5.1.</span> <span class="nav-text">route配置规范</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前端页面继承与复用"><span class="nav-number">6.</span> <span class="nav-text">前端页面继承与复用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前端UI组件的沉淀"><span class="nav-number">7.</span> <span class="nav-text">前端UI组件的沉淀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、动态图表"><span class="nav-number">7.1.</span> <span class="nav-text">1、动态图表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、分页插件"><span class="nav-number">7.2.</span> <span class="nav-text">2、分页插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、学校选择器"><span class="nav-number">7.3.</span> <span class="nav-text">3、学校选择器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多语言的支持"><span class="nav-number">8.</span> <span class="nav-text">多语言的支持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#系统语言判断"><span class="nav-number">8.1.</span> <span class="nav-text">系统语言判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语言字典"><span class="nav-number">8.2.</span> <span class="nav-text">语言字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端返回文案"><span class="nav-number">8.3.</span> <span class="nav-text">后端返回文案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前端的文案"><span class="nav-number">8.4.</span> <span class="nav-text">前端的文案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#邮件队列与定时任务"><span class="nav-number">9.</span> <span class="nav-text">邮件队列与定时任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#EDM服务购买"><span class="nav-number">9.1.</span> <span class="nav-text">EDM服务购买</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#域名配置"><span class="nav-number">9.2.</span> <span class="nav-text">域名配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMTP接口"><span class="nav-number">9.3.</span> <span class="nav-text">SMTP接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列设计"><span class="nav-number">9.4.</span> <span class="nav-text">队列设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#立即任务与定时任务"><span class="nav-number">9.5.</span> <span class="nav-text">立即任务与定时任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#邮件统计数据"><span class="nav-number">9.6.</span> <span class="nav-text">邮件统计数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">10.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

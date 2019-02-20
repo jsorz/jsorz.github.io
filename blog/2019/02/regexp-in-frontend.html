@@ -1,0 +1,1288 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="正则,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="在笔者学生时代，一直单纯地认为正则都是后端老哥的事儿，前端只要 split 一把梭就够了。万不得已的时候就网上搜几段正则代码，copy 一下也能用。  这是维基百科上正则表达式的词条，截图只截了一屏，事实上这张正则表达式的表格两个屏幕都装不下。。。我第一次查的时候立马就弃了，于是很长一段时间里都在原地踏步，只会用用 ^ $ . *  最初见到正则表达式是在表单验证里，多少会用些 validate">
+<meta name="keywords" content="正则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端为什么要会正则表达式">
+<meta property="og:url" content="http://jsorz.cn/blog/2019/02/regexp-in-frontend.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="在笔者学生时代，一直单纯地认为正则都是后端老哥的事儿，前端只要 split 一把梭就够了。万不得已的时候就网上搜几段正则代码，copy 一下也能用。  这是维基百科上正则表达式的词条，截图只截了一屏，事实上这张正则表达式的表格两个屏幕都装不下。。。我第一次查的时候立马就弃了，于是很长一段时间里都在原地踏步，只会用用 ^ $ . *  最初见到正则表达式是在表单验证里，多少会用些 validate">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20190220_regexp_grammar.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20190220_find_replace.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20190220_back_tracking.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20190220_look_ahead.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20190220_multi_line.png">
+<meta property="og:updated_time" content="2019-02-20T03:06:27.160Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端为什么要会正则表达式">
+<meta name="twitter:description" content="在笔者学生时代，一直单纯地认为正则都是后端老哥的事儿，前端只要 split 一把梭就够了。万不得已的时候就网上搜几段正则代码，copy 一下也能用。  这是维基百科上正则表达式的词条，截图只截了一屏，事实上这张正则表达式的表格两个屏幕都装不下。。。我第一次查的时候立马就弃了，于是很长一段时间里都在原地踏步，只会用用 ^ $ . *  最初见到正则表达式是在表单验证里，多少会用些 validate">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20190220_regexp_grammar.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2019/02/regexp-in-frontend.html">
+
+
+
+
+
+  <title>前端为什么要会正则表达式 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2019/02/regexp-in-frontend.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端为什么要会正则表达式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-20T00:00:00+08:00">
+                2019-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发/" itemprop="url" rel="index">
+                    <span itemprop="name">开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在笔者学生时代，一直单纯地认为正则都是后端老哥的事儿，前端只要 split 一把梭就够了。万不得已的时候就网上搜几段正则代码，copy 一下也能用。</p>
+<p><img src="/images/captures/20190220_regexp_grammar.png"></p>
+<p>这是维基百科上<a href="https://zh.wikipedia.org/wiki/正则表达式" target="_blank" rel="noopener">正则表达式</a>的词条，截图只截了一屏，事实上这张正则表达式的表格两个屏幕都装不下。。。我第一次查的时候立马就弃了，于是很长一段时间里都在原地踏步，只会用用 <code>^</code> <code>$</code> <code>.</code> <code>*</code> </p>
+<p>最初见到正则表达式是在表单验证里，多少会用些 validate 的库，基本的电话 / 邮箱之类的校验都有现成的，真正自己写正则去校验输入格式的机会并不多。后来渐渐发觉正则表达式的魔力，它可以是前端工程师的一把利器。</p>
+<a id="more"></a>
+<h2 id="日常琐事"><a href="#日常琐事" class="headerlink" title="日常琐事"></a>日常琐事</h2><p>1、老项目迁移，所有的 <code>T.dom.getElementById(&#39;abc&#39;)</code> 代码都要改成新的写法 <code>$(&#39;#abc&#39;)</code></p>
+<p>2、组件库升级，所有的 <code>&lt;el-dialog v-model=&quot;a&quot;</code> 必须改成 <code>&lt;el-dialog :visible.sync=&quot;a&quot;</code></p>
+<p>都是真实工作中的脏活累活，故事 1 中的项目有近 100 个页面，由于 T 库弃用了，不仅 <code>T.dom.getElementById</code> 还有 getElementByClass 等等调用都要改成 jquery 的写法。如果完全靠人肉，那是多么的苦力。</p>
+<p>故事 2 中的组件库其实就是我们的 Element，我们原先很多项目都是 Element 1.x，要升级到 2.x，这个对话框的 breaking change 影响还挺大的，在 2.x 中通过 <code>v-model</code> 是无法唤起对话框的。因此要确保每个 <code>el-dialog</code> 都检查一遍，而模板代码里 <code>el-dialog</code> 的 <code>v-model</code> 可能不在第一个，属性多的时候还会换行，都需要火眼金睛。</p>
+<p>聪明的读者肯定知道，靠人肉是个没有办法的办法，而且看多了也会眼花，最好还要 double check。虽然写正则表达式去找，也不能保证 100% 都覆盖，毕竟老项目里各种迷之代码都有，但正则能帮我们找出大部分，并且 replace 的时候也能避免输入错误，这样可以把精力放在 double check 上。</p>
+<h2 id="正则起源"><a href="#正则起源" class="headerlink" title="正则起源"></a>正则起源</h2><p>正则表达式源于形式语言与自动机理论，关于形式化的内容不是本文的重点，感兴趣的朋友可以去 <a href="https://zh.wikipedia.org/wiki/正则表达式" target="_blank" rel="noopener">wiki</a> 上查。</p>
+<p>正则引擎的基础就是状态机，在编译原理中你一定会听说 NFA (非确定有限状态自动机) 与 DFA (确定有限状态自动机)，关于 NFA / DFA 通俗的解释可以参考<a href="https://juejin.im/post/5becc2aef265da6110369c93" target="_blank" rel="noopener">这篇文章</a>。</p>
+<p>正则表达式最早在 Unix 中的 sed 和 grep 命令中开始普及。如果你用过 <code>sed &quot;s/aaa/bbb/&quot;</code> 的话，其实可以写正则表达式来做更复杂的文本处理。</p>
+<p>而在编程语言中，Perl 是第一个实现正则表达式引擎的语言。目前大部分语言都使用基于 NFA 的正则引擎。</p>
+<h2 id="怎么学正则"><a href="#怎么学正则" class="headerlink" title="怎么学正则"></a>怎么学正则</h2><p>笔者走了一些弯路，先在实战中写正则，不会写就查正则的语法表，渐渐地大部分语法也就都记住了，需要查表的也越来越少了。其实我觉得正确的学习方式应该先完整地看一本入门书籍，对整体有宏观把控后，再在实战中反复练习和查表，回头再重看书，这样的记忆应该最深。</p>
+<p>如果你还在为正则表达式的语法而健忘的话，推荐一本<a href="https://book.douban.com/subject/2269648/" target="_blank" rel="noopener">《正则表达式必知必会》</a>，这本书只有 100 页，一个周末就能看完。以后再查语法表的时候，就会越来越有规律可循。</p>
+<p>正则表达式的语法可分为这几大类</p>
+<ul>
+<li>匹配字符</li>
+<li>匹配位置</li>
+<li>重复与贪婪</li>
+<li>分组与捕获</li>
+<li>前后断言</li>
+</ul>
+<p>本文并不介绍正则表达式语法，只通过实际工作的例子来说明正则的用途。可以先根据以上几个分类，在<a href="https://www.baidufe.com/item/eb10deb92f2c05ca32cf.html" target="_blank" rel="noopener">正则表达式的语法表</a>里再过一遍。</p>
+<h3 id="1、URL里的暗号"><a href="#1、URL里的暗号" class="headerlink" title="1、URL里的暗号"></a>1、URL里的暗号</h3><p>在公司的开发环境中，一般都会有两套以上的测试环境，如 alpha 和 beta 环境。而在前端页面，我们通常使用不同的 URL 来区分，例如 <code>jack.alpha.domain.com</code> 与 <code>jack.beta.domain.com</code> 分别对应 alpha 和 beta 环境，而 <code>jack.domain.com</code> 则是生产环境。问题来了，前端代码是同一份，它需要根据当前 hostname 所属的环境来调用不同环境的接口。</p>
+<p>当然这个问题也是 split 一把梭就能解决的，但这并不优雅。回到正则表达式上，我们先分析需求，假设公司一级域名只有 <code>domain.com</code> 的，那么这个问题就是提取 appid (例子中的 jack) 与 <code>.domain.com</code> 中间的部分。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="regexp">/\w+\.(\w+\.)?domain.com/</span>;</span><br><span class="line"><span class="keyword">var</span> match = <span class="string">'jack.alpha.domain.com'</span>.match(reg);</span><br><span class="line"><span class="built_in">console</span>.log(match[<span class="number">1</span>]); <span class="comment">// alpha.</span></span><br></pre></td></tr></table></figure>
+<p>如上代码的正则表达式中，关键是 <code>(\w+\.)?</code> 这段，它表示匹配零次或一次，并且小括号是分组，可在 match 的结果中直接捕获到分组里的值。</p>
+<p>补充1：分组里拿到的结果是 <code>alpha.</code>，多了个 <code>.</code> 不走心，怎么把它去掉呢？可以改成 <code>((\w+)\.)?</code> 这样 <code>alpha</code> 就要在第 2 组捕获里拿到了，因为第 1 组仍是 <code>alpha.</code></p>
+<p>补充2：试试 <code>(?:(\w+)\.)?</code> 这里 <code>(?:)</code> 表示不产生分组号，于是仍可在第 1 组捕获中拿到 <code>alpha</code></p>
+<p>补充3：<code>\w</code> 匹配字母数字和下划线，如果你的 hostname 中包含其他字符，比如扩充成 <code>[\w-]</code> 就可以包含中划线 <code>-</code></p>
+<p>补充4：加入公司的一级域名有多个，那也可以对 <code>domain.com</code> 再进行扩充。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="regexp">/\w+\.(?:(\w+)\.)?(domain|abc|xyz).com/</span>;</span><br><span class="line"><span class="keyword">var</span> match = <span class="string">'jack.alpha.domain.com'</span>.match(reg);</span><br><span class="line"><span class="built_in">console</span>.log(match[<span class="number">1</span>]); <span class="comment">// alpha</span></span><br><span class="line">match = <span class="string">'jack.domain.com'</span>.match(reg)</span><br><span class="line"><span class="built_in">console</span>.log(match[<span class="number">1</span>]); <span class="comment">// undefined (分组捕获不到则表示生产环境)</span></span><br></pre></td></tr></table></figure>
+<p>正则表达式的书写是逐步细化的，还是要先分析好需求，写的不多余。</p>
+<h3 id="2、引号替换"><a href="#2、引号替换" class="headerlink" title="2、引号替换"></a>2、引号替换</h3><p>在一些老项目里 JavaScript 代码经常存在单引号双引号混用，很不规范，让以后的维护者看着很累。虽然现在我们都会使用 ESLint 来自动修复，还是想举这个例子来作为正则表达式的一个 case</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"a"</span>: &#123;</span><br><span class="line">    <span class="string">"a1"</span>: <span class="string">"a1"</span>,</span><br><span class="line">    <span class="string">"a2"</span>: &#123;</span><br><span class="line">      <span class="string">"b1"</span>: <span class="string">'b1'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">'b'</span>: <span class="string">"b"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在希望把这段 JSON 对象改成 key 不带引号，value 都为单引号。观察下这份数据，key 和 value 都有单引号和双引号，于是我的想法是先把所有双引号改成单引号，然后再把 key 的单引号去掉。</p>
+<p>双引号 → 单引号，我第一次写出来是这样的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">replace(<span class="regexp">/"(.*)"/g</span>, <span class="string">'$1'</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/captures/20190220_find_replace.png" style="max-width: 300px"></p>
+<p>大部分 IDE 的 find-replace 功能都支持写正则，不妨可以试试看，上面这段正则有什么问题。</p>
+<p><code>.*</code> 也匹配了双引号，上面 <code>&quot;a1&quot;:&quot;a1&quot;</code> 被 <code>&quot;.*&quot;</code> 匹配了，这是典型的过度匹配。解决办法是使用 <code>[^&quot;]*</code> 或者使用 <code>.*?</code> 以表示尽可能少的重复。这就说到了正则表达式中的贪婪与惰性。</p>
+<p><img src="/images/captures/20190220_back_tracking.png" style="max-width: 750px"></p>
+<p>图片示例来自<a href="https://zhuanlan.zhihu.com/p/29707385" target="_blank" rel="noopener">《JavaScript 正则表达式迷你书》</a></p>
+<p>上面这张图解释了正则引擎的匹配过程，正则表达式是 <code>&quot;.*&quot;</code>，待匹配的字符串是 <code>&quot;abc&quot;de</code></p>
+<ul>
+<li>第 1 步，初始化，当前状态指向正则中的第1个 <code>&quot;</code>，并且开始读取待匹配字符串。</li>
+<li>第 2 步，发现正则中的第1个 <code>&quot;</code> 正好能匹配字符串。</li>
+<li>第 3 步，当前状态指向正则中的 <code>.*</code>，并且读取字符串的指针也向前移动，巧了，<code>a</code> 也被匹配上了。</li>
+<li>第 4 ~ 8 步，真香真香，<code>.*</code> 一直匹配到字符串末尾了！坑了，我这正则 <code>.*</code> 后面还有个 <code>&quot;</code> 要怎么办？</li>
+<li>第 9 步，读取字符串的指针回退一格。这就是正则匹配中的回溯。</li>
+<li>第 10 步，回退完发现正则最后的 <code>&quot;</code> 还是没法匹配 <code>e</code>，于是继续回退。</li>
+<li>第 11 步，回退完还是不能匹配，再回退。</li>
+<li>第 12 步，现在读取字符串的指针在 <code>&quot;</code> 上，不容易，终于匹配上了！</li>
+</ul>
+<p>上述过程中，<code>.*</code> 是贪婪的，一开始会把字符串里的 <code>abc&quot;de</code> 都匹配进去，然后正则发现这是条死路，再一步步回退，直到正则能够继续匹配下去。这个过程就是 NFA 中的回溯法。</p>
+<p>而当使用了惰性模式后，如将 <code>.*</code> 改成 <code>.*?</code>，它会尽可能少地匹配。不妨试下以下两个例子，观察两个分组里捕获到的内容。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'12345'</span>.match(<span class="regexp">/(\d&#123;1,3&#125;)(\d&#123;2&#125;)/</span>)</span><br><span class="line"><span class="string">'12345'</span>.match(<span class="regexp">/(\d&#123;1,3&#125;?)(\d&#123;2&#125;)/</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="3、字符串去重"><a href="#3、字符串去重" class="headerlink" title="3、字符串去重"></a>3、字符串去重</h3><p>你可能在算法题里也见过字符串去重，去掉字符串中重复的字符。本文这里不讨论算法，想说明通过正则表达式也能判断用户的输入里有无重复字符。这里需要先学习正则里的几个武器。</p>
+<h4 id="反向引用-back-reference"><a href="#反向引用-back-reference" class="headerlink" title="反向引用 (back reference)"></a>反向引用 (back reference)</h4><p>简单说就是在一个正则表达式中引用一个分组的子表达式。举个 HTML 标签的例子，如果要匹配 <code>&lt;h1&gt;&lt;/h1&gt;</code> 标签，可以这么写 <code>/&lt;(h[1-6])&gt;[\s\S]*&lt;\/\1&gt;/</code> 这个正则可以匹配任意合法的 h 标签，其中 <code>\1</code> 就代表第 1 个分组的反向引用，否则就得为 h1 ~ h6 各写一个表达式就很累赘。反向引用的关键在于前面要先有分组，否则 <code>\1</code> 是无效的。</p>
+<h4 id="先行断言-look-ahead-后行断言-look-behind"><a href="#先行断言-look-ahead-后行断言-look-behind" class="headerlink" title="先行断言 (look ahead)  / 后行断言 (look behind)"></a>先行断言 (look ahead)  / 后行断言 (look behind)</h4><p>先行断言的语法形式为 <code>/c(?=a)/</code>，表示匹配 a 左边的 c。为了避免与断言中的「前」和 「后」混淆，这里就用「a 左边的 c」来表达。</p>
+<p><img src="/images/captures/20190220_look_ahead.png" style="max-width: 250px"></p>
+<p>先行断言有些地方也叫「前瞻断言」或「前向查找」，想象你自己就是一个指针，扫描字符串的过程就像指针在向前移动。</p>
+<p>先行断言也有其否定形式，叫做先行否定断言，如 <code>/c(?!a)/</code>，即匹配「非a」左边的 c，其实这与 <code>/c(?=[^a])/</code> 效果相同，感兴趣的朋友可以自己试试。</p>
+<p>所有的正则引擎都支持先行断言和先行否定断言。到了 ES2018 才支持后行断言，细节可参考 <a href="http://es6.ruanyifeng.com/#docs/regex#后行断言" target="_blank" rel="noopener">ECMAScript 6 入门的正则章节</a>。</p>
+<p>尤其需要提一点的是，<strong>断言中的文本不会包含在最终的匹配结果里</strong>，怎么理解呢？<code>/c(?=a)/</code> 只会匹配 <code>c</code>，<code>(?=a)</code> 既不会产生分组，也不会出现在 match 函数的结果中，可以试下 <code>&#39;cat&#39;.match(/c(?=a)/)</code>。容易犯的错误是不小心写成了 <code>/c(?=a)t/</code> 那就 GG 了，这是个永远不可能匹配的正则表达式。</p>
+<p>现在我们回到字符串去重的问题上，用上面的武器很容易想到，用先行断言配合反向引用。直观上的理解就是自己作为一个扫描指针，先往前面看，在远处能不能找到和当前脚下相同的字符。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'abcdaccd'</span>.replace(<span class="regexp">/(.)(?=.*?\1)/g</span>, <span class="string">''</span>) <span class="comment">// bacd</span></span><br></pre></td></tr></table></figure>
+<p>上面的字符串用正则替换后为什么是 bacd，不应该是 abcd 么？因为 <code>/(.)(?=.*?\1)/</code> 匹配的是第1个 <code>.</code>，断言并不会出现在匹配结果里，所以理解起来就是扫描指针在当前位置时，先往前面看，如果有看到相同的字符，就把当前脚下的字符替换成空。</p>
+<p>如果想让替换后的结果是 abcd 该怎么写正则呢？显然要用后行断言，就是扫描指针在当前位置时，往身后看，如果有看到相同的字符，就把当前脚下的字符替换成空。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'abcdaccd'</span>.replace(<span class="regexp">/(.)(?&lt;=\1.*?\1)/g</span>, <span class="string">''</span>) <span class="comment">// abcd</span></span><br></pre></td></tr></table></figure>
+<p>看到这个正则可能又困惑了，后行断言难道不都是 <code>/(?&lt;=y)x/</code> 这么写的么？这就是黑科技了，因为用到反向引用，就得保证正则表达式中要先出现分组，所以 <code>/(?&lt;=\1.*?\1)(.)/</code> 这种表达式里的 <code>\1</code> 是无效的。</p>
+<p>注：此法来自<a href="https://zhuanlan.zhihu.com/p/54615672" target="_blank" rel="noopener">正则实现数组滤重</a></p>
+<h3 id="4、定制-vue-单文件模板"><a href="#4、定制-vue-单文件模板" class="headerlink" title="4、定制 .vue 单文件模板"></a>4、定制 .vue 单文件模板</h3><p>最近在做微信小程序，每个页面都必须写 wxml / wxss / js / json 这 4 个文件，当项目里页面多的时候文件就巨多无比。假如没有用任何开发框架，可以自己定制一个单文件模板，有点类似 .vue 文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;view&gt;&lt;/view&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script type=&quot;json&quot;&gt;</span><br><span class="line">&#123;</span><br><span class="line">  usingComponents: &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">Page(&#123;</span><br><span class="line">  // ...</span><br><span class="line">&#125;);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang=&quot;stylus&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<p>现在我们的目标是把这个文件拆成模板、样式、js 和 json 配置对应的 4 个文件，抛弃原来的 split 大法或者逐行读文件，正则表达式可以帮我们优雅地解决问题。</p>
+<h4 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a>修饰符</h4><p>在前面的正则表达式中见到了 <code>/.*/g</code>，其中的最后那个 <code>g</code>  就是正则表达式的修饰符。</p>
+<p>常用的修饰符有</p>
+<ul>
+<li><code>i</code> ：ignore case</li>
+<li><code>m</code> ：multiline</li>
+<li><code>g</code> ：global</li>
+</ul>
+<p>很好记，合起来 <code>img</code>，ES6 中又新增了几种修饰符，细节可参考 <a href="http://es6.ruanyifeng.com/#docs/regex#u-修饰符" target="_blank" rel="noopener">ECMAScript 6 入门的正则章节</a>。</p>
+<h4 id="多行模式-multiline"><a href="#多行模式-multiline" class="headerlink" title="多行模式 (multiline)"></a>多行模式 (multiline)</h4><p>上面这个问题需要用到正则表达式中的多行模式，因为要在代码文件中做匹配，肯定涉及到换行。</p>
+<p>当使用了 <code>m</code> 修饰符后，多行模式下会更改 <code>^</code> 和 <code>$</code> 的含义，使它们分别在任意一行的行首和行尾匹配，而不是整个字符串的开头和结尾。</p>
+<p><img src="/images/captures/20190220_multi_line.png" style="max-width: 250px"></p>
+<p>回到刚才的问题，如何提取 <code>&lt;template&gt;&lt;/template&gt;</code> 标签之间的内容，首先会想到 <code>/&lt;template&gt;(.*)&lt;\/template&gt;/m</code>，然而可以试试发现不行。这是因为 <code>.</code> 匹配的是除 <code>\r</code> <code>\n</code> 之外的任何单个字符，并不是所有任意字符。所以正则表达式需要改成 <code>/&lt;template&gt;([\s\S]*)&lt;\/template&gt;/m</code>，分组中捕获的就是标签之间的内容。</p>
+<p>同理，匹配 <code>&lt;style&gt;</code> 标签里的样式，可以写出 <code>/&lt;style(?:\s+lang=&quot;(\w+)&quot;)?&gt;([\s\S]*?)&lt;\/style&gt;/mg</code> 其中 <code>&lt;style(?:\s+lang=&quot;(\w+)&quot;)?&gt;</code> 可以同时匹配 <code>&lt;style&gt;</code> 与 <code>&lt;style lang=&quot;stylus&quot;&gt;</code>，并且可以从分组捕获中拿到 lang 属性的值。另外要提的是，.vue 文件里可能会写多个 <code>&lt;style&gt;</code>，所以这个正则表达式中要使用 <code>m</code> 和 <code>g</code> 两个修饰符，并且在标签内容的里要使用 <code>[\s\S]*?</code> 以表示惰性（尽可能少的匹配）。</p>
+<p>最后就是区分 <code>&lt;script&gt;</code> 标签了，在我们定制的模板中，存在着 <code>&lt;script type=&quot;json&quot;&gt;</code> 这是我们自己约定的写 JSON 配置的地方，而普通的 <code>&lt;script&gt;</code> 或 <code>&lt;script type=&quot;text/javascript&quot;&gt;</code> 则是写 JavaScript 代码。用先行否定断言，可以写出 <code>/&lt;script(?!\s+type=&quot;json&quot;).*?&gt;([\s\S]*?)&lt;\/script&gt;/m</code> 来提取 JavaScript 代码。这里可以体会下，如果前面半段写成 <code>/&lt;script(?!\s+type=&quot;json&quot;)&gt;/</code> 的话，就无法匹配到 <code>&lt;script type=&quot;text/javascript&quot;&gt;</code> 了。</p>
+<h2 id="正则中的黑洞"><a href="#正则中的黑洞" class="headerlink" title="正则中的黑洞"></a>正则中的黑洞</h2><p>正则表达式中也有天坑，那就是 ReDos 正则表达式里的 Deny of Service。可以试试如下代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'aaaaaaaaaaaaaaaaaaaaaaaab'</span>.match(<span class="regexp">/^(a+)+$/</span>)</span><br><span class="line"><span class="string">'aaaaaaaaaaaaaaaaaaaaaaaaaab'</span>.match(<span class="regexp">/^(a+)+$/</span>)</span><br><span class="line"><span class="string">'aaaaaaaaaaaaaaaaaaaaaaaaaaaab'</span>.match(<span class="regexp">/^(a+)+$/</span>)</span><br><span class="line"><span class="string">'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaab'</span>.match(<span class="regexp">/^(a+)+$/</span>)</span><br></pre></td></tr></table></figure>
+<p>你会发现每行字符串仅仅增加了 2 个字母，但 match 语句的耗时越来越长。当字符串长到一定程序时，就会导致正则匹配的语句一直不返回，这就是 ReDos。</p>
+<p>ReDos 出现的原因就是正则匹配时的回溯算法，在上文引号替换例子里的图片就解释了回溯的过程。当正则表达式中出现有“歧义”的片段时，如 <code>/(a+)+/</code>，字符串里的 <code>a</code> 既可以匹配 <code>a+</code>，又可以匹配 <code>(a+)+</code>，这就会导致回溯变多。随着字符串长度的增加，回溯次数会呈指数级增长，终将导致 Deny of Service。</p>
+<p>可能出现 ReDos 的正则表达式通常包含以下几种模式</p>
+<ul>
+<li><code>(a+)+</code></li>
+<li><code>([a-zA-Z]+)*</code></li>
+<li><code>(a|aa)+</code></li>
+<li><code>(a|a?)+</code></li>
+<li><code>(.*a)*</code></li>
+</ul>
+<p>可以看出它们都有“歧义”的特点，平时书写正则表达式的时候尤其要留意嵌套的 <code>*</code> 和 <code>+</code></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正则表达式是前端工程师的一把利器，也是值得每个程序员掌握的。本文抛砖引玉，主要想说明正则表达式在前端中有着很多应用场景，而不仅仅是纯粹的表单验证。</p>
+<p>正则表达式的语法看着多而复杂，但只要从语法的功能分类入手，平时多写多运用，就能很快克服语法的记忆负担。书写正则表达式的过程也体现着思考的过程，正则的细化也就是需求的细化。</p>
+<p>最后再次推荐入门书籍<a href="https://book.douban.com/subject/2269648/" target="_blank" rel="noopener">《正则表达式必知必会》</a>，以及正则表达式的可视化工具 <a href="https://jex.im/regulex" target="_blank" rel="noopener">regulex</a>。</p>
+<p>参考资料</p>
+<p><a href="https://zhuanlan.zhihu.com/p/29707385" target="_blank" rel="noopener">《JavaScript 正则表达式迷你书》</a></p>
+<p><a href="http://es6.ruanyifeng.com/#docs/regex" target="_blank" rel="noopener">ECMAScript 6 入门的正则章节</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/54615672" target="_blank" rel="noopener">正则实现数组滤重</a></p>
+<p><a href="https://www.freebuf.com/articles/network/124422.html" target="_blank" rel="noopener">浅析ReDoS的原理与实践</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/46294360" target="_blank" rel="noopener">一个由正则表达式引发的血案（解决版）</a></p>
+<p><a href="https://juejin.im/post/5becc2aef265da6110369c93" target="_blank" rel="noopener">一次性搞懂JavaScript正则表达式之引擎</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/正则/" rel="tag"># 正则</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2018/12/interesting-event-loop.html" rel="next" title="“滑稽”的事件循环">
+                <i class="fa fa-chevron-left"></i> “滑稽”的事件循环
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#日常琐事"><span class="nav-number">1.</span> <span class="nav-text">日常琐事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则起源"><span class="nav-number">2.</span> <span class="nav-text">正则起源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么学正则"><span class="nav-number">3.</span> <span class="nav-text">怎么学正则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、URL里的暗号"><span class="nav-number">3.1.</span> <span class="nav-text">1、URL里的暗号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、引号替换"><span class="nav-number">3.2.</span> <span class="nav-text">2、引号替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、字符串去重"><span class="nav-number">3.3.</span> <span class="nav-text">3、字符串去重</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#反向引用-back-reference"><span class="nav-number">3.3.1.</span> <span class="nav-text">反向引用 (back reference)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#先行断言-look-ahead-后行断言-look-behind"><span class="nav-number">3.3.2.</span> <span class="nav-text">先行断言 (look ahead)  / 后行断言 (look behind)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、定制-vue-单文件模板"><span class="nav-number">3.4.</span> <span class="nav-text">4、定制 .vue 单文件模板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修饰符"><span class="nav-number">3.4.1.</span> <span class="nav-text">修饰符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多行模式-multiline"><span class="nav-number">3.4.2.</span> <span class="nav-text">多行模式 (multiline)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则中的黑洞"><span class="nav-number">4.</span> <span class="nav-text">正则中的黑洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

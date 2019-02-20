@@ -1,0 +1,1227 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="util,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="颜色模型是绘图的基础知识之一，除了用 RGB 表示颜色外，还有 CMY、HSV、HSL 等其他颜色模型。RGB 是用于电子设备显示的模型，CMY 是广泛用于印刷的颜色模型，而 HSV 更多是面向用户的颜色表达方式。">
+<meta name="keywords" content="util">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈HSV颜色模型">
+<meta property="og:url" content="http://jsorz.cn/blog/2016/09/color-model-hsv.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="颜色模型是绘图的基础知识之一，除了用 RGB 表示颜色外，还有 CMY、HSV、HSL 等其他颜色模型。RGB 是用于电子设备显示的模型，CMY 是广泛用于印刷的颜色模型，而 HSV 更多是面向用户的颜色表达方式。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_light_dispersion.jpg">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_rgb_colors.jpg">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_rgb_cube.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_cmy_colors.jpg">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_hsv_model.jpg">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_hsv_from_cube.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_rgb_to_hsv.png">
+<meta property="og:image" content="http://jsorz.cn/images/captures/20160922_hsv_to_rgb.png">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.841Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅谈HSV颜色模型">
+<meta name="twitter:description" content="颜色模型是绘图的基础知识之一，除了用 RGB 表示颜色外，还有 CMY、HSV、HSL 等其他颜色模型。RGB 是用于电子设备显示的模型，CMY 是广泛用于印刷的颜色模型，而 HSV 更多是面向用户的颜色表达方式。">
+<meta name="twitter:image" content="http://jsorz.cn/images/captures/20160922_light_dispersion.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2016/09/color-model-hsv.html">
+
+
+
+
+
+  <title>浅谈HSV颜色模型 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2016/09/color-model-hsv.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浅谈HSV颜色模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-22T00:00:00+08:00">
+                2016-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/绘图/" itemprop="url" rel="index">
+                    <span itemprop="name">绘图</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  颜色模型是绘图的基础知识之一，除了用 RGB 表示颜色外，还有 CMY、HSV、HSL 等其他颜色模型。RGB 是用于电子设备显示的模型，CMY 是广泛用于印刷的颜色模型，而 HSV 更多是面向用户的颜色表达方式。
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="颜色模型来源"><a href="#颜色模型来源" class="headerlink" title="颜色模型来源"></a>颜色模型来源</h2><p>颜色模型最早来自美术和打印领域。“三原色”就是一种颜色模型，它来自美术上的概念，指“红/黄/蓝”，因为这三种颜色的配合可以调出除了黑白以外的几乎所有颜色，故称为三原色。</p>
+<p>而在计算机/多媒体方面所说的“R/G/B”颜色模型其实是“三基色”，或者教科书上所说的“光的三原色”。红、绿、蓝三种光通过不同的组合，可以获得各种不同颜色光。而红、绿、蓝这三种光是无法用其他色光混合而成的，所以这三种色光叫做光的“三基色”。</p>
+<h3 id="物理解释"><a href="#物理解释" class="headerlink" title="物理解释"></a>物理解释</h3><p>物理课上学过光的色散，肯定见过下面这个图。</p>
+<p><img src="/images/captures/20160922_light_dispersion.jpg"></p>
+<p>可知白光是各种颜色的光叠加而成的，显然光的三原色是一种“加法”颜色模型。</p>
+<p>光的颜色是直接进入人的眼睛，而人看到各种物体的颜色，其实是物体反射出的光的颜色。即红色的物体只会反射红色的光，其他颜色的光都被它吸收了；而黑色的物体吸收了所有颜色的光，人看不到它的反射光，所以看到的是黑色。</p>
+<p>因此被物体吸收的颜色，其实是<code>所有颜色 - 物体反射的颜色</code>，当颜料叠加时，也遵从了<code>所有颜色 - Σ(反射的颜色)</code>，可以理解为一种“减法”颜色模型。</p>
+<h2 id="常用颜色模型"><a href="#常用颜色模型" class="headerlink" title="常用颜色模型"></a>常用颜色模型</h2><h3 id="RGB"><a href="#RGB" class="headerlink" title="RGB"></a>RGB</h3><p>即光的三原色，如下图。</p>
+<p><img src="/images/captures/20160922_rgb_colors.jpg"></p>
+<p>RGB 颜色模型可以理解为一个立方体的模型，R/G/B 分别代表三维坐标系中的 x/y/z 轴，而原点表示什么颜色都没有(即黑色)</p>
+<p><img src="/images/captures/20160922_rgb_cube.png"></p>
+<p>在计算机多媒体领域中，通常将 R/G/B 三个值标准化到 0~255 的整数区间上，因为这样一个颜色分量共有256个取值，正好可以用一个字节表示。这样 R/G/B 共可组成 <code>2^24</code> 种颜色，当然远远超过了人眼能够分辨的颜色数目。</p>
+<h3 id="CMY"><a href="#CMY" class="headerlink" title="CMY"></a>CMY</h3><p>第一节中提到的美术/印刷领域用的三原色，其实就是 CMY 颜色模型。</p>
+<p><img src="/images/captures/20160922_cmy_colors.jpg"></p>
+<p>在印刷领域也会用 CMYK 模型，表示青(Cyan)品红(Magenta)黄(Yellow)黑(BlacK)四种颜料，就是在 CMY 的基础上也将黑色作为基础颜色，因为打印时由品红、黄、青合成的黑色不够纯粹。</p>
+<p>从上面可以看到 CMY 和 RGB 的颜色合成图有点类似，<code>R</code>和<code>B</code>可以成<code>品红</code>。这里要说明下，RGB 颜色是越叠加越亮(越接近白色)，而 CMY 颜色是越叠加越暗(越接近黑色)，这就是“加法混色模型”和“减法混色模型”的区别。</p>
+<h3 id="HSV"><a href="#HSV" class="headerlink" title="HSV"></a>HSV</h3><p>HSV 使用六角锥体模型来表示 色调（Hue）、饱和度（Saturation）、明度（Value）。</p>
+<p><img src="/images/captures/20160922_hsv_model.jpg"></p>
+<p>用角度来表示色调<code>H</code>，取值范围为0°～360°，从红色开始按逆时针方向计算，红色为0°，绿色为120°，蓝色为240°。它们的补色是：黄色为60°，青色为180°，品红为300°。</p>
+<p>饱和度<code>S</code>表示颜色接近光谱色的程度，通常取值范围为0%～100%，值越大，颜色越饱和。而<code>S=0</code>时，只有灰度。</p>
+<p>明度<code>V</code>表示颜色明亮的程度，通常取值范围为 0%（黑）到 100%（白）</p>
+<blockquote>
+<p>HSV 模型的三维表示从 RGB 立方体演化而来。设想从 RGB 沿立方体对角线的白色顶点向黑色顶点观察，就可以看到立方体的六边形外形。六边形边界表示色彩，水平轴表示纯度，明度沿垂直轴测量。</p>
+</blockquote>
+<p><img src="/images/captures/20160922_hsv_from_cube.png"></p>
+<h3 id="HSL"><a href="#HSL" class="headerlink" title="HSL"></a>HSL</h3><p>HSL 和 HSV 很相似，它们都是面向用户的颜色模型，定义了：色调(色相)、饱和度、明度(亮度)。相信大家在调节电视或显示器屏幕颜色时都会看到这几个名词吧！</p>
+<p>关于更多 HSL 和 HSV 的区别请参见 <a href="https://zh.wikipedia.org/wiki/HSL%E5%92%8CHSV%E8%89%B2%E5%BD%A9%E7%A9%BA%E9%97%B4" target="_blank" rel="noopener">维基词条：HSL和HSV色彩空间</a></p>
+<h2 id="颜色模型转化"><a href="#颜色模型转化" class="headerlink" title="颜色模型转化"></a>颜色模型转化</h2><h3 id="RGB-to-HSV"><a href="#RGB-to-HSV" class="headerlink" title="RGB to HSV"></a>RGB to HSV</h3><p>由 RGB 转换为 HSV 时，设<code>max</code>为 r/g/b 中的最大值，<code>min</code>为 r/g/b 中的最小值。转换公式如下</p>
+<p><img src="/images/captures/20160922_rgb_to_hsv.png"></p>
+<p><strong>js 实现如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">rgb2hsv: function () &#123;</span><br><span class="line">    // 读取 rgb</span><br><span class="line">    var rgb = this.parseRgbArguments.apply(null, arguments);</span><br><span class="line">    var r = rgb.r;</span><br><span class="line">    var g = rgb.g;</span><br><span class="line">    var b = rgb.b;</span><br><span class="line"></span><br><span class="line">    // rgb 分量的最大最小值</span><br><span class="line">    var max;</span><br><span class="line">    var min;</span><br><span class="line"></span><br><span class="line">    if (r &gt; g) &#123;</span><br><span class="line">        max = Math.max(r, b);</span><br><span class="line">        min = Math.min(g, b);</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        max = Math.max(g, b);</span><br><span class="line">        min = Math.min(r, b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    var delta = max - min;</span><br><span class="line"></span><br><span class="line">    // hsv 分量</span><br><span class="line">    var v = max;</span><br><span class="line">    var s = (v === 0.0) ? 0.0 : delta / v;</span><br><span class="line">    var h;</span><br><span class="line"></span><br><span class="line">    if (s === 0.0) &#123;</span><br><span class="line">        h = 0.0;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        if (r === max) &#123;</span><br><span class="line">            h = 60.0 * (g - b) / delta;</span><br><span class="line">        &#125;</span><br><span class="line">        else if (g === max) &#123;</span><br><span class="line">            h = 120 + 60.0 * (b - r) / delta;</span><br><span class="line">        &#125;</span><br><span class="line">        else &#123;</span><br><span class="line">            h = 240 + 60.0 * (r - g) / delta;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 修正色调 ( 0~360 度)</span><br><span class="line">        if (h &lt; 0.0) &#123;</span><br><span class="line">            h += 360.0;</span><br><span class="line">        &#125;</span><br><span class="line">        if (h &gt; 360.0) &#123;</span><br><span class="line">            h -= 360.0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    h = Math.round(h);</span><br><span class="line">    s = Math.round(s * 255.0);</span><br><span class="line">    v = Math.round(v);</span><br><span class="line"></span><br><span class="line">    // avoid the ambiguity of returning different values for the same color</span><br><span class="line">    if (h === 360) &#123;</span><br><span class="line">        h = 0;</span><br><span class="line">    &#125;</span><br><span class="line">    // 注: s,v 分量值域为 0~255</span><br><span class="line">    return &#123;</span><br><span class="line">        h: h,</span><br><span class="line">        s: s,</span><br><span class="line">        v: v</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：因为<code>v = max(r,g,g)</code>，这里我将<code>v</code>和<code>s</code>也转到了<code>0~255</code>的区间上，而<code>h</code>的值域为<code>0~359</code>。</p>
+<h3 id="HSV-to-RGB"><a href="#HSV-to-RGB" class="headerlink" title="HSV to RGB"></a>HSV to RGB</h3><p>由HSV转换为RGB时，如果饱和度<code>s = 0</code>，则颜色是非彩色的，色调(Hue)是无意义的，此时<code>r=g=b=v(亮度)</code>。</p>
+<p>如果饱和度<code>s ≠ 0</code>，有如下的计算方式：</p>
+<p><img src="/images/captures/20160922_hsv_to_rgb.png"></p>
+<p><strong>js 实现如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">hsv2rgb: function () &#123;</span><br><span class="line">    // 读取 hsv</span><br><span class="line">    var hsv = this.parseHsvArguments.apply(null, arguments);</span><br><span class="line">    var h = hsv.h;</span><br><span class="line">    var s = hsv.s;</span><br><span class="line">    var v = hsv.v;</span><br><span class="line"></span><br><span class="line">    // rgb 分量</span><br><span class="line">    var r;</span><br><span class="line">    var g;</span><br><span class="line">    var b;</span><br><span class="line"></span><br><span class="line">    // 特殊处理</span><br><span class="line">    if (s === 0) &#123;</span><br><span class="line">        r = v;</span><br><span class="line">        g = v;</span><br><span class="line">        b = v;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        // 原始亮度</span><br><span class="line">        var value = v;</span><br><span class="line">        // s,v 分量归一化</span><br><span class="line">        var s = s / 255.0;</span><br><span class="line">        var v = v  / 255.0;</span><br><span class="line"></span><br><span class="line">        // 修正后的 h 分量</span><br><span class="line">        var hFix = (h === 360) ? 0 : h / 60;</span><br><span class="line">        var hIndex = Math.floor(hFix);</span><br><span class="line">        var hLeft = hFix - hIndex;</span><br><span class="line"></span><br><span class="line">        // v 分量转化的中间变量</span><br><span class="line">        var vs = v * s;</span><br><span class="line">        var vLeft  = value - value * s;</span><br><span class="line"></span><br><span class="line">        switch (hIndex) &#123;</span><br><span class="line">            case 0:</span><br><span class="line">                var vTemp = v - vs * (1 - hLeft);</span><br><span class="line">                r = Math.round(value);</span><br><span class="line">                g = Math.round(vTemp * 255.0);</span><br><span class="line">                b = Math.round(vLeft);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            case 1:</span><br><span class="line">                var vTemp = v - vs * hLeft;</span><br><span class="line">                r = Math.round(vTemp * 255.0);</span><br><span class="line">                g = Math.round(value);</span><br><span class="line">                b = Math.round(vLeft);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            case 2:</span><br><span class="line">                var vTemp  = v - vs * (1 - hLeft);</span><br><span class="line">                r = Math.round(vLeft);</span><br><span class="line">                g = Math.round(value);</span><br><span class="line">                b = Math.round(vTemp * 255.0);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            case 3:</span><br><span class="line">                var vTemp = v - vs * hLeft;</span><br><span class="line">                r = Math.round(vLeft);</span><br><span class="line">                g = Math.round(vTemp * 255.0);</span><br><span class="line">                b = Math.round(value);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            case 4:</span><br><span class="line">                var vTemp = v - vs * (1 - hLeft);</span><br><span class="line">                r = Math.round(vTemp * 255.0);</span><br><span class="line">                g = Math.round(vLeft);</span><br><span class="line">                b = Math.round(value);</span><br><span class="line">                break;</span><br><span class="line"></span><br><span class="line">            case 5:</span><br><span class="line">                var vTemp = v - vs * hLeft;</span><br><span class="line">                r = Math.round(value);</span><br><span class="line">                g = Math.round(vLeft);</span><br><span class="line">                b = Math.round(vTemp * 255.0);</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return &#123;</span><br><span class="line">        r: r,</span><br><span class="line">        g: g,</span><br><span class="line">        b: b</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>详见 <a href="/demo/ColorUtil/colorUtil.js">完整代码</a> 和 <a href="/demo/ColorUtil/testcase.html">测试用例</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li>在线转化工具：<a href="http://www.kmhpromo.com/rgbtopms/cmyktopantone.html" target="_blank" rel="noopener">http://www.kmhpromo.com/rgbtopms/cmyktopantone.html</a></li>
+<li>更多颜色模型：<a href="http://blog.ibireme.com/2013/08/12/color-model/" target="_blank" rel="noopener">http://blog.ibireme.com/2013/08/12/color-model/</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/util/" rel="tag"># util</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2016/08/code-patterns-of-css-layout.html" rel="next" title="常用模式片段之CSS布局篇">
+                <i class="fa fa-chevron-left"></i> 常用模式片段之CSS布局篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2016/10/code-patterns-of-dom-position.html" rel="prev" title="常用模式片段之元素偏移量">
+                常用模式片段之元素偏移量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#颜色模型来源"><span class="nav-number">1.</span> <span class="nav-text">颜色模型来源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理解释"><span class="nav-number">1.1.</span> <span class="nav-text">物理解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用颜色模型"><span class="nav-number">2.</span> <span class="nav-text">常用颜色模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RGB"><span class="nav-number">2.1.</span> <span class="nav-text">RGB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMY"><span class="nav-number">2.2.</span> <span class="nav-text">CMY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HSV"><span class="nav-number">2.3.</span> <span class="nav-text">HSV</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HSL"><span class="nav-number">2.4.</span> <span class="nav-text">HSL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#颜色模型转化"><span class="nav-number">3.</span> <span class="nav-text">颜色模型转化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RGB-to-HSV"><span class="nav-number">3.1.</span> <span class="nav-text">RGB to HSV</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HSV-to-RGB"><span class="nav-number">3.2.</span> <span class="nav-text">HSV to RGB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">3.3.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

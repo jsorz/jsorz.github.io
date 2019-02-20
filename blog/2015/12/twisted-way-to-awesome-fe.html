@@ -1,0 +1,1357 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="前端,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="一直想总结下自己摸打滚爬的前端经历，3年，从一个极讨厌前端的人，变成一个吃前端饭碗的人。没有人带过我，跌跌撞撞的缓慢前进，但我很喜欢分享，喜欢一起进步，这会是我以后一直乐意做的事情。">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端要给力 — 平凡之路">
+<meta property="og:url" content="http://jsorz.cn/blog/2015/12/twisted-way-to-awesome-fe.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="一直想总结下自己摸打滚爬的前端经历，3年，从一个极讨厌前端的人，变成一个吃前端饭碗的人。没有人带过我，跌跌撞撞的缓慢前进，但我很喜欢分享，喜欢一起进步，这会是我以后一直乐意做的事情。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.840Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端要给力 — 平凡之路">
+<meta name="twitter:description" content="一直想总结下自己摸打滚爬的前端经历，3年，从一个极讨厌前端的人，变成一个吃前端饭碗的人。没有人带过我，跌跌撞撞的缓慢前进，但我很喜欢分享，喜欢一起进步，这会是我以后一直乐意做的事情。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2015/12/twisted-way-to-awesome-fe.html">
+
+
+
+
+
+  <title>前端要给力 — 平凡之路 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2015/12/twisted-way-to-awesome-fe.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端要给力 — 平凡之路</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-14T00:00:00+08:00">
+                2015-12-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/吹水/" itemprop="url" rel="index">
+                    <span itemprop="name">吹水</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一直想总结下自己摸打滚爬的前端经历，3年，从一个极讨厌前端的人，变成一个吃前端饭碗的人。没有人带过我，跌跌撞撞的缓慢前进，但我很喜欢分享，喜欢一起进步，这会是我以后一直乐意做的事情。</p>
+<a id="more"></a>
+<h2 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h2><h3 id="娃娃学步"><a href="#娃娃学步" class="headerlink" title="娃娃学步"></a>娃娃学步</h3><ul>
+<li><a href="http://www.w3school.com.cn" target="_blank" rel="noopener">w3cschool</a>上的 html / css / javascript / 以及jquery教程，万事开头的第一步</li>
+</ul>
+<blockquote>
+<p>Say hello to the world!</p>
+</blockquote>
+<h3 id="小跑上路"><a href="#小跑上路" class="headerlink" title="小跑上路"></a>小跑上路</h3><ul>
+<li>jquery 轻松玩耍DOM和event</li>
+<li>jquery-ui 增强的UI组件</li>
+<li><a href="http://www.bootcss.com" target="_blank" rel="noopener">Bootstrap</a> 从此傻瓜式排版就能搞定</li>
+<li><a href="http://www.cnblogs.com/lhb25/p/30-free-bootstrap-templates.html" target="_blank" rel="noopener">Bootstrap 主题模板</a> and <a href="http://sudasuta.com/bootstrap-admin-templates.html" target="_blank" rel="noopener">管理系统模板</a> 快速搭建项目，简单，好看</li>
+</ul>
+<h3 id="遇上平衡木"><a href="#遇上平衡木" class="headerlink" title="遇上平衡木"></a>遇上平衡木</h3><p>在小跑上路的过程中，做出来的东西看起来很专业，注意是“看起来”。如果不理解真正的前端技能，那只能是看起来专业，内部结构还是乱糟糟的，或者是遇到bug不知道怎么调，东一句西一句，拆了东墙补西墙。这过程就像走在平衡木上，稍不留神就会摔下去。</p>
+<h4 id="首先要了解css的布局原理"><a href="#首先要了解css的布局原理" class="headerlink" title="首先要了解css的布局原理"></a>首先要了解css的布局原理</h4><ul>
+<li><a href="/blog/2015/03/css-box-model.html">盒模型</a></li>
+<li><a href="/blog/2015/03/css-position-model.html">定位模型</a></li>
+<li>有了布局的基本理论后，尝试去理解Boostrap里的栅格系统 <code>row</code> <code>col</code> <code>span2</code> 背后的style</li>
+</ul>
+<h4 id="js最重要的三点-闭包、原型、作用域"><a href="#js最重要的三点-闭包、原型、作用域" class="headerlink" title="js最重要的三点: 闭包、原型、作用域"></a>js最重要的三点: 闭包、原型、作用域</h4><ul>
+<li><a href="/blog/2015/03/closure-in-js.html">JS中的闭包及使用场合</a></li>
+<li><a href="/blog/2015/03/apply-closure-to-forloop.html">使用闭包解决循环引用问题</a></li>
+<li><a href="/blog/2015/04/some-interview-questions-of-javascript-2.html">闭包、原型、作用域 面试整理</a></li>
+</ul>
+<p>关于js的原型和作用域，我没专门写过文章，建议去<a href="http://www.cnblogs.com" target="_blank" rel="noopener">博客园</a>搜下。如果想要完整的理解js语言机制，可以去看《Javascript模式》这本书，或者看我整理的读书笔记</p>
+<ul>
+<li><a href="/tags.html#读书笔记-ref">《JavaScript模式》读书笔记系列</a></li>
+</ul>
+<h3 id="华丽跳跃谢幕"><a href="#华丽跳跃谢幕" class="headerlink" title="华丽跳跃谢幕"></a>华丽跳跃谢幕</h3><p>只有把平衡木上的技能磨熟练后，我们才能真正的游刃有余，保证不从平衡木上摔下来的前提下，再有余力去设计如何华丽的跳跃和谢幕。</p>
+<h2 id="组件封装"><a href="#组件封装" class="headerlink" title="组件封装"></a>组件封装</h2><p>还没了解js对类(或模块)的封装前，我们的代码可能是这样的</p>
+<pre><code>var getData = function(){
+    // ......
+};
+
+function editFunc(){
+    // ......
+};
+
+$(&apos;.refresh-btn&apos;).on(&apos;click&apos;, function(){
+    var data = getData();
+    var $target = $($(this).attr(&apos;data-target&apos;));
+    $target.empty();
+
+    for(var i=0; i&lt;data.length; i++){
+        var $child = $(&apos;&lt;tr&gt;&lt;/tr&gt;&apos;);
+        $child.append(&apos;&lt;td&gt;&apos; + data[i][&apos;name&apos;] + &apos;&lt;/td&gt;&apos;);
+        // ......
+        $child.append(&apos;&lt;td&gt;&lt;a class=&quot;edit-link&quot;&gt;编辑&lt;/a&gt;&lt;/td&gt;&apos;);
+        $target.append($child);
+    }
+
+    $target.find(&apos;.edit-link&apos;).on(&apos;click&apos;, editFunc);
+});
+</code></pre><p>一个点击就获取数据，然后刷新表格的功能。如果一个页面中有多个类似的异步刷新的表格，且每个表格的字段又各不相同，那么最偷懒的做法就是拷贝大段代码，然后再调整<code>&lt;td&gt;</code>的字段。这样的代码简直了，太难维护了！</p>
+<pre><code>var table1 = new AjaxTable({
+    el: &apos;#dataTable&apos;,
+    dataUrl: &apos;/path/to/action/&apos;
+});
+
+table1.refresh();
+</code></pre><p>如果代码变成这样，那就爽多了，获取数据和刷新表格的过程都封在了<code>AjaxTable</code>中，各个使用之处只需要传个参数调用下<code>refresh()</code>即可，减少了大量重复(相似的)代码。这就是对UI组件/功能组件的封装。</p>
+<p>以前为了准备面试时的“手撕代码”，写过一个简单的轮播组件，不用jquery（面试经常不允许使用任何库）</p>
+<ul>
+<li><a href="/demo/js-native/slider/demo.html">原生js的Slider组件</a></li>
+</ul>
+<p>还写过下面一些文章</p>
+<ul>
+<li><a href="/blog/2015/03/step-by-step-jquery-plugin-pagination-1.html">自己写的jquery分页插件</a></li>
+<li><a href="/blog/2015/02/ajax-chart-for-highcharts.html">为Highcharts做包装</a> （有点类似上面示例中的<code>AjaxTable</code>）</li>
+<li><a href="/blog/2015/02/step-by-step-js-component-schoolbox-collections.html">一步步做组件-学校选择器(系列)</a> （系列长文，如何把一段生硬实现的代码一步一步封装和扩展成为一个可配置的UI组件）</li>
+</ul>
+<h2 id="模块化开发"><a href="#模块化开发" class="headerlink" title="模块化开发"></a>模块化开发</h2><p>如果要在页面上引入外部的js库，最初学习的时候是这样引入的</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-ui/jquery-ui-1.8.24.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-ui/jquery-ui-datepicker-zh-CN.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bootstrap-2.3.2.min.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>由于浏览器中js的执行(非加载)过程是在单线程中的，而各js文件又会存在依赖关系，比如 jquery-ui 依赖 jquery，bootstrap 也依赖 jquery，所以<code>&lt;script&gt;</code>标签的引入得满足依赖顺序。当一个项目越做页面越多时，这么多页面中会存在一堆<code>&lt;script&gt;</code>标签，如果要将某个js文件升级版本，或者修改script的依赖关系时，这就会成为一个很繁琐的工作，特别是<code>&lt;script&gt;</code>分散在项目的各个文件中时。</p>
+<p><a href="http://www.requirejs.cn/" target="_blank" rel="noopener">RequireJS</a>就是出来解决这个问题的（简单来说就是用js去管理js），还有<a href="https://github.com/seajs/seajs" target="_blank" rel="noopener">SeaJS</a>，它们分别代表着<strong>AMD</strong>和<strong>CMD</strong>两种风格，关于<a href="http://www.html-js.com/article/The-front-box-front-end-module" target="_blank" rel="noopener">模块化和两者的区别可以看这篇文章</a>。</p>
+<h3 id="实战案例"><a href="#实战案例" class="headerlink" title="实战案例"></a>实战案例</h3><ul>
+<li><a href="/blog/2015/02/wrap-ajaxchart-with-requirejs.html">用RequireJS包装AjaxChart</a></li>
+<li><a href="/blog/2015/12/attack-map-with-amd.html">前端模块化开发demo之攻击地图</a></li>
+</ul>
+<h2 id="页面继承"><a href="#页面继承" class="headerlink" title="页面继承"></a>页面继承</h2><p><em>页面继承</em> 这块跟上面的各种具体的技术没太大关系，页面继承主要是用来组织项目文件结构（或页面结构）的一些经验规则。假设在一个系统里，每个页面都有相同的头和尾，还有nav，那根据上面封装和分离的思想，我们可能会这样写</p>
+<pre><code>&lt;html&gt;
+&lt;body&gt;
+    %{ include header.html }%
+
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;left&quot;&gt;
+            %{ include nav.html }%
+        &lt;/div&gt;
+        &lt;div class=&quot;main&quot;&gt;
+            &lt;!-- 具体业务... --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    %{ include footer.html }%
+
+    &lt;script src=&quot;require.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+    requirejs.config({
+        // 全局配置...
+    });
+    &lt;/script&gt;
+
+    &lt;script type=&quot;text/javascript&quot;&gt;
+    require([&apos;jquery&apos;], function($){
+        // 具体业务...
+    });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>我们可以把这一段作为一个base的父页面，命名为<code>base.html</code>，每个“具体业务”的页面都继承自它。</p>
+<pre><code>%{ extends &apos;base.html&apos; }%
+
+%{ block styles }%
+&lt;style type=&quot;text/css&quot;&gt;
+
+&lt;/style&gt;
+%{ endblock }%
+
+%{ block content }%
+&lt;div&gt;具体业务...&lt;/div&gt;
+%{ endblock }%
+
+%{ block scripts }%
+&lt;script type=&quot;text/javascript&quot;
+require([&apos;jquery&apos;], function($){
+    // 具体业务...
+});
+&lt;/script&gt;
+%{ endblock }%
+</code></pre><p>把这个页面叫做<code>func1.html</code>，具体业务的页面中只会包含自身业务功能需要关心(用到)的东西，不去多管base页面的闲事。可以看到子页面中有很多<code>block</code>之类的锚点，会将与<code>endblock</code>之间的内容插入到父页面中的相应位置，所以要先在<code>base.html</code>中“挖好坑”。</p>
+<pre><code>%{ block styles }% %{ endblock }%
+%{ block content }% %{ endblock }%
+%{ block scripts }% %{ endblock }%
+</code></pre><p>具体做法可以去看常见的模板系统，本例中参考的是<a href="https://docs.djangoproject.com/en/1.9/ref/templates/language/" target="_blank" rel="noopener">Django</a>中的模板定义。</p>
+<h2 id="页面组件化"><a href="#页面组件化" class="headerlink" title="页面组件化"></a>页面组件化</h2><p><em>页面组件化</em> 也是和具体技术没有关系，它是顺着 <em>页面继承</em> 的思路，把页面或文件结构做更小粒度的拆分，页面由一个个页面组件构成。</p>
+<pre><code>%{ include sectionA.css }%
+%{ include sectionB.css }%
+
+&lt;div class=&quot;row&quot;&gt;
+    %{ include sectionA.tpl }%
+&lt;/div&gt;
+&lt;div class=&quot;row&quot;&gt;
+    %{ include sectionB.tpl }%
+&lt;/div&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+require([&apos;sectionA&apos;, &apos;sectionB&apos;], function(A, B){
+    var App = Base.extend({
+        _init: function(){
+            var that = this;
+            var mods = [A, B];
+            this.modules = [];
+
+            mods.forEach(function(Module){
+                that.modules.push(new Module(App));
+            });
+        }
+    });
+});
+&lt;/script&gt;
+</code></pre><p>上面相当于一个业务页面，它由<code>sectionA</code>和<code>sectionB</code>两个页面组件组成，<code>sectionA.tpl</code>和<code>sectionB.tpl</code>是html模板。在应用层(即业务)页面中初始化两个js模块<code>A</code>和<code>B</code>，并且把自身的<code>App</code>变量传递给模块（<code>new Module(App)</code>），可以实现子模块与应用层页面的通信，甚至是模块之间的通信。</p>
+<p>这样把页面拆成粒度更细的结构，好处是页面模块可以复用，也便于管理，改动页面中的一小块时只需在所处的模块中，缩小改动的影响范围。</p>
+<p>还看过一种思想是，把css文件也当做资源由requireJS动态加载，这样上面示例中的<code>include xxx.css</code>都不需要了，页面模块的css资源作为该模块的依赖，写在js模块的<code>define</code>的依赖中。</p>
+<pre><code>define([&apos;jquery&apos;, &apos;sectionA.css&apos;], function($){
+    // 业务模块...
+});
+</code></pre><p>这样把css和js都抽象成“资源”，相当于</p>
+<blockquote>
+<p>组件 = 模板 + 资源</p>
+</blockquote>
+<p>一个页面整体的模板，相当于多个页面组件的拼装而成。更进一步，如果能让页面组件做到<strong>异步渲染</strong>的话（即可以由js去解析模板语法和变量，而不是交给web框架），才能真正做到页面渲染的本质：</p>
+<blockquote>
+<p>呈现给用户的页面 = 页面模板 (包括组件的模板) + 数据</p>
+</blockquote>
+<p>“渲染”就是将带数据变量的页面模板输出成标准的html，同步渲染是指在服务端解析模板并输出完整html到浏览器中，而异步渲染指直接在浏览器中通过javascript 根据传入的数据将模板输出成标准html。</p>
+<p>同一模板如果既能在服务端同步渲染，又能在浏览器端异步渲染的话，我们就不需要关心“数据”是后端框架直接输出到页面的，还是ajax动态取来的。对模板来说，数据就是个“接口”，而 <code>模板 + 数据 = 渲染</code>。这样我们作为前端，才能把更多精力放在模板和交互上，不用管数据的传递方式。</p>
+<h2 id="平凡之路"><a href="#平凡之路" class="headerlink" title="平凡之路"></a>平凡之路</h2><p>前端发展了十几年，现在几乎到达顶峰的速度了，近两年推出的框架层出不穷，jquery早已不是一统江湖了。每个人的精力都有限，不可能一个个都学过来，但是必须承认，<a href="/blog/2015/09/fe-review-points.html">前端是一个完整的体系</a>（我之前整理的知识体系），有它独特和魅力之处。不仅是框架，还有更多的工程化问题，框架都是为了解决某类相通的问题而生。模板和数据分离也好，“状态”和“表现”分离也好，我越来越体会到</p>
+<blockquote>
+<p>“分”是为了“合”</p>
+</blockquote>
+<p>这条平凡之路，还会“频繁”的发展和融合下去。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/12/attack-map-with-amd.html" rel="next" title="前端模块化开发demo之攻击地图">
+                <i class="fa fa-chevron-left"></i> 前端模块化开发demo之攻击地图
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2016/01/multi-git-repo-config.html" rel="prev" title="多仓库git配置">
+                多仓库git配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#娃娃学步"><span class="nav-number">1.1.</span> <span class="nav-text">娃娃学步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小跑上路"><span class="nav-number">1.2.</span> <span class="nav-text">小跑上路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遇上平衡木"><span class="nav-number">1.3.</span> <span class="nav-text">遇上平衡木</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#首先要了解css的布局原理"><span class="nav-number">1.3.1.</span> <span class="nav-text">首先要了解css的布局原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#js最重要的三点-闭包、原型、作用域"><span class="nav-number">1.3.2.</span> <span class="nav-text">js最重要的三点: 闭包、原型、作用域</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#华丽跳跃谢幕"><span class="nav-number">1.4.</span> <span class="nav-text">华丽跳跃谢幕</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件封装"><span class="nav-number">2.</span> <span class="nav-text">组件封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块化开发"><span class="nav-number">3.</span> <span class="nav-text">模块化开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实战案例"><span class="nav-number">3.1.</span> <span class="nav-text">实战案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#页面继承"><span class="nav-number">4.</span> <span class="nav-text">页面继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#页面组件化"><span class="nav-number">5.</span> <span class="nav-text">页面组件化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平凡之路"><span class="nav-number">6.</span> <span class="nav-text">平凡之路</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

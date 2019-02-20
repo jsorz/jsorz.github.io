@@ -1,0 +1,1771 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="javascript,AMD,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="很早以前写过一篇用RequireJS包装AjaxChart，当时用Highcharts做图表，在其上封装了一层ajax，最后只是简单套用了一下requireJS。由于当时自己才接触模块化，理解层面还太浅，后来经过其他项目的磨练以及实习获得的见识，想重新结合一个示例来写点前端模块化的开发方式。">
+<meta name="keywords" content="javascript,AMD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端模块化开发demo之攻击地图">
+<meta property="og:url" content="http://jsorz.cn/blog/2015/12/attack-map-with-amd.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="很早以前写过一篇用RequireJS包装AjaxChart，当时用Highcharts做图表，在其上封装了一层ajax，最后只是简单套用了一下requireJS。由于当时自己才接触模块化，理解层面还太浅，后来经过其他项目的磨练以及实习获得的见识，想重新结合一个示例来写点前端模块化的开发方式。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.839Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端模块化开发demo之攻击地图">
+<meta name="twitter:description" content="很早以前写过一篇用RequireJS包装AjaxChart，当时用Highcharts做图表，在其上封装了一层ajax，最后只是简单套用了一下requireJS。由于当时自己才接触模块化，理解层面还太浅，后来经过其他项目的磨练以及实习获得的见识，想重新结合一个示例来写点前端模块化的开发方式。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2015/12/attack-map-with-amd.html">
+
+
+
+
+
+  <title>前端模块化开发demo之攻击地图 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2015/12/attack-map-with-amd.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端模块化开发demo之攻击地图</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-05T00:00:00+08:00">
+                2015-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>很早以前写过一篇<a href="/blog/2015/02/wrap-ajaxchart-with-requirejs.html">用RequireJS包装AjaxChart</a>，当时用Highcharts做图表，在其上封装了一层ajax，最后只是简单套用了一下requireJS。由于当时自己才接触模块化，理解层面还太浅，后来经过其他项目的磨练以及实习获得的见识，想重新结合一个示例来写点前端模块化的开发方式。</p>
+<a id="more"></a>
+<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p>最近在做一个安全运维监控的项目，其中有一条是根据设备获取到的攻击数据，在地图上做可视化。对比了<a href="http://www.hcharts.cn/" target="_blank" rel="noopener">Highcharts</a>和<a href="http://echarts.baidu.com" target="_blank" rel="noopener">ECharts</a></p>
+<ul>
+<li>ECharts对国内地图的支持更多</li>
+<li>ECharts在模块化和扩展方面做的比Highcharts更好</li>
+</ul>
+<p>所以最后我选择了基于ECharts去封装。类似的网络攻击的监控地图可看国外的<a href="http://map.norsecorp.com" target="_blank" rel="noopener">Norse Attack Map</a>，也算是同类的参照。</p>
+<h2 id="需求整理"><a href="#需求整理" class="headerlink" title="需求整理"></a>需求整理</h2><p>数据要求</p>
+<ul>
+<li>提供的数据只有IP到IP的攻击，包括攻击时间、攻击类型等，需要自行根据IP定位到相应的经纬度。</li>
+</ul>
+<p>展现要求</p>
+<ul>
+<li>地图提供世界、中国、省份，这三种维度（只针对中国）</li>
+<li>要在地图上表现出攻击的来源与目标之间的动画</li>
+<li>需要强调出攻击受灾地区，可一眼看出哪里是重灾区</li>
+<li>可以循环表现攻击，也可实时刷新攻击数据</li>
+</ul>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><pre><code>- index.html 主页面
+- assets
+    - css
+        - normalize.css 浏览器初始化样式
+        - common.css 从bootstrap里扒了一些基础样式
+    - img/ 
+- js
+    - app
+        - mainMap.js index页面的主执行js
+    - lib
+        - echarts/ 用了源码包
+        - zrender/ 同样源码包，具体看echarts官方说明
+        - geo 一些地理数据的定义
+            - china/
+            - world/
+        - mods
+            - attackMap/ 对echarts map的封装
+            - util.js 等等其他帮助或插件模块的封装
+            - xxxx.js
+    - config.js
+</code></pre><h3 id="requireJS的config配置"><a href="#requireJS的config配置" class="headerlink" title="requireJS的config配置"></a>requireJS的config配置</h3><pre><code>requirejs.config({
+    baseUrl: &apos;js/lib&apos;,
+    paths: {
+        jquery: &apos;http://cdn.staticfile.org/jquery/1.7.2/jquery.min&apos;,
+        underscore: &apos;http://cdn.staticfile.org/underscore.js/1.7.0/underscore-min&apos;
+    },
+    packages: [
+        {
+            name: &apos;echarts&apos;,
+            location: &apos;echarts/src&apos;,
+            main: &apos;echarts&apos;
+        },
+        {
+            name: &apos;zrender&apos;,
+            location: &apos;zrender/src&apos;,
+            main: &apos;zrender&apos;
+        }
+    ]
+});
+</code></pre><h2 id="map封装过程"><a href="#map封装过程" class="headerlink" title="map封装过程"></a>map封装过程</h2><p>初步封装 mods/attackMap/main.js</p>
+<pre><code>define(function(require){
+
+    var U = require(&apos;underscore&apos;);
+    var EC = require(&apos;echarts/echarts&apos;);
+    var ecMap = require(&apos;echarts/chart/map&apos;);
+    var ecMapParams = require(&apos;echarts/util/mapData/params&apos;).params;
+
+    var EVENT = require(&apos;echarts/config&apos;).EVENT;
+    var MAP_TYPE_WORLD = &apos;world&apos;;
+    var MAP_TYPE_CHINA = &apos;china&apos;;
+
+
+    var AttackMap = function(config){
+        this.config = U.extend({
+            view: MAP_TYPE_WORLD
+        }, config);
+
+        this.el = document.getElementById(this.config.id);
+        // 初始化echarts
+        this._init();
+    };
+
+    // 不带下划线的为对外暴露的方法
+    AttackMap.prototype = {
+        _init: function(){
+            // _chart对象私有
+            this._chart = EC.init(this.el);
+            // default view
+            var mapOption = U.extend({}, require(&apos;mods/attackMap/mapOption&apos;));
+            // 合并option
+            U.extend(mapOption.series[0], this._getViewOption(this.config.view));
+            // render
+            this._chart.setOption(mapOption);
+
+            // 交互
+            this._bindEvents();
+        },
+
+        _bindEvents: function(){
+            var that = this;
+            this._chart.on(EVENT.CLICK, function(e, chart){
+                // 仅对中国钻取
+                if(e.data.name === &apos;中国&apos; || e.data.name === &apos;China&apos;){
+                    that.setView(MAP_TYPE_CHINA);
+                }
+                // and中国省份钻取
+                else if(e.data.name in ecMapParams){
+                    that.setView(e.data.name);
+                }
+            });
+        },
+
+        // view涉及到的series里需要设置的属性
+        _getViewOption: function(viewType){
+            if(viewType === MAP_TYPE_WORLD){
+                return {
+                    mapType: MAP_TYPE_WORLD,
+                    nameMap: require(&apos;geo/world/countryName&apos;)
+                }
+            }
+            else if(viewType === MAP_TYPE_CHINA){
+                return {
+                    mapType: MAP_TYPE_CHINA
+                };
+            }
+            else if(viewType in ecMapParams){
+                return {
+                    mapType: viewType
+                };
+            }
+            return {};
+        },
+
+        _setOtherOption: function(viewType){
+            if(viewType === MAP_TYPE_WORLD){
+                this._chart.chart.map.series[0].itemStyle.normal.label.show = false;
+                this._chart.chart.map.series[0].markLine.effect.period = 15;
+            }
+            else if(viewType === MAP_TYPE_CHINA){
+                this._chart.chart.map.series[0].itemStyle.normal.label.show = false;
+                this._chart.chart.map.series[0].markLine.effect.period = 8;
+            }
+            else{
+                this._chart.chart.map.series[0].itemStyle.normal.label.show = true;
+                this._chart.chart.map.series[0].markLine.effect.period = 4;
+            }
+        },
+
+        // 设置地图视图
+        setView: function(viewType){
+            // 上一次的view
+            (typeof this._lastView === &apos;undefined&apos;) &amp;&amp; (this._lastView = this.config.view);
+            // 防止重复set
+            if(viewType === this._lastView){
+                return false;
+            }
+            this._lastView = viewType;
+
+            // 历史开过的view（string逗号分隔）
+            (typeof this._historyViews === &apos;undefined&apos;) &amp;&amp; (this._historyViews = this.config.view);
+            // 用来判断是否加载过
+            if(this._historyViews.indexOf(viewType) === -1){
+                this._historyViews += (&apos;,&apos; + viewType);
+                // loading
+                this._chart.showLoading();
+                // 假loading
+                var that = this;
+                setTimeout(function(){
+                    that._chart.hideLoading();
+                }, 350);
+            }
+
+            // 要先reset再draw
+            this.reset();
+            var viewOption = this._getViewOption(viewType);
+            this._chart.setSeries([viewOption]);
+            // 多级的option没法merge原来的，所以得手动设置
+            this._setOtherOption(viewType);
+        },
+
+        // 攻击线
+        setAttacks: function(data, isLoop){
+            // 是否循环显示markline（暂未用到）
+            isLoop = isLoop || true;
+            // 留个data备份（暂未用到）
+            this._mData = data;
+
+            // TODO: 要对IP聚合
+            // 国内最小定位到市级，国外只能定位到国家
+            // 而markline只能通过 name-name 来标识
+            // 聚合后相同 name-name 的攻击累计次数视为强度
+
+            var lineData = U.map(data, function(v){
+                return [
+                    {name: v[&apos;srcName&apos;], geoCoord: [v[&apos;srcLocX&apos;], v[&apos;srcLocY&apos;]]},
+                    {name: v[&apos;destName&apos;], geoCoord: [v[&apos;destLocX&apos;], v[&apos;destLocY&apos;]]}
+                ]
+            });
+
+            var pointData = U.map(data, function(v){
+                return {
+                    name: v[&apos;destName&apos;],
+                    geoCoord: [v[&apos;destLocX&apos;], v[&apos;destLocY&apos;]]
+                }
+            });
+
+            // ECharts内部的核心变量
+            var _map = this._chart.chart.map;
+            // 防止addMarkLine抛异常 seriesIndex 0
+            // _map.buildMark(0);
+
+            try{
+                this._chart.addMarkLine(0, {data: lineData});
+            }catch(e){
+                // console.error(e);
+            }
+
+            try{
+                this._chart.addMarkPoint(0, {data: pointData});
+            }catch(e){
+                // console.error(e);
+            }
+        },
+
+        // 通用方法
+        refresh: function(){
+            this._chart.refresh();
+        },
+        reset: function(){
+            this._chart.restore();
+        }
+    };
+
+    return AttackMap;
+});
+</code></pre><p>这里我用echarts中的MarkLine作为攻击线，MarkPoint作为受害地点，AttackMap封装了对echarts的操作过程，对外只暴露<code>setView</code>和<code>setAttacks</code>两个方法，以实现地图维度的缩放以及攻击线的表现。其中echarts map的通用配置项都拎到了<code>mods/attactMap/mapOption.js</code>中，这里AttackMap只手工操作部分option，比如根据地图的维度修改MarkLine动画的速率。</p>
+<p>应用层 js/app/mainMap.js</p>
+<pre><code>require([
+    &apos;jquery&apos;,
+    &apos;mods/attackMap/main&apos;,
+    &apos;mods/attackMap/mock&apos;
+
+], function($, AttackMap, Mock){
+
+    var View = {
+        // 作为一个视图模版来初始化
+        init: function(){
+            // 此View片段的root元素
+            // this.$el = $(&apos;body&apos;);
+
+            // 初始化成员
+            this.aMap = new AttackMap({
+                id: &apos;mapChart&apos;,
+                view: &apos;world&apos;
+            });
+
+            // 绑定事件
+            this._bindEvents();
+        },
+
+        _bindEvents: function(){
+            var that = this;
+            // 视图切换
+            this._bindMapViewEvents();
+
+            // 其他binding
+            $(window).on(&apos;resize&apos;, function(){
+                that.aMap.resize();
+            });
+        },
+
+        // 视图切换事件
+        _bindMapViewEvents: function(){
+            var that = this;
+
+            // NOTE: 会有动态生成的元素
+            $(&apos;.J_changeView&apos;).live(&apos;click&apos;, function(){
+                that.aMap.setView($(this).attr(&apos;data-type&apos;));
+            });
+        },
+
+        // 攻击数据展现
+        _renderAttacks: function(data){
+            // render map
+            this.aMap.setAttacks(data);
+
+            // render table
+            var $tbody = $(&apos;#attacksTable&apos;).find(&apos;tbody&apos;);
+            // var $frags = [];
+            $.each(data, function(i, v){
+                var $tr = $(&apos;&lt;tr&gt;&lt;td&gt;&apos;+v[&apos;srcIp&apos;]+&apos;&lt;/td&gt;&lt;td&gt;&apos;+v[&apos;srcName&apos;]+&apos;&lt;/td&gt;&lt;td&gt;&apos;+v[&apos;destIp&apos;]+&apos;&lt;/td&gt;&lt;td&gt;&apos;+v[&apos;destName&apos;]+&apos;&lt;/td&gt;&lt;td&gt;&apos;+v[&apos;type&apos;]+&apos;&lt;/td&gt;&lt;td&gt;&apos;+v[&apos;time&apos;]+&apos;&lt;/td&gt;&lt;/tr&gt;&apos;);
+                $tbody.append($tr);
+            });
+        },
+
+        // 获取攻击数据
+        getAttacks: function(){
+            var that = this;
+            // ajax TODO
+
+            // 本地mock数据
+            that.attacksData = Mock.data;
+            that._renderAttacks(that.attacksData);
+        }
+    };
+
+    // execution
+    View.init();
+
+    // lazy load
+    setTimeout(function(){
+        View.getAttacks();
+    }, 16);
+
+});
+</code></pre><p>至此，在应用层页面上，可以通过点击<code>.J_changeView</code>按钮来切换地图的维度(世界/中国/省份)，攻击数据的展现暂时没有ajax调用，只是简单用了mock数据来做，大体效果是一样的。</p>
+<p><a href="/demo/AttackMap/index.html">最终demo</a></p>
+<h2 id="自定义事件封装"><a href="#自定义事件封装" class="headerlink" title="自定义事件封装"></a>自定义事件封装</h2><p>在上面的demo链接中看到，不仅应用层页面的按钮可以切换地图维度，直接点击地图里的”中国”区域也能切换地图，同时又能通知到应用层页面的按钮改变状态。因此应用层页面是需要关心AttackMap的状态(事件)的，同样将鼠标放在攻击线上出现的攻击详情，也是通过监听AttackMap的事件实现的。</p>
+<p>1、在 mods/attackMap/main.js 中定义事件类型</p>
+<pre><code>// 对外事件
+AttackMap.EVENTS = {
+    VIEW_CHANGED: &apos;viewChanged&apos;,
+    LINE_HOVERED: &apos;marklineHovered&apos;,
+    LINE_BLURED: &apos;marklineBlured&apos;
+};
+</code></pre><p>2、在AttackMap中实现事件触发器</p>
+<pre><code>AttackMap.prototype = {
+    on: function(type, fn){
+        (typeof this._handlers === &apos;undefined&apos;) &amp;&amp; (this._handlers = {});
+        (typeof this._handlers[type] === &apos;undefined&apos;) &amp;&amp; (this._handlers[type] = []);
+        this._handlers[type].push(fn);
+    },
+    fire: function(type, data, event){
+        if(typeof this._handlers === &apos;undefined&apos; || 
+            typeof this._handlers[type] === &apos;undefined&apos;){
+            return false;
+        }
+
+        var that = this;
+        var eventObj = {
+            type: type,
+            data: data
+        };
+        // 原生event对象
+        (typeof event !== &apos;undefined&apos;) &amp;&amp; (eventObj.event = event);
+
+        U.each(this._handlers[type], function(fn){
+            fn(eventObj, that);
+        });
+    }
+};
+</code></pre><p>3、在AttackMap内部适当的方法中<code>fire</code>自定义事件</p>
+<pre><code>AttackMap.prototype = {
+    _bindEvents: function(){
+        var that = this;
+        // 省略...
+
+        this._chart.on(EVENT.HOVER, function(e, chart){
+            // 是markline
+            if(e.name.indexOf(&apos;&gt;&apos;) !== -1){
+                // 阻止此时的tooltip
+                that._chart.chart.map.component.tooltip.hideTip();
+
+                // 由外部去渲染
+                that.fire(
+                    AttackMap.EVENTS.LINE_HOVERED,
+                    { name: e.name },
+                    e.event
+                );
+            }
+            // 不是markline，告诉外部
+            else{
+                // 效率有点低 每次hover都会触发
+                that.fire(AttackMap.EVENTS.LINE_BLURED);
+            }
+        });
+    },
+    setView: function(viewType){
+        // 省略...
+
+        // 对外fire事件
+        this.fire(
+            AttackMap.EVENTS.VIEW_CHANGED, 
+            { viewType: viewType }
+        );
+    }
+};
+</code></pre><p>当触发<code>AttackMap.EVENTS.LINE_HOVERED</code>事件时，由于应用层页面要绘制攻击详情的浮层，需要知道鼠标位置信息，所以这里<code>fire</code>时将原生的event对象也传了进去。（注意<code>fire</code>方法的实现中，传给回调函数的<code>eventObj</code>对象中，有事件类型type，自定义data，以及原生event对象）</p>
+<p>4、在应用层js中监听自定义事件</p>
+<pre><code>// 别名
+var MAP_EVENTS = AttackMap.EVENTS;
+
+var View = {
+    // 视图切换事件
+    _bindMapViewEvents: function(){
+        var that = this;
+
+        // AttackMap监听
+        this.aMap.on(MAP_EVENTS.VIEW_CHANGED, function(e){
+            var type = e.data.viewType;
+            // 清空当前
+            $current = $(&apos;.view-nav.active&apos;);
+            $current.removeClass(&apos;active&apos;);
+
+            // 目标
+            var $target = $(&apos;.view-nav[data-type=&quot;&apos; + type + &apos;&quot;]&apos;);
+            if($target.length == 0){
+                // 另起一个
+                var $copy = $current.clone();
+                $copy.addClass(&apos;active&apos;).attr(&apos;data-type&apos;, type).text(type);
+                $(&apos;#dynamicNav&apos;).empty().append($copy);
+            }
+            else{
+                $target.addClass(&apos;active&apos;);
+            }
+        });
+
+        // 省略...
+    },
+
+    // 攻击线(地图markline)事件
+    _bindMapLineEvents: function(){
+        var that = this;
+
+        this.aMap.on(MAP_EVENTS.LINE_HOVERED, function(e){
+            // 前提：srcName-destName 必须能唯一区分
+            // 国外IP目前只能定位到国家
+            var temps = (e.data.name).split(&apos; &gt; &apos;);
+            var source = temps[0];
+            var dest = temps[1];
+
+            var attacks = that.attacksData;
+            // 遍历data
+            for(var i=0; i&lt;attacks.length; i++){
+                if(attacks[i][&apos;srcName&apos;] === source &amp;&amp; attacks[i][&apos;destName&apos;] === dest){
+                    that._drawMapLineDetail(attacks[i], e.event.pageX, e.event.pageY);
+                    break;
+                }
+            }
+        });
+
+        this.aMap.on(MAP_EVENTS.LINE_BLURED, function(e){
+            that._hideMapLineDetail();
+        });
+    },
+
+    // 画攻击线详情
+    _drawMapLineDetail: function(){
+        // 细节省略...
+    },
+    _hideMapLineDetail: function(){
+        // 细节省略...
+    }
+};
+</code></pre><p><a href="/demo/AttackMap/index.html">再看一遍demo</a></p>
+<h2 id="点缀的动画效果"><a href="#点缀的动画效果" class="headerlink" title="点缀的动画效果"></a>点缀的动画效果</h2><h3 id="时钟模块"><a href="#时钟模块" class="headerlink" title="时钟模块"></a>时钟模块</h3><p>比较简单，源码在 js/lib/mods/clock.js 中，下面只列出大体结构。</p>
+<pre><code>define([&apos;jquery&apos;], function($){
+    var Clock = function(config){
+        this.$el = $(&apos;#&apos; + this.config.id);
+        this._init();
+    };
+
+    Clock.prototype = {
+        _init: function(){
+            // 细节省略...
+            this.start();
+        },
+        _update: function(){
+            // 细节省略...
+        },
+        start: function(){
+            // 先初始化时间
+            this._update();
+
+            var that = this;
+            this.timer = setInterval(function(){
+                that._update();
+            }, 1000);
+        },
+        stop: function(){
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+    };
+
+    return Clock;
+});
+</code></pre><h3 id="move动画封装"><a href="#move动画封装" class="headerlink" title="move动画封装"></a>move动画封装</h3><p>原理是采用的css中<code>transform</code>动画，我们原本的做法会是先定义两个css class，一个添加transform的各种css规则，另一个class添加与前一项相反(或清除动画)的css规则，然后通过js操控DOM元素，在两个class之间切换。但我觉得这种做法太挫了，可以把相同效果的transform封装起来（避免写大同小异的css class），于是我封装了一个只做move移动的动画util方法。</p>
+<pre><code>define([&apos;jquery&apos;, &apos;underscore&apos;], function($, U){
+    return {
+        /* 移动动画
+            @param el {HTMLElement}
+            @param x1 {number}
+            @param y1 {number}
+            @param x2 {number}
+            @param y2 {number}
+            @param config {Object}
+                @param duration {number}
+                @param ease {string}
+                @param isShowEl {boolean} 动画结束后是否继续显示元素
+                @param isClear {boolean} 动画结束后是否清除动画属性
+                @param beforeAnim {Function}
+                @param afterAnim {Function}
+        */
+        moveAnim: function(el, x1, y1, x2, y2, config) {
+            if(!el){
+                return;
+            }
+            if(!el.tagName &amp;&amp; el.length){
+                // jquery节点
+                el = el[0];
+            }
+
+            var style = el.style;
+            config = U.extend({
+                duration: 400,
+                ease: &apos;ease&apos;,
+                isShowEl: true,
+                isClear: false
+            }, config);
+
+            style.display = &apos;block&apos;;
+            style.transform = &apos;translate3d(&apos; + x1 + &apos;px, &apos; + y1 + &apos;px, 0px)&apos;;
+            style.transitionDuration = &apos;0ms&apos;;
+            style.webkitTransform = &apos;translate3d(&apos; + x1 + &apos;px, &apos; + y1 + &apos;px, 0px)&apos;;
+            style.webkitTransitionDuration = &apos;0ms&apos;;
+
+            // before animation
+            config.beforeAnim &amp;&amp; config.beforeAnim();
+
+            setTimeout(function() {
+                style.transform = &apos;translate3d(&apos; + x2 + &apos;px, &apos; + y2 + &apos;px, 0px)&apos;;
+                style.transitionDuration = config.duration + &apos;ms&apos;;
+                style.transitionTimingFunction = config.ease;
+                style.webkitTransform = &apos;translate3d(&apos; + x2 + &apos;px, &apos; + y2 + &apos;px, 0px)&apos;;
+                style.webkitTransitionDuration = config.duration + &apos;ms&apos;;
+                style.webkitTransitionTimingFunction = config.ease;
+
+                // 下面不会有第二次setTimeout
+                if(config.isShowEl &amp;&amp; !config.isClear){
+                    // after animation
+                    config.afterAnim &amp;&amp; config.afterAnim();
+                }
+            }, 0);
+
+            // 动画结束后不显示元素
+            if(!config.isShowEl){
+                style.display = &apos;none&apos;;
+            }
+            // 清空动画属性（下次show时显示在最初的位置）
+            if(!config.isShowEl || config.isClear){
+                var that = this;
+                setTimeout(function() {
+                    that._clearTransform(el);
+                    // after animation
+                    config.afterAnim &amp;&amp; config.afterAnim();
+                }, config.duration + 10);
+            }
+        },
+
+        _clearTransform: function(el){
+            var style = el.style;
+            style.transform = null;
+            style.transitionDuration = null;
+            style.transitionTimingFunction = null;
+            style.webkitTransform = null;
+            style.webkitTransitionDuration = null;
+            style.webkitTransitionTimingFunction = null;
+        }
+    }
+});
+</code></pre><h3 id="基于move动画的滚动表格"><a href="#基于move动画的滚动表格" class="headerlink" title="基于move动画的滚动表格"></a>基于move动画的滚动表格</h3><p>在demo中可以看到屏幕下方的攻击数据的表格一直在滚动播放，现在已经很少人还在用<code>&lt;marquee&gt;</code>这种东西了，好比已经淘汰的用<code>&lt;table&gt;</code>做页面布局。我这里基于上面的动画util方法，实现了一个滚动播放的table组件。</p>
+<p>实现思路是，先要对table元素做预处理，将thead拷贝一份，因为表格滚动时thead是不动的(相当于sticky)。代码结构类似上面的Clock类，主动画逻辑包在<code>setInterval</code>中。每次动画循环到来时，取出tbody的第一个<code>tr</code>元素的高度h，然后将table整体向上move这段高度h，move结束后将第一个<code>tr</code>追加到tbody的队尾。具体实现代码见 js/lib/mods/animTable.js</p>
+<h2 id="还有什么欠缺的"><a href="#还有什么欠缺的" class="headerlink" title="还有什么欠缺的"></a>还有什么欠缺的</h2><p>最初的展现需求都已实现了，在这过程中封装了AttackMap，并自己实现了自定义事件，完全将echarts对外透明了。同时还产出了几个非主要的js小组件，过程看似拉的很长，但都是一步步自然而然会产生的想法。这里还遗留着一个问题，<strong>如何将html模板、样式和js模块捆绑起来</strong>，即只需reuqire一下模块，模块相应的css会一并载入。</p>
+<pre><code>&lt;!-- 不需要 &lt;link rel=&quot;stylesheet&quot; href=&quot;moduleA.css&quot;&gt; --&gt;
+&lt;div&gt;
+    &lt;!-- 引入组件的html模板 --&gt;
+    %{ require moduleA }%
+&lt;/div&gt;
+
+&lt;script&gt;
+require([&apos;mods/moduleA&apos;], function(A){
+    // something...
+});
+&lt;/script&gt;
+</code></pre><p>我想达到的效果就像上面，应用层页面不需要引组件模块的css，只要inclue一份html模板，require一下对应的js模块。有知道具体做法的吗，我想进一步交流。</p>
+<h3 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h3><ul>
+<li><p><a href="/demo/AttackMap/index.html">在线demo</a></p>
+</li>
+<li><p><a href="/demo/AttackMap.zip">demo源码</a></p>
+</li>
+</ul>
+<h3 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h3><ul>
+<li><p>在繁忙的项目中抽出时间做些整理和总结，是件重要但不紧急的事情。</p>
+</li>
+<li><p>和以前写的文章一对比，明显感觉到自己这半年多的成长。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/AMD/" rel="tag"># AMD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/11/iweb-nanjing-notes.html" rel="next" title="iWeb南京2015峰会笔记">
+                <i class="fa fa-chevron-left"></i> iWeb南京2015峰会笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/12/twisted-way-to-awesome-fe.html" rel="prev" title="前端要给力 — 平凡之路">
+                前端要给力 — 平凡之路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目背景"><span class="nav-number">1.</span> <span class="nav-text">项目背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#需求整理"><span class="nav-number">2.</span> <span class="nav-text">需求整理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录结构"><span class="nav-number">3.</span> <span class="nav-text">目录结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#requireJS的config配置"><span class="nav-number">3.1.</span> <span class="nav-text">requireJS的config配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#map封装过程"><span class="nav-number">4.</span> <span class="nav-text">map封装过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义事件封装"><span class="nav-number">5.</span> <span class="nav-text">自定义事件封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#点缀的动画效果"><span class="nav-number">6.</span> <span class="nav-text">点缀的动画效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#时钟模块"><span class="nav-number">6.1.</span> <span class="nav-text">时钟模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#move动画封装"><span class="nav-number">6.2.</span> <span class="nav-text">move动画封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于move动画的滚动表格"><span class="nav-number">6.3.</span> <span class="nav-text">基于move动画的滚动表格</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#还有什么欠缺的"><span class="nav-number">7.</span> <span class="nav-text">还有什么欠缺的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#demo"><span class="nav-number">7.1.</span> <span class="nav-text">demo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#感想"><span class="nav-number">7.2.</span> <span class="nav-text">感想</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

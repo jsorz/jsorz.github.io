@@ -1,0 +1,1449 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="javascript,读书笔记,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="这个系列的文章终于整理完了，来自于Stoyan Stefanov的《JavaScript Patterns》一书，断断续续看了半年多，受益匪浅，整理了这些笔记。前面的章节讲述了Javascript的大部分核心模式，这些模式是和环境无关的。最后一章集中介绍了在特定客户端浏览器环境下的模式，这些内容包括：内容、表现和行为的分离，加速DOM操作，事件委托，远程脚本，以及脚本的载入性能。">
+<meta name="keywords" content="javascript,读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript模式之七-浏览器模式">
+<meta property="og:url" content="http://jsorz.cn/blog/2014/12/js-pattern-part7-browser-pattern.html">
+<meta property="og:site_name" content="阿冒的前端之路">
+<meta property="og:description" content="这个系列的文章终于整理完了，来自于Stoyan Stefanov的《JavaScript Patterns》一书，断断续续看了半年多，受益匪浅，整理了这些笔记。前面的章节讲述了Javascript的大部分核心模式，这些模式是和环境无关的。最后一章集中介绍了在特定客户端浏览器环境下的模式，这些内容包括：内容、表现和行为的分离，加速DOM操作，事件委托，远程脚本，以及脚本的载入性能。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T03:49:08.832Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript模式之七-浏览器模式">
+<meta name="twitter:description" content="这个系列的文章终于整理完了，来自于Stoyan Stefanov的《JavaScript Patterns》一书，断断续续看了半年多，受益匪浅，整理了这些笔记。前面的章节讲述了Javascript的大部分核心模式，这些模式是和环境无关的。最后一章集中介绍了在特定客户端浏览器环境下的模式，这些内容包括：内容、表现和行为的分离，加速DOM操作，事件委托，远程脚本，以及脚本的载入性能。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jsorz.cn/blog/2014/12/js-pattern-part7-browser-pattern.html">
+
+
+
+
+
+  <title>Javascript模式之七-浏览器模式 | 阿冒的前端之路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0332ac41a3e578e7400c04811d37f5d7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阿冒的前端之路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2014/12/js-pattern-part7-browser-pattern.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Javascript模式之七-浏览器模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-12-09T00:00:00+08:00">
+                2014-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  这个系列的文章终于整理完了，来自于Stoyan Stefanov的《JavaScript Patterns》一书，断断续续看了半年多，受益匪浅，整理了这些笔记。前面的章节讲述了Javascript的大部分核心模式，这些模式是和环境无关的。最后一章集中介绍了在特定客户端浏览器环境下的模式，这些内容包括：内容、表现和行为的分离，加速DOM操作，事件委托，远程脚本，以及脚本的载入性能。
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="关注分离"><a href="#关注分离" class="headerlink" title="关注分离"></a>关注分离</h2><p>HTML、CSS、JS相互独立，不要使用内联处理器（onclick之类）和内联样式属性（style属性），因为这些都不属于内容层。<br>js应该是用来加强网页功能，而不能称为网页正常工作的必需组件。</p>
+<p>不要使用用户代理来嗅探代码路径，而应该在运行环境中检查是否有所需的属性或方法。</p>
+<pre><code>// 反模式
+if(navigator.userAgent.indexOf(&apos;MSIE&apos;) !== -1){
+    document.attachEvent(&apos;onclick&apos;, console.log);
+}
+
+// 比较好的做法
+if(document.attachEvent){
+    document.attachEvent(&apos;onclick&apos;, console.log);
+}
+
+// 更具体的做法
+if(typeof document.attachEvent !== &apos;undefined&apos;){
+    document.attachEvent(&apos;onclick&apos;, console.log);
+}
+</code></pre><h2 id="DOM脚本"><a href="#DOM脚本" class="headerlink" title="DOM脚本"></a>DOM脚本</h2><p>DOM访问的代价是昂贵的，它是制约js性能的主要瓶颈，这是因为DOM通常是独立于js引擎而实现的。<br>总之，DOM的访问应该减少到最低，这意味着：</p>
+<ol>
+<li>避免在循环中使用DOM访问</li>
+<li>将DOM引用分配给局部变量，并使用这些局部变量</li>
+<li>在可能的情况下使用selector API（IE8以后都支持）</li>
+<li>当在HTML容器中重复使用时，缓存重复的次数</li>
+</ol>
+<p>example.</p>
+<pre><code>// 反模式
+for(var i=0;  i&lt;100; i++){
+     document.getElementById(&apos;result&apos;).innerHTML += (i + &apos; , &apos;);
+}
+
+// 更好的方式，使用了局部便利了
+var i, content = &apos;&apos;;
+for(i=0; i&lt;100; i++){
+     content += (i + &apos; , &apos;);
+}
+document.getElementById(&apos;result&apos;).innerHTML += content;
+</code></pre><p>为经常访问的元素增加<code>id</code>属性是一个很好的做法，因为<code>document.getElementById(myId)</code>是最简单快捷查找节点的方法。</p>
+<p>除了访问DOM元素以外，对元素的增删改也很频繁。更新DOM会导致浏览器重新绘制屏幕，也会经常导致reflow（也就是重新计算元素的几何位置），这样会带来巨大的开销。</p>
+<p><strong>1. 添加节点时，使用文档碎片（document fragment）</strong></p>
+<pre><code>var p, t;
+var frag = document.createDocumentFragment();
+
+p = document.createElement(&apos;p&apos;);
+t = document.createTextNode(&apos;first paragraph&apos;);
+p.appendChild(t);
+frag.appendChild(p);
+
+p = document.createElement(&apos;p&apos;);
+t = document.createTextNode(&apos;second paragraph&apos;);
+p.appendChild(t);
+frag.appendChild(p);
+
+document.body.appendChild(frag);  // 只触发一次屏幕重绘
+</code></pre><p><strong>2. 更新节点时，使用克隆镜像</strong></p>
+<pre><code>var oldNode = document.getElementById(&apos;result&apos;);
+var clone = oldNode.cloneNode(true);
+
+// 处理克隆对象...
+
+// 更新到DOM
+oldNode.parentNode.replaceChild(clone, oldNode);  // 只触发一次重绘
+</code></pre><h2 id="事件委托"><a href="#事件委托" class="headerlink" title="事件委托"></a>事件委托</h2><p>事件委托模式得益于事件冒泡，会减少为每个节点附加的事件监听器数量。如果在<code>div</code>元素中有10个按钮，只需要为该<code>div</code>元素附加一个事件监听器就可以实现为每个按钮分别附加一个监听器的效果。</p>
+<pre><code>function myHandler(e) {
+    var src, parts;
+    // 获取事件和源元素
+    e = e || window.event;
+    src = e.target || e.srcElement;
+
+    // 过滤不感兴趣的事件源
+    if (src.nodeName.toLowerCase() !== &apos;button&apos;) {
+        return;
+    }
+
+    // 实际工作：更新标签
+    parts = src.innerHTML.split(&quot;: &quot;);
+    parts[1] = parseInt(parts[1], 10) + 1;
+    src.innerHTML = parts[0] + &quot;: &quot; + parts[1];
+
+    // 无冒泡
+    if (typeof e.stopPropagation === &quot;function&quot;) {
+        e.stopPropagation();
+    }
+    if (typeof e.cancelBubble !== &apos;undefined&apos;) {
+        e.cancelBubble = true;
+    }
+
+    // 阻止默认操作
+    if (typeof e.preventDefault === &quot;function&quot;) {
+        e.preventDefault();
+    }
+    if (typeof e.returnValue !== &apos;undefined&apos;) {
+        e.returnValue = false;
+    }
+}
+
+// 事件绑定
+var el = document.getElementById(&apos;click-wrap&apos;);
+if (document.addEventListener) { // W3C
+    el.addEventListener(&apos;click&apos;, myHandler, false);
+} else if (document.attachEvent) { // IE
+    el.attachEvent(&apos;click&apos;, myHandler);
+} else { // 终极手段
+    el.onclick = myHandler;
+}
+</code></pre><p>事件委托的缺点在于如果碰巧没有感兴趣的事件发生，那么增加的小部分代码就显得没用了。</p>
+<p>YUI3中有一个<code>Y.delegate()</code>方法，该方法可以指定一个CSS选择器来匹配封装，并使用另外一个选择器来匹配感兴趣的节点。这是十分方便的，因为当事件在关注的节点之外发生时，回调函数实际上并没有被调用。</p>
+<pre><code>function myHandler(e) {
+    var src = e.target;
+    var parts = src.get(&apos;innerHTML&apos;).split(&quot;: &quot;);
+    parts[1] = parseInt(parts[1], 10) + 1;
+    src.set(&apos;innerHTML&apos;, parts[0] + &quot;: &quot; + parts[1]);
+
+    e.halt();
+}
+
+YUI().use(&quot;event-delegate&quot;, function (Y) {
+    Y.delegate(&apos;click&apos;, myHandler, &quot;#click-wrap&quot;, &quot;button&quot;);
+});
+</code></pre><p>同样，jQuery中也有类似的接口。<code>$(selector).delegate(childSelector,event,data,function)</code><br>参见<a href="http://www.w3school.com.cn/jquery/event_delegate.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/jquery/event_delegate.asp</a></p>
+<h2 id="长期运行脚本"><a href="#长期运行脚本" class="headerlink" title="长期运行脚本"></a>长期运行脚本</h2><p>可能会注意到有时候浏览器会提示某个脚本已经运行了很长时间，是否应该停止脚本。实际上无论要处理多么复杂的任务，都不希望应用程序发生上述事情。而且，如果该脚本的工作十分繁重，那么浏览器的UI将会无法响应用户的任何操作，应该尽量避免。</p>
+<p>在js中没有线程，但是可以在浏览器中使用<code>setTimeout()</code>来模拟线程。这样做的思想是将一个大任务分解为多个小任务，并为每一个小任务设置timeout为1毫秒。虽然这样会导致完成整个任务需要耗费更长的时间，但是通过这样做，可以使得用户接口保持响应，用户体验较好。</p>
+<p>注意，timeout时间设置为1毫秒（或者0毫秒）实际上是与浏览器和操作系统有关的。0毫秒不意味着没有timeout，而是指尽可能快的处理。例如在IE中，最快的时钟周期是15毫秒。</p>
+<p>最近的浏览器为长期运行的脚本提供了另外一个解决方案：Web Workers。它为浏览器提供了背景线程支持，可以将任务比较繁重的计算放在单独一个文件中，从主程序（网页）中调用该文件。</p>
+<h2 id="远程脚本"><a href="#远程脚本" class="headerlink" title="远程脚本"></a>远程脚本</h2><h3 id="XMLHttpRequest"><a href="#XMLHttpRequest" class="headerlink" title="XMLHttpRequest"></a>XMLHttpRequest</h3><p>XMLHttpRequest是一个在大多数浏览器中都支持的特殊对象。建立一个HTTP请求分为如下三个步骤：</p>
+<ol>
+<li>建立一个XMLHttpRequest对象（简写为XHR）</li>
+<li>提供一个回调函数来告知请求对象改变状态</li>
+<li>发送请求</li>
+</ol>
+<p>但是在IE 7.0之前的版本中，XHR功能性是以ActiveX对象的方式实现的，因此对于那些版本需要做一些特殊处理。</p>
+<pre><code>var xhr;
+var activeXids = [
+    &apos;MSXML2.XMLHTTP.3.0&apos;,
+    &apos;MSXML2.XMLHTTP&apos;,
+    &apos;Microsoft.XMLHTTP&apos;
+];
+
+if (typeof XMLHttpRequest === &quot;function&quot;) { // 原生XHR
+    xhr =  new XMLHttpRequest();       
+} else { // IE 7.0之前版本
+    for (var i = 0; i &lt; activeXids.length; i += 1) {
+        try {
+            xhr = new ActiveXObject(activeXids[i]);
+            break;
+        } catch (e) {}
+    }
+}
+
+xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4) {
+        return false;
+    }
+    if (xhr.status !== 200) {
+        alert(&quot;Error, status code: &quot; + xhr.status);
+        return false;
+    }
+    document.body.innerHTML += &quot;&lt;pre&gt;&quot; + xhr.responseText + &quot;&lt;\/pre&gt;&quot;;
+};
+
+xhr.open(&quot;GET&quot;, &quot;page.html&quot;, true);
+xhr.send(&quot;&quot;);
+</code></pre><h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>JSONP（JSON with Padding）是另外一种创建远程请求的方法。和XHR有所不同，它不受同一个域浏览器策略的限制，出于从第三方网站载入数据的安全考虑，需要小心使用。</p>
+<p>对应于XHR请求，JSONP的请求可以是任意类型的文档：</p>
+<ul>
+<li>XML文档（过去常用）</li>
+<li>HTML块（现在十分常见）</li>
+<li>JSON数据（轻量级，方便）</li>
+<li>简单文本文件或者其他文档</li>
+</ul>
+<p>对于JSONP，最常见的是用函数调用封装的JSON，函数名由请求方提供。JSONP请求的URL通常格式如，<br><code>http://example.org/getdata.php?callback=myHandler</code><br>getdata.php可以是任意类型的网页，<code>callback</code>参数指定采用哪个js函数来处理该请求的返回值。</p>
+<p>然后像这样将URL载入到动态的<code>&lt;script&gt;</code>元素</p>
+<pre><code>var script = document.createElement(&apos;script&apos;);
+script.src = url;
+document.body.appendChild(script);
+</code></pre><p>服务器响应JSONP数据，这些数据将作为回调函数的参数。最终的结果是在网页中包含了一个新脚本，该脚本碰巧是一个函数调用。但需注意的是，JSONP中的回调函数必须是一个公有的和全局有效的函数。</p>
+<h3 id="框架和图像灯塔"><a href="#框架和图像灯塔" class="headerlink" title="框架和图像灯塔"></a>框架和图像灯塔</h3><p>使用框架也是一种处理远程脚本的备选方案。可以使用js创建一个<code>iframe</code>元素，并修改其<code>src</code>属性的url，新的URL可以包含更新调用者（在iframe之外的父页面）的数据和函数调用。</p>
+<p>使用远程脚本最简单的场景是在只需要向服务器发送数据，而无需服务器回应的时候。在这种情形下，可以创建一个新图像，并将其<code>src</code>属性设置为服务器上的脚本文件，如下所示：</p>
+<p><code>new Image().src = &#39;http://example.org/some/page.php&#39;;</code></p>
+<p>这种模式称为图像灯塔（image beacon），这在希望向服务器发送日志数据时非常有用。举例来说，该模式可以用于收集访问者统计信息。因为用户并不需要服务器对这些日志数据的响应，通常的做法是服务器用一个1x1像素的GIF图片来作为响应（虽然这是一种不好的模式）。使用”204 Not Content”这样的HTTP响应是更好的选择，该HTTP响应的意思是指仅向客户端发送HTTP报头文件，而不发送HTTP内容体。</p>
+<h2 id="脚本载入性能"><a href="#脚本载入性能" class="headerlink" title="脚本载入性能"></a>脚本载入性能</h2><p>脚本元素会阻止下载网页内容。浏览器可以同时下载多个组件，但一旦遇到一个外部脚本文件后，浏览器会停止进一步下载，直到这个脚本文件下载、解析并执行完毕。为了最小化阻止的影响，可以将脚本元素放置于网页的最后部分，刚好在<code>&lt;/body&gt;</code>标签之前。</p>
+<p>也有一些模式可以防范这个问题：</p>
+<ol>
+<li>使用XHR请求载入脚本，并使用<code>eval()</code>将其转换为字符串。缺点是该方法受同一个域的限制，并且使用了<code>eval()</code>这种不好的模式。</li>
+<li>使用<code>defer</code>和<code>async</code>属性。缺点是这种方法并不能在所有浏览器上都有效。</li>
+<li>使用动态的<code>&lt;script&gt;</code>元素</li>
+</ol>
+<h3 id="动态script元素"><a href="#动态script元素" class="headerlink" title="动态script元素"></a>动态script元素</h3><pre><code>var script = document.createElement(&apos;script&apos;);
+script.src = &apos;all_20141209.js&apos;;
+document.documentElement.firstChild.appendChild(script);
+</code></pre><p>上面的过程不会阻塞网页文件中其他部分的下载。但该模式的缺点在于如果js脚本依赖于载入主js文件，那么采用该模式后不能有其他脚本元素。主js文件是异步载入的，因此无法保证该文件什么时候能够载入完毕，所以紧跟着主js文件的脚本可能要假定对象都还未定义。</p>
+<p>为了解决该缺点，可以让所有内联的脚本都不要立即执行，而是将这些脚本都收集起来放在一个数组里面。然后当主脚本文件载入完毕后，就可以执行所有缓存数组中收集的函数了。</p>
+<p>首先，创建一个数组来存储所有内联代码，这部分代码应该放在页面文件尽可能前面的位置。</p>
+<pre><code>var myNamespace = {
+     inlineScripts: []
+};
+
+然后，需要将所有单独的内联脚本封装到一个函数中，并将每个函数增加到inlineScripts数组中。
+
+// 过去是
+// &lt;script&gt;console.log(&apos;inline&apos;);&lt;/script&gt;
+// 修改为
+&lt;script&gt;
+myNamespace.inlineScripts.push(function(){
+     console.log(&apos;inline&apos;);
+});
+&lt;/script&gt;
+
+最后，循环执行缓存中的所有内联脚本。
+
+for(var i=0, len=myNamespace.inlineScripts.length; i&lt;len; i++){
+     myNamespace.inlineScripts[i]();
+}
+</code></pre><h3 id="script元素位置"><a href="#script元素位置" class="headerlink" title="script元素位置"></a>script元素位置</h3><p>上面的例子中，documentElement是指<code>&lt;html&gt;</code>，而它的第一个子元素就是<code>&lt;head&gt;</code></p>
+<p><code>document.documentElement.firstChild.appendChild(script);</code> </p>
+<p>通常也可以这样写</p>
+<p><code>document.getElementsByTagName(&#39;head&#39;)[0].appendChild(script);</code></p>
+<p>可以在网页中不使用<code>&lt;head&gt;</code>和<code>&lt;body&gt;</code>，尽管document.body通常能够在没有<code>&lt;body&gt;</code>标签时正常运作。但是实际上有一个标签一直会在脚本运行的网页中存在，那就是<code>&lt;script&gt;</code>标签，如果没有它，那么里面的js代码就不会运行。基于以上事实，可以在网页中使用<code>insertBefore()</code>来在第一个有效的元素之前插入元素。</p>
+<pre><code>var firstScript = document.getElementsByTagName(&apos;script&apos;)[0];
+firstScript.parentNode.insertBefore(script, firstScript);
+</code></pre><h3 id="延迟加载"><a href="#延迟加载" class="headerlink" title="延迟加载"></a>延迟加载</h3><pre><code>window.onload = function(){
+     var script = document.createElement(&apos;script&apos;);
+     script.src = &apos;all_lazy_20141209.js&apos;;
+     document.documentElement.firstChild.appendChild(script);
+};
+</code></pre><p>这样的做法符合渐进增强的思想，一部分代码是用于初始化页面并将事件附加到UI元素上，而第二部分代码只在用户交互或者其他条件下才用得上，因此这部分内容可以在用户浏览该页面时在后台载入。对于许多应用程序来说，延迟加载的代码部分远远大于立即加载的核心部分，因为很多有趣的操作（例如拖放、XHR和动画等）只在用户触发后发生。</p>
+<h3 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h3><p>上面的模式在页面载入后，无条件地载入附加的js脚本，假定这些代码极有可能用得上。如果只载入那些确实需要的代码，请使用按需加载模式。可以创建一个<code>require()</code>函数，该函数包含需要加载的脚本的名称和当附加脚本加载后需要执行的回调函数。用法如下</p>
+<pre><code>require(&apos;extra.js&apos;, function(){
+     functionDefinedInExtraJS();
+});
+</code></pre><p>require函数的实现</p>
+<pre><code>function require(file, callback) {
+    var script = document.getElementsByTagName(&apos;script&apos;)[0],
+        newjs = document.createElement(&apos;script&apos;);
+
+    // IE
+    newjs.onreadystatechange = function () {
+        if (newjs.readyState === &apos;loaded&apos; || newjs.readyState === &apos;complete&apos;) {
+            callback();
+        }
+    };
+
+    // 其他浏览器
+    newjs.onload = function () {
+        callback();
+    };
+
+    newjs.src = file;
+    script.parentNode.insertBefore(newjs, script);
+}
+</code></pre><p>在IE中订阅<code>readystatechange</code>事件，并寻找<code>readyState</code>状态为”loaded”或”complete”的状态。而在Firefox、Safari和Opera中，需要通过<code>onload</code>属性订阅<code>load</code>事件。注意：这种方法不适用于Safari 2，如果需要，请创建一个时间间隔来定期检查是否指定变量已定义（在附加文件中定义的变量）。当该变量被定义以后，就意味着新脚本已经加载并执行了。</p>
+<h3 id="预加载模式"><a href="#预加载模式" class="headerlink" title="预加载模式"></a>预加载模式</h3><p>在延迟加载和按需加载模式中，我们延迟加载当前页面需要的脚本。此外，还可以延迟加载当前页面不需要，但是在后续页面中可能需要的脚本。这样，当用户打开接下来的网页后，所需要的脚本已经预先加载了，进而用户会感觉速度加快了。</p>
+<p>预加载可以使用动态脚本模式来实现，但是这意味着该脚本将被解析和执行。解析仅仅会增加预加载的时间，而执行脚本可能会导致js错误，因为这些脚本应该是在第二个页面执行的，例如寻找某个特定的DOM节点。</p>
+<p>可以加载脚本而并不解析和执行这些脚本，在IE中可以使用图像灯塔来发出请求。在所有其他浏览器中可以使用一个<code>&lt;object&gt;</code>来代替脚本元素，并将其<code>data</code>属性指向脚本的URL。</p>
+<pre><code>var preload; 
+if (/*@cc_on!@*/false) { // 使用条件注释的IE嗅探
+    preload = function (file) {
+        new Image().src = file;
+    };
+} else {
+    preload = function (file) {
+        var obj = document.createElement(&apos;object&apos;);
+        // 避免显示出该对象
+        obj.width = 0;
+        obj.height = 0;
+        obj.data = file;
+       document.body.appendChild(obj);
+    };
+}
+</code></pre><p>注意：上面的代码使用了分支注释来嗅探IE，该方法比在<code>navigator.userAgent</code>中寻找字符串要安全一些，因为那些字符串很容易被用户修改。<code>var isIE = /*@cc_on!@*/false;</code> 会在除IE外的其他浏览器中将<code>isIE</code>设置为<code>false</code>，因为在注释语句中有一个<code>!</code>，因此在IE中<code>isIE</code>的值为<code>true</code>。</p>
+<p>这种模式的缺点在于使用了用户代理嗅探，但是这是无法避免的。因为在这种情况下，使用特性检测技术无法告知关于浏览器行为的足够信息。举例来说，在这种模式下如果 <code>typeof Image === &#39;function&#39;</code>，那么理论上可以用该函数来代替嗅探。然而在这里该方法没有作用，因为所有浏览器都支持 <code>new Image();</code> 区别仅仅在于有的浏览器为图像有独立的缓存，这也就意味着作为图像预加载的组件不会被用作缓存中的脚本，因此下一个页面会再次下载该图像。</p>
+<p>预加载模式可以用于各种类型组件，而不限于脚本。举例来说，这在登录页面就十分有用。当用户开始输入用户名时，可以使用输入的时间来启动预加载，因为用户下一步极有可能进入登录后的界面。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2014/11/js-pattern-part6-design-pattern.html" rel="next" title="Javascript模式之六-设计模式">
+                <i class="fa fa-chevron-left"></i> Javascript模式之六-设计模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/01/step-by-step-js-component-schoolbox-1.html" rel="prev" title="一步步做组件-学校选择器(1)">
+                一步步做组件-学校选择器(1) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
+          <p class="site-author-name" itemprop="name">阿冒</p>
+           
+              <p class="site-description motion-element" itemprop="description">我曾经失落失望失掉所有方向<br>直到看见平凡才是唯一的答案</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jsorz" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/jsorz" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              博客推荐
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://xiaoiver.github.io/" title="xiaOp的博客" target="_blank">xiaOp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关注分离"><span class="nav-number">1.</span> <span class="nav-text">关注分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM脚本"><span class="nav-number">2.</span> <span class="nav-text">DOM脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件委托"><span class="nav-number">3.</span> <span class="nav-text">事件委托</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#长期运行脚本"><span class="nav-number">4.</span> <span class="nav-text">长期运行脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程脚本"><span class="nav-number">5.</span> <span class="nav-text">远程脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XMLHttpRequest"><span class="nav-number">5.1.</span> <span class="nav-text">XMLHttpRequest</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSONP"><span class="nav-number">5.2.</span> <span class="nav-text">JSONP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#框架和图像灯塔"><span class="nav-number">5.3.</span> <span class="nav-text">框架和图像灯塔</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本载入性能"><span class="nav-number">6.</span> <span class="nav-text">脚本载入性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态script元素"><span class="nav-number">6.1.</span> <span class="nav-text">动态script元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#script元素位置"><span class="nav-number">6.2.</span> <span class="nav-text">script元素位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延迟加载"><span class="nav-number">6.3.</span> <span class="nav-text">延迟加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按需加载"><span class="nav-number">6.4.</span> <span class="nav-text">按需加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预加载模式"><span class="nav-number">6.5.</span> <span class="nav-text">预加载模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">阿冒</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
