@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="以前面试当被问到 css position 能取哪些值时，只回答了 relative absolute fixed 外加 static inherit，在 MDN 上可以看到有个新增的实验性的 position sticky">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.843Z">
+<meta property="og:updated_time" content="2019-02-20T05:52:23.702Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用模式片段之 sticky position">
 <meta name="twitter:description" content="以前面试当被问到 css position 能取哪些值时，只回答了 relative absolute fixed 外加 static inherit，在 MDN 上可以看到有个新增的实验性的 position sticky">
@@ -437,7 +437,7 @@
 <li><a href="http://webpop.github.io/jquery.pin/" target="_blank" rel="noopener">jquery.pin</a></li>
 <li><a href="https://github.com/filamentgroup/fixed-sticky" target="_blank" rel="noopener">fixed-sticky</a></li>
 </ul>
-<h3 id="判断浏览器是否支持sticky"><a href="#判断浏览器是否支持sticky" class="headerlink" title="判断浏览器是否支持sticky"></a>判断浏览器是否支持sticky</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function supportSticky() &#123;</span><br><span class="line">  var _supportCSS = function(property, value)&#123;</span><br><span class="line">    var el = document.createElement(&apos;i&apos;);</span><br><span class="line">    el.style[property] = value;</span><br><span class="line">    var r = el.style[property];</span><br><span class="line">    el = null;</span><br><span class="line">    return r === value;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  var supportVals = [&apos;-webkit-sticky&apos;, &apos;-ms-sticky&apos;, &apos;sticky&apos;].filter(function(item)&#123;</span><br><span class="line">      return _supportCSS(&apos;position&apos;, item);</span><br><span class="line">  &#125;);</span><br><span class="line">  return supportVals.length ? supportVals[0] : null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="判断浏览器是否支持sticky"><a href="#判断浏览器是否支持sticky" class="headerlink" title="判断浏览器是否支持sticky"></a>判断浏览器是否支持sticky</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">supportSticky</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> _supportCSS = <span class="function"><span class="keyword">function</span>(<span class="params">property, value</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(<span class="string">'i'</span>);</span><br><span class="line">    el.style[property] = value;</span><br><span class="line">    <span class="keyword">var</span> r = el.style[property];</span><br><span class="line">    el = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> r === value;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> supportVals = [<span class="string">'-webkit-sticky'</span>, <span class="string">'-ms-sticky'</span>, <span class="string">'sticky'</span>].filter(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> _supportCSS(<span class="string">'position'</span>, item);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> supportVals.length ? supportVals[<span class="number">0</span>] : <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -639,7 +639,7 @@
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                  <a href="https://github.com/halfrost/Halfrost-Field" title="halfrost" target="_blank">halfrost</a>
                 </li>
               
             </ul>

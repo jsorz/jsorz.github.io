@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="主要记录些 git 工作流中最最常用的几个操作，如：提交合并，撤销修改，回滚等操作。 之前也整理过关于 git submodule 的文档，这里简单记录一些自己常用的命令。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.845Z">
+<meta property="og:updated_time" content="2019-02-20T05:46:47.989Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用git命令">
 <meta name="twitter:description" content="主要记录些 git 工作流中最最常用的几个操作，如：提交合并，撤销修改，回滚等操作。 之前也整理过关于 git submodule 的文档，这里简单记录一些自己常用的命令。">
@@ -397,14 +397,14 @@
 <p>之前也整理过关于 <a href="/blog/2016/10/usage-of-git-submodule.html">git submodule</a> 的文档，这里简单记录一些自己常用的命令。</p>
 <a id="more"></a>
 <h2 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h2><p>用于保持commit树的整洁</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend 【修改最后一次提交】</span><br><span class="line">git pull --rebase</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend 【修改最后一次提交】</span><br><span class="line">git pull --rebase</span><br></pre></td></tr></table></figure>
 <p>手动合并</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br><span class="line">git merge branch_name 【在一个分支下合并另一个分支上的改动】</span><br></pre></td></tr></table></figure>
-<h2 id="撤销回退"><a href="#撤销回退" class="headerlink" title="撤销回退"></a>撤销回退</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git rm --cache file_path 【撤消已暂存的文件】</span><br><span class="line">git checkout -- file_path 【撤消对文件的修改】</span><br><span class="line">git reset --hard commit_id 【撤消commit】</span><br><span class="line">git reset --hard HEAD^ 【回退到最新的前一次commit】</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br><span class="line">git merge branch_name 【在一个分支下合并另一个分支上的改动】</span><br></pre></td></tr></table></figure>
+<h2 id="撤销回退"><a href="#撤销回退" class="headerlink" title="撤销回退"></a>撤销回退</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git rm --cache file_path 【撤消已暂存的文件】</span><br><span class="line">git checkout -- file_path 【撤消对文件的修改】</span><br><span class="line">git reset --hard commit_id 【撤消commit】</span><br><span class="line">git reset --hard HEAD^ 【回退到最新的前一次commit】</span><br></pre></td></tr></table></figure>
 <p><a href="http://blog.csdn.net/wirelessqa/article/details/20152353" target="_blank" rel="noopener">Git入门指南八:Git撤消操作</a></p>
 <p><a href="http://blog.csdn.net/wirelessqa/article/details/20153689" target="_blank" rel="noopener">Git入门指南十一:Git branch 分支与合并分支</a></p>
 <h2 id="回滚的两种情况"><a href="#回滚的两种情况" class="headerlink" title="回滚的两种情况"></a>回滚的两种情况</h2><h3 id="A-还没有-push"><a href="#A-还没有-push" class="headerlink" title="A) 还没有 push"></a>A) 还没有 push</h3><p>这种情况发生在你的本地代码仓库，可能你 add commit 以后发现代码有点问题，准备取消提交，用到下面命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset [--soft | --mixed | --hard]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset [--soft | --mixed | --hard]</span><br></pre></td></tr></table></figure>
 <p>1、<code>--mixed</code></p>
 <p>会保留源码，只是将 git commit 和 index 信息回退到了某个版本。git reset 默认是 –mixed 模式。</p>
 <p>2、<code>--soft</code></p>
@@ -416,7 +416,7 @@
 <p>git revert: 用于反转提交，执行 revert 命令时要求工作树必须是干净的。</p>
 <p><strong>【注意】git revert 用一个新提交来消除一个历史提交所做的任何修改</strong></p>
 <p>revert 之后你的本地代码会回滚到指定的历史版本，这时你再 git push 既可以把线上的代码更新，也不会像 reset 造成冲突的问题。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git revert commit_id</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git revert commit_id</span><br></pre></td></tr></table></figure>
 <h3 id="revert-与-reset-区别"><a href="#revert-与-reset-区别" class="headerlink" title="revert 与 reset 区别"></a>revert 与 reset 区别</h3><p>reset 是在正常的 commit 历史，删除了指定的 commit，这时 HEAD 是向后移动了。而 revert 是在正常的 commit 历史中再 commit 一次，只不过是反向提交，它的 HEAD 是一直向前的。</p>
 <p>如果在日后现有分支和历史分支需要合并的时候，reset 恢复部分的代码依然会出现在历史分支里，但是 revert 方式提交的 commit 并不会出现在历史分支里。</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>图解Git：<a href="https://marklodato.github.io/visual-git-guide/index-en.html" target="_blank" rel="noopener">https://marklodato.github.io/visual-git-guide/index-en.html</a></p>
@@ -620,7 +620,7 @@
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                  <a href="https://github.com/halfrost/Halfrost-Field" title="halfrost" target="_blank">halfrost</a>
                 </li>
               
             </ul>

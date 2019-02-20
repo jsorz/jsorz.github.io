@@ -102,7 +102,7 @@
 <meta property="og:image" content="http://jsorz.cn/images/captures/20161021_sub_commit.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20161021_sub_rollback.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20161021_sub_delete.png">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.842Z">
+<meta property="og:updated_time" content="2019-02-20T05:49:28.414Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 git submodule 建立子项目依赖">
 <meta name="twitter:description" content="在使用 git 做项目时，也许会碰到一些组件需要独立出去，同时供多个项目使用，而不是在多个项目里拷贝两份组件的代码。如果公共的组件已经成熟了，可以发布到CDN上供多个项目去引用。但如果都在开发阶段，在多个项目里都要引用某个公共组件，这是就需要用到 git submodule 的功能了。">
@@ -427,11 +427,11 @@
 <p><img src="/images/captures/20161021_sub_commit.png"></p>
 <p>Git 在主项目中记录了一个子模块的提交日志的指针，用于保存子模块的提交日志所处的位置，以保证无论子模块是否有新的提交，在任何一个地方克隆下顶级项目时，各个子模块的记录是一致的。避免因为所引用的子模块不一致导致的潜在问题。如果我们更新了子模块，我们需要把这个最近的记录提交到版本库中，以方便和其他人协同。</p>
 <h2 id="克隆主项目"><a href="#克隆主项目" class="headerlink" title="克隆主项目"></a>克隆主项目</h2><p>方法1：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github.com:xxx/your-app.git</span><br><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:xxx/your-app.git</span><br><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
 <p>方法2：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone --recursive git@github.com:xxx/your-app.git</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --recursive git@github.com:xxx/your-app.git</span><br></pre></td></tr></table></figure>
 <p>今后对主项目 pull 时</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br><span class="line">git submodule update --recursive</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br><span class="line">git submodule update --recursive</span><br></pre></td></tr></table></figure>
 <h2 id="Submodule-开发协作"><a href="#Submodule-开发协作" class="headerlink" title="Submodule 开发协作"></a>Submodule 开发协作</h2><p>在主项目中添加了 submodule 作为子项目，其实进入到子项目中，它跟平常<code>git clone</code>下来的仓库没啥区别，同样可以在里面 commit, pull, push</p>
 <p>如果需要将子项目回退到之前的版本，可以使用<code>git reset –hard commit_id</code>，即在主项目中不使用最新版本的子项目（<strong>此时同样需在主项目中 add commit 1次，以更新 Subproject  的指针位置</strong>）。<a href="http://blog.csdn.net/wirelessqa/article/category/1522507" target="_blank" rel="noopener">更多 git 工作流的协作&gt;&gt;</a></p>
 <p><img src="/images/captures/20161021_sub_rollback.png"></p>
@@ -639,7 +639,7 @@
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                  <a href="https://github.com/halfrost/Halfrost-Field" title="halfrost" target="_blank">halfrost</a>
                 </li>
               
             </ul>

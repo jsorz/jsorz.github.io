@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="也是去年公司培训里听课的一些笔记，较为粗略，主要供自己查阅用。bash 命令自己平时用的少，得督促了，在写 build 过程中很管用的。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.846Z">
+<meta property="og:updated_time" content="2019-02-20T05:45:47.958Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bash基础编程 (听课笔记)">
 <meta name="twitter:description" content="也是去年公司培训里听课的一些笔记，较为粗略，主要供自己查阅用。bash 命令自己平时用的少，得督促了，在写 build 过程中很管用的。">
@@ -396,11 +396,11 @@
         <p>也是去年公司培训里听课的一些笔记，较为粗略，主要供自己查阅用。bash 命令自己平时用的少，得督促了，在写 build 过程中很管用的。</p>
 <a id="more"></a>
 <h2 id="热身"><a href="#热身" class="headerlink" title="热身"></a>热身</h2><p>seq</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">seq 0 5</span><br><span class="line">seq -s</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">seq 0 5</span><br><span class="line">seq -s</span><br></pre></td></tr></table></figure>
 <p>bc</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo 1+2 | bc</span><br><span class="line">echo &apos;1+2&apos; | bc</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1+2 | bc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'1+2'</span> | bc</span><br></pre></td></tr></table></figure>
 <p>求和</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seq -s &apos;+&apos; 100 | bc</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seq -s <span class="string">'+'</span> 100 | bc</span><br></pre></td></tr></table></figure>
 <h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><p>命令</p>
 <ul>
 <li>关键字</li>
@@ -448,9 +448,9 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$&#123;a&#125;</span><br><span class="line"></span><br><span class="line">$&#123;#a&#125;   变量得长度</span><br><span class="line">$&#123;a%&#125;   尾匹配</span><br><span class="line">$&#123;a%%&#125;  最大尾匹配</span><br><span class="line">$&#123;a#&#125;   头匹配</span><br><span class="line">$&#123;a##&#125;  最大头匹配</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;a&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$&#123;#a&#125;</span>   变量得长度</span><br><span class="line"><span class="variable">$&#123;a%&#125;</span>   尾匹配</span><br><span class="line"><span class="variable">$&#123;a%%&#125;</span>  最大尾匹配</span><br><span class="line"><span class="variable">$&#123;a#&#125;</span>   头匹配</span><br><span class="line"><span class="variable">$&#123;a##&#125;</span>  最大头匹配</span><br></pre></td></tr></table></figure>
 <p>数组</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">array=(a b c)</span><br><span class="line">$&#123;a[0]&#125;</span><br><span class="line">$&#123;#a[0]&#125;    第一个元素的长度</span><br><span class="line">$&#123;a[@]&#125;</span><br><span class="line">$&#123;#a[@]&#125;    数组的长度</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">array=(a b c)</span><br><span class="line"><span class="variable">$&#123;a[0]&#125;</span></span><br><span class="line"><span class="variable">$&#123;#a[0]&#125;</span>    第一个元素的长度</span><br><span class="line"><span class="variable">$&#123;a[@]&#125;</span></span><br><span class="line"><span class="variable">$&#123;#a[@]&#125;</span>    数组的长度</span><br></pre></td></tr></table></figure>
 <p>成功与非成功</p>
 <ul>
 <li>0 为成功，非0 为不成功</li>
@@ -470,7 +470,7 @@
 <li>bash兼容了很多种写法，建议只记住<code>if [[ ]]</code></li>
 </ul>
 <p>循环遍历</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">ary=(a b c)</span><br><span class="line">for (( i=0; i&lt;$&#123;#ary[@]&#125;; i++ )) ; do</span><br><span class="line">    echo $&#123;ary[$i]&#125;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">ary=(a b c)</span><br><span class="line"><span class="keyword">for</span> (( i=0; i&lt;<span class="variable">$&#123;#ary[@]&#125;</span>; i++ )) ; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;ary[$i]&#125;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
 <h2 id="字符处理"><a href="#字符处理" class="headerlink" title="字符处理"></a>字符处理</h2><ul>
 <li>正则与通配符<ul>
 <li>正则，一般通过外部命令实现，如 awk, grep 等</li>
@@ -499,15 +499,15 @@
 <li>标准模板 TODO</li>
 </ul>
 <p>调试</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">trap DEBUG</span><br><span class="line">bash -x</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">trap</span> DEBUG</span><br><span class="line">bash -x</span><br></pre></td></tr></table></figure>
 <p>here-document</p>
 <ul>
 <li>文本输入：<code>&lt;&lt;</code></li>
 </ul>
 <p>进程替换</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diff &lt;(echo x) &lt;(echo y)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diff &lt;(<span class="built_in">echo</span> x) &lt;(<span class="built_in">echo</span> y)</span><br></pre></td></tr></table></figure>
 <p>here-string</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &apos;s/a/A/&apos; &lt;&lt;&lt; abc</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">'s/a/A/'</span> &lt;&lt;&lt; abc</span><br></pre></td></tr></table></figure>
 <p>多进程并发控制</p>
 <ul>
 <li>标准模板 TODO</li>
@@ -515,7 +515,7 @@
 <li>用 fd</li>
 </ul>
 <h2 id="误操作"><a href="#误操作" class="headerlink" title="误操作"></a>误操作</h2><p>rm 重灾区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rm -rf $dir/</span><br><span class="line">rm -rf  / dir （路径前多了一个空格，也相当于把根目录也删了）</span><br><span class="line">rm -rf /path/a/b</span><br><span class="line"></span><br><span class="line">cd dir/ （如果dir目录不存在，不知道会删掉啥。。）</span><br><span class="line">rm -rf *</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rm -rf <span class="variable">$dir</span>/</span><br><span class="line">rm -rf  / dir （路径前多了一个空格，也相当于把根目录也删了）</span><br><span class="line">rm -rf /path/a/b</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> dir/ （如果dir目录不存在，不知道会删掉啥。。）</span><br><span class="line">rm -rf *</span><br></pre></td></tr></table></figure>
 <p>double check</p>
 <ul>
 <li><code>set -ue</code></li>
@@ -720,7 +720,7 @@
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                  <a href="https://github.com/halfrost/Halfrost-Field" title="halfrost" target="_blank">halfrost</a>
                 </li>
               
             </ul>

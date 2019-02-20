@@ -102,7 +102,7 @@
 <meta property="og:image" content="http://jsorz.cn/images/captures/20180302_combination_question.jpg">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20180302_triangle_question.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20180302_triangle_topology.png">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.848Z">
+<meta property="og:updated_time" content="2019-02-20T05:51:09.685Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="组合计数问题">
 <meta name="twitter:description" content="假设有 A、B、C 三种药丸，现在要从 A、B、C 三种药丸中取100粒进行调剂，规则如下：  A、B、C 这三种药丸每种至少有1粒 不考虑药丸的顺序 同种药丸每粒都相同  问：药品调剂的组合共有多少种？">
@@ -424,7 +424,7 @@
 <p><a href="https://myst729.github.io/#/blog/articles/2016/counting-triangles/" target="_blank" rel="noopener">https://myst729.github.io/#/blog/articles/2016/counting-triangles/</a> 提供了一种巧妙的方法</p>
 <p><img src="/images/captures/20180302_triangle_topology.png"></p>
 <p>将三角形做拓扑变换（<a href="https://en.wikipedia.org/wiki/Topology" target="_blank" rel="noopener">Topology</a>），即可用如下数据结构简单的表示图形中的点关系</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [&apos;A&apos;, &apos;A&apos;, &apos;A&apos;, &apos;A&apos;],</span><br><span class="line">  [&apos;B&apos;, &apos;C&apos;, &apos;D&apos;, &apos;E&apos;],</span><br><span class="line">  [&apos;H&apos;, &apos;G&apos;, &apos;F&apos;, &apos;E&apos;],</span><br><span class="line">  [&apos;H&apos;, &apos;I&apos;, &apos;J&apos;, &apos;K&apos;]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [<span class="string">'A'</span>, <span class="string">'A'</span>, <span class="string">'A'</span>, <span class="string">'A'</span>],</span><br><span class="line">  [<span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>, <span class="string">'E'</span>],</span><br><span class="line">  [<span class="string">'H'</span>, <span class="string">'G'</span>, <span class="string">'F'</span>, <span class="string">'E'</span>],</span><br><span class="line">  [<span class="string">'H'</span>, <span class="string">'I'</span>, <span class="string">'J'</span>, <span class="string">'K'</span>]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 <p>再遍历变换后的矩形，只要满足矩形的4个节点有且只有3个不相同的节点，即代表一个三角形</p>
 <p>最后。。。答案是 <strong>24</strong></p>
 
@@ -626,7 +626,7 @@
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                  <a href="https://github.com/halfrost/Halfrost-Field" title="halfrost" target="_blank">halfrost</a>
                 </li>
               
             </ul>

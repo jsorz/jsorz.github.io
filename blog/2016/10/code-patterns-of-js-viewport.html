@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="继续【常用模式片段】系列的JS部分，首先整理了下关于滚动视窗的一些判定方法，经常用于做各种滚动相关的交互效果，比如滚动刷新，图片延迟加载（当图片位于视窗范围内才加载）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.843Z">
+<meta property="og:updated_time" content="2019-02-20T05:49:16.334Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用模式片段之JS视窗">
 <meta name="twitter:description" content="继续【常用模式片段】系列的JS部分，首先整理了下关于滚动视窗的一些判定方法，经常用于做各种滚动相关的交互效果，比如滚动刷新，图片延迟加载（当图片位于视窗范围内才加载）">
@@ -396,7 +396,7 @@
         <p>继续【常用模式片段】系列的JS部分，首先整理了下关于滚动视窗的一些判定方法，经常用于做各种滚动相关的交互效果，比如滚动刷新，图片延迟加载（当图片位于视窗范围内才加载）</p>
 <a id="more"></a>
 <h3 id="一、页面scrollTop"><a href="#一、页面scrollTop" class="headerlink" title="一、页面scrollTop"></a>一、页面scrollTop</h3><p>在jquery中直接<code>$(window).scrollTop()</code>就完事了，但也要知道在原生js中的兼容性写法为</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.pageYOffset || <span class="built_in">document</span>.documentElement.scrollTop || <span class="built_in">document</span>.body.scrollTop</span><br></pre></td></tr></table></figure>
 <p>可参考如下</p>
 <ul>
 <li><p><a href="http://www.cnblogs.com/freshbird/p/3422972.html" target="_blank" rel="noopener">关于pageYOffset scrollY scrollTop的小结</a></p>
@@ -647,7 +647,7 @@
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="https://www.jianshu.com/u/12201cdd5d7a" title="halfrost" target="_blank">halfrost</a>
+                  <a href="https://github.com/halfrost/Halfrost-Field" title="halfrost" target="_blank">halfrost</a>
                 </li>
               
             </ul>
