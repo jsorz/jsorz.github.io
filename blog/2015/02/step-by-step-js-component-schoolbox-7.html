@@ -100,7 +100,7 @@
 <meta property="og:description" content="本来这个系列主题已经结束了，突然想到还有个功能要做，就是“模态”，即把学校选择器做成一个类似模态的对话框。这样就可以应付这样的使用场景：在一个学生列表的页面中，可以修改任意学生的所在学校，也可以添加其他学校的学生。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20150225_01.jpg">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.835Z">
+<meta property="og:updated_time" content="2019-02-20T12:12:44.111Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一步步做组件-学校选择器(7)">
 <meta name="twitter:description" content="本来这个系列主题已经结束了，突然想到还有个功能要做，就是“模态”，即把学校选择器做成一个类似模态的对话框。这样就可以应付这样的使用场景：在一个学生列表的页面中，可以修改任意学生的所在学校，也可以添加其他学校的学生。">
@@ -406,129 +406,22 @@
 <p>可以看到其实没什么，就是页面背景加一块<strong>遮罩</strong>（mask），然后添加一个对话框的关闭按钮，告诉用户一定要先对该对话框进行操作。</p>
 <h2 id="添加模态"><a href="#添加模态" class="headerlink" title="添加模态"></a>添加模态</h2><p>首先从SchoolBox的对外接口出发，原来我们构造SchoolBox对象时会传入一个<code>appendTo</code>参数，意思是把这个对象追到到哪个元素中去。现在我们不用传<code>appendTo</code>了，就可以表示这是个模态框，不需要追加到哪个具体元素。</p>
 <p>1.我们要做的就是在SchoolBox对外的<code>show</code>和<code>hide</code>方法做相应的改变。</p>
-<pre><code>show: function(){
-    if(this.opts.popup){
-        $(&apos;body&apos;).append(&apos;&lt;div class=&quot;school-box-mask&quot;&gt;&lt;/div&gt;&apos;);
-        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;)
-            .removeClass(&apos;school-box-hide&apos;).addClass(&apos;school-box-popup&apos;);
-    }
-    else{
-        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;).slideDown();
-    }
-},
-hide: function(){
-    if(this.opts.popup){
-        $(&apos;.school-box-mask&apos;).remove();
-        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;)
-            .removeClass(&apos;school-box-popup&apos;).addClass(&apos;school-box-hide&apos;);
-    }
-    else{
-        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;).slideUp();
-    }
-}
-</code></pre><p>这里注意，当用户不传入<code>appendTo</code>时，构造函数中会给它个默认值就是<code>body</code>，即上面代码中的<code>$(this.opts.appendTo)</code>就是<code>$(&#39;body&#39;)</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.opts.popup)&#123;</span><br><span class="line">        $(<span class="string">'body'</span>).append(<span class="string">'&lt;div class="school-box-mask"&gt;&lt;/div&gt;'</span>);</span><br><span class="line">        $(<span class="keyword">this</span>.opts.appendTo).find(<span class="string">'.school-box-wrapper'</span>)</span><br><span class="line">            .removeClass(<span class="string">'school-box-hide'</span>).addClass(<span class="string">'school-box-popup'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        $(<span class="keyword">this</span>.opts.appendTo).find(<span class="string">'.school-box-wrapper'</span>).slideDown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line">hide: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.opts.popup)&#123;</span><br><span class="line">        $(<span class="string">'.school-box-mask'</span>).remove();</span><br><span class="line">        $(<span class="keyword">this</span>.opts.appendTo).find(<span class="string">'.school-box-wrapper'</span>)</span><br><span class="line">            .removeClass(<span class="string">'school-box-popup'</span>).addClass(<span class="string">'school-box-hide'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        $(<span class="keyword">this</span>.opts.appendTo).find(<span class="string">'.school-box-wrapper'</span>).slideUp();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里注意，当用户不传入<code>appendTo</code>时，构造函数中会给它个默认值就是<code>body</code>，即上面代码中的<code>$(this.opts.appendTo)</code>就是<code>$(&#39;body&#39;)</code>。</p>
 <p>2.在初始化时添加模态框的窗口栏和关闭按钮。</p>
-<pre><code>var $popupCloseCopy = $(&apos;&lt;div class=&quot;school-box-popup-close&quot;&gt;&lt;a href=&quot;javascript:void(0)&quot; title=&quot;关闭&quot;&gt;X&lt;/a&gt;&lt;/div&gt;&apos;);
-
-var init = function(instance){
-    // 生成元素
-    var $parent = $(instance.opts.appendTo);
-    var $el = $(&apos;&lt;div class=&quot;school-box-wrapper&quot;&gt;&lt;/div&gt;&apos;);
-
-    $el.append($schoolBoxCopy.clone());
-    $parent.append($el);
-
-    // popup关闭
-    if(instance.opts.popup){
-        var $popup = $popupCloseCopy.clone();
-        $el.prepend($popup);
-
-        $popup.find(&apos;a&apos;).click(function(){
-            instance.hide();
-        });
-    }
-
-    // 以下省略...
-};
-</code></pre><p>3.为模态框和遮罩添加相应的样式。</p>
-<pre><code>.school-box-mask{
-    background-color: #666;
-    height: 100%;
-    left: 0;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 99;
-}
-.school-box-popup{
-    margin-left: -25%;
-    left: 50%;
-    position: fixed;
-    top: 120px;
-    z-index: 100;
-}
-.school-box-popup-close{
-    background-color: #444;
-    height: 24px;
-    opacity: 0.8;
-    padding: 2px 6px;
-}
-.school-box-popup-close a{
-    float: right;
-    font-family: Arial;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 24px;
-    color: #ddd;
-    text-decoration: none;
-}
-.school-box-popup-close a:hover{
-    color: #fff;
-}
-.school-box-hide{
-    display: none;
-}
-</code></pre><p>4.【patch】在真正的构造函数中添加<code>appendTo</code>的默认值，并添加<code>this.opts.popup</code>。在prototype的<code>init</code>中如果是<code>popup</code>，先隐藏<code>school-box-wrapper</code>，因为它直接append到body最后。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $popupCloseCopy = $(<span class="string">'&lt;div class="school-box-popup-close"&gt;&lt;a href="javascript:void(0)" title="关闭"&gt;X&lt;/a&gt;&lt;/div&gt;'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> init = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 生成元素</span></span><br><span class="line">    <span class="keyword">var</span> $parent = $(instance.opts.appendTo);</span><br><span class="line">    <span class="keyword">var</span> $el = $(<span class="string">'&lt;div class="school-box-wrapper"&gt;&lt;/div&gt;'</span>);</span><br><span class="line"></span><br><span class="line">    $el.append($schoolBoxCopy.clone());</span><br><span class="line">    $parent.append($el);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// popup关闭</span></span><br><span class="line">    <span class="keyword">if</span>(instance.opts.popup)&#123;</span><br><span class="line">        <span class="keyword">var</span> $popup = $popupCloseCopy.clone();</span><br><span class="line">        $el.prepend($popup);</span><br><span class="line"></span><br><span class="line">        $popup.find(<span class="string">'a'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            instance.hide();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>3.为模态框和遮罩添加相应的样式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.school-box-mask</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#666</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">z-index</span>: <span class="number">99</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.school-box-popup</span>&#123;</span><br><span class="line">    <span class="attribute">margin-left</span>: -<span class="number">25%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">position</span>: fixed;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">120px</span>;</span><br><span class="line">    <span class="attribute">z-index</span>: <span class="number">100</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.school-box-popup-close</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#444</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">24px</span>;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.8</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">2px</span> <span class="number">6px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.school-box-popup-close</span> <span class="selector-tag">a</span>&#123;</span><br><span class="line">    <span class="attribute">float</span>: right;</span><br><span class="line">    <span class="attribute">font-family</span>: Arial;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>: bold;</span><br><span class="line">    <span class="attribute">line-height</span>: <span class="number">24px</span>;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#ddd</span>;</span><br><span class="line">    <span class="attribute">text-decoration</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.school-box-popup-close</span> <span class="selector-tag">a</span><span class="selector-pseudo">:hover</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.school-box-hide</span>&#123;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4.【patch】在真正的构造函数中添加<code>appendTo</code>的默认值，并添加<code>this.opts.popup</code>。在prototype的<code>init</code>中如果是<code>popup</code>，先隐藏<code>school-box-wrapper</code>，因为它直接append到body最后。</p>
 <h2 id="对象共享"><a href="#对象共享" class="headerlink" title="对象共享"></a>对象共享</h2><p>到这里我们已经实现了模态的SchoolBox，但是还有个问题，因为SchoolBox的构造开销不小，我们不希望在页面中每个有“学校”的地方都为之创建一个SchoolBox对象，我们希望同一个页面中能共用同一个SchoolBox对象。</p>
 <p>因为我们之前已经使用了观察者模式，页面中的元素去监听自定义事件，然而“学校选定”这件事只触发一个事件。因此如果页面中有多个元素都监听着<code>schoolChosen</code>事件，那么当由一个元素打开的学校选择器操作完成后，所有监听着该事件的其他元素都会做出相应的改变。即在一个学生列表的页面中，我改变一个学生的学校，其他学生的学校也会跟着改变。</p>
 <p>因此要实现共用一个对象，我们得在每次使用它时，清空它的监听者列表，并重新赋予它该次使用时唯一的回调函数。这样就可以实现操作一个学生的学校，只响应一个元素。</p>
-<pre><code>SchoolBox.prototype.unbind = function(type){
-    this.handlers[type] = [];
-    return this;
-};
-</code></pre><h2 id="完整应用"><a href="#完整应用" class="headerlink" title="完整应用"></a>完整应用</h2><p>多个需要使用学校的元素</p>
-<pre><code>&lt;div id=&quot;formResult&quot;&gt;
-    &lt;div&gt;
-        &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
-        &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
-        &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
-    &lt;/div&gt;
-    &lt;div&gt;
-        &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
-        &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
-        &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
-    &lt;/div&gt;
-    &lt;div&gt;
-        &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
-        &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
-        &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre><p>共用一个SchoolBox对象，为页面元素绑定事件。</p>
-<pre><code>$(&apos;.choose-school&apos;).click(function(){
-    var $schoolInput = $(this).siblings(&apos;.school-input&apos;);
-    var $schoolId = $(this).siblings(&apos;.school-id&apos;);
-
-    // 监听自定义事件
-    schoolBox.unbind(&apos;schoolChosen&apos;).on(&apos;schoolChosen&apos;, function(data){
-        $schoolInput.val(data.schoolName);
-        $schoolId.val(data.schoolId);
-    });
-
-    schoolBox.show();
-});
-</code></pre><p><a href="/demo/SchoolBox/v8/demo.html">学校选择器v8 Demo</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SchoolBox.prototype.unbind = <span class="function"><span class="keyword">function</span>(<span class="params">type</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.handlers[type] = [];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="完整应用"><a href="#完整应用" class="headerlink" title="完整应用"></a>完整应用</h2><p>多个需要使用学校的元素</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"formResult"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-input"</span> <span class="attr">readonly</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-id"</span> <span class="attr">readonly</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:void(0)"</span> <span class="attr">class</span>=<span class="string">"choose-school"</span>&gt;</span>选择学校<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-input"</span> <span class="attr">readonly</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-id"</span> <span class="attr">readonly</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:void(0)"</span> <span class="attr">class</span>=<span class="string">"choose-school"</span>&gt;</span>选择学校<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-input"</span> <span class="attr">readonly</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-id"</span> <span class="attr">readonly</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:void(0)"</span> <span class="attr">class</span>=<span class="string">"choose-school"</span>&gt;</span>选择学校<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>共用一个SchoolBox对象，为页面元素绑定事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.choose-school'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $schoolInput = $(<span class="keyword">this</span>).siblings(<span class="string">'.school-input'</span>);</span><br><span class="line">    <span class="keyword">var</span> $schoolId = $(<span class="keyword">this</span>).siblings(<span class="string">'.school-id'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听自定义事件</span></span><br><span class="line">    schoolBox.unbind(<span class="string">'schoolChosen'</span>).on(<span class="string">'schoolChosen'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">        $schoolInput.val(data.schoolName);</span><br><span class="line">        $schoolId.val(data.schoolId);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    schoolBox.show();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><a href="/demo/SchoolBox/v8/demo.html">学校选择器v8 Demo</a></p>
 
       
     </div>

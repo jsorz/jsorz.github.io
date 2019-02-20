@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="最近面试经常拿这个学校选择器作为例子来讲自己的JS学习过程，有位工程师哥哥直接打开这里“注册”里的第二步，就是我这个功能最初应用的地方。跟他讨论实现模态时事件的unbind这种方式是不是不好时，他给了我一点启发，于是我回过头来重新思考。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.837Z">
+<meta property="og:updated_time" content="2019-02-20T12:21:45.289Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一步步做组件-学校选择器(8)">
 <meta name="twitter:description" content="最近面试经常拿这个学校选择器作为例子来讲自己的JS学习过程，有位工程师哥哥直接打开这里“注册”里的第二步，就是我这个功能最初应用的地方。跟他讨论实现模态时事件的unbind这种方式是不是不好时，他给了我一点启发，于是我回过头来重新思考。">
@@ -396,175 +396,41 @@
         <p>最近面试经常拿这个<a href="/blog/2015/02/step-by-step-js-component-schoolbox-collections.html">学校选择器</a>作为例子来讲自己的JS学习过程，有位工程师哥哥直接打开<a href="http://mooctest.net/" target="_blank" rel="noopener">这里</a>“注册”里的第二步，就是我这个功能最初应用的地方。跟他讨论实现模态时事件的unbind<a href="/blog/2015/02/step-by-step-js-component-schoolbox-7.html#对象共享">这种方式</a>是不是不好时，他给了我一点启发，于是我回过头来重新思考。</p>
 <a id="more"></a>
 <h2 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h2><p>假设页面上有这么三行元素</p>
-<pre><code>&lt;div&gt;
-    &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
-    &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
-    &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
-&lt;/div&gt;
-&lt;div&gt;
-    &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
-    &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
-    &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
-&lt;/div&gt;
-&lt;div&gt;
-    &lt;input type=&quot;text&quot; class=&quot;school-input&quot; readonly/&gt;
-    &lt;input type=&quot;text&quot; class=&quot;school-id&quot; readonly&gt;
-    &lt;a href=&quot;javascript:void(0)&quot; class=&quot;choose-school&quot;&gt;选择学校&lt;/a&gt;
-&lt;/div&gt;
-</code></pre><p>想要对每行都“选择学校”，并将选中的值填回该行中的<code>input</code>元素中，最早代码是酱紫的。</p>
-<pre><code>$(&apos;.choose-school&apos;).click(function(event){
-    var $source = $(this);
-
-    // 监听自定义事件
-    schoolBox.on(&apos;schoolChosen&apos;, function(data){
-        $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
-        $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
-    });
-
-    schoolBox.show();
-});
-</code></pre><p>当点一个元素时没问题，但是点了两个三个元素后，就会发现每次“选择学校”后都会一起刷新。原因就在于这三个元素都把各自的回调加绑到了<code>schoolChosen</code>事件中，而<code>schoolBox</code>的<code>schoolChosen</code>被触发时，它会依次调用绑到它身上的handlers。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-input"</span> <span class="attr">readonly</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-id"</span> <span class="attr">readonly</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:void(0)"</span> <span class="attr">class</span>=<span class="string">"choose-school"</span>&gt;</span>选择学校<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-input"</span> <span class="attr">readonly</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-id"</span> <span class="attr">readonly</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:void(0)"</span> <span class="attr">class</span>=<span class="string">"choose-school"</span>&gt;</span>选择学校<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-input"</span> <span class="attr">readonly</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"school-id"</span> <span class="attr">readonly</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:void(0)"</span> <span class="attr">class</span>=<span class="string">"choose-school"</span>&gt;</span>选择学校<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>想要对每行都“选择学校”，并将选中的值填回该行中的<code>input</code>元素中，最早代码是酱紫的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.choose-school'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $source = $(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听自定义事件</span></span><br><span class="line">    schoolBox.on(<span class="string">'schoolChosen'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">        $source.siblings(<span class="string">'.school-input'</span>).val(data.schoolName);</span><br><span class="line">        $source.siblings(<span class="string">'.school-id'</span>).val(data.schoolId);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    schoolBox.show();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>当点一个元素时没问题，但是点了两个三个元素后，就会发现每次“选择学校”后都会一起刷新。原因就在于这三个元素都把各自的回调加绑到了<code>schoolChosen</code>事件中，而<code>schoolBox</code>的<code>schoolChosen</code>被触发时，它会依次调用绑到它身上的handlers。</p>
 <p>在SchoolBox内部的实现中，使用一个map来记录所有的事件回调，key是事件名称，而value是监听该事件的回调函数的数组。</p>
-<pre><code>SchoolBox.prototype = {
-    on: function(type, handler){
-        if(typeof this.handlers[type] === &apos;undefined&apos;){
-            this.handlers[type] = [];
-        }
-        this.handlers[type].push(handler);
-    },
-    fire: function(type, data){
-        if(this.handlers[type] instanceof Array){
-            var handlers = this.handlers[type];
-            for(var i=0, len=handlers.length; i&lt;len; i++){
-                handlers[i](data);
-            }
-        }
-    }
-};
-</code></pre><p>因此以上实现代码是有弊端的，页面上多个元素共享同一个模态对话框时，无法正确地响应事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">SchoolBox.prototype = &#123;</span><br><span class="line">    on: <span class="function"><span class="keyword">function</span>(<span class="params">type, handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.handlers[type] === <span class="string">'undefined'</span>)&#123;</span><br><span class="line">            <span class="keyword">this</span>.handlers[type] = [];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.handlers[type].push(handler);</span><br><span class="line">    &#125;,</span><br><span class="line">    fire: <span class="function"><span class="keyword">function</span>(<span class="params">type, data</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.handlers[type] <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> handlers = <span class="keyword">this</span>.handlers[type];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=handlers.length; i&lt;len; i++)&#123;</span><br><span class="line">                handlers[i](data);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>因此以上实现代码是有弊端的，页面上多个元素共享同一个模态对话框时，无法正确地响应事件。</p>
 <p>在上一篇<a href="/blog/2015/02/step-by-step-js-component-schoolbox-7.html#对象共享">一步步做组件-学校选择器(7)</a>中使用了一种暴力的解决办法，每次click时都对SchoolBox对象unbind掉所有的事件，然后重新监听，以保证每次打开SchoolBox时handlers map中该事件类型的回调函数只有唯一的一个。很明显这种做法不是很妥。</p>
 <h2 id="从监听上入手"><a href="#从监听上入手" class="headerlink" title="从监听上入手"></a>从监听上入手</h2><p>由于上面的代码在监听时只绑定事件名称，不区分监听者元素，因此很容易想到在<code>on</code>监听时把当前操作的元素ID连同回调函数一起传入。这样的话，SchoolBox内部的handlers的map格式要稍微改下，即<code>{ eventType1: { sourceId1: function(){} } }</code>这样的格式。</p>
-<pre><code>SchoolBox.prototype = {
-    on: function(type, sourceId, handler){
-        if(typeof this.handlers[type] === &apos;undefined&apos;){
-            this.handlers[type] = {};
-        }
-        this.handlers[type][sourceId] = handler;
-    },
-    fire: function(type, data){
-        var handler = this.handlers[type][this.curSourceId];
-        handler &amp;&amp; handler(data);
-    }
-};
-</code></pre><p>这里<code>on</code>时由<code>type + sourceId</code>来确定handler，注意这里<code>fire</code>时根据<code>type + this.curSourceId</code>来取出相应的handler回调函数。而这个<code>this.curSourceId</code>需要在SchoolBox每次被打开的时候更新，每次被关闭的时候清空其值。</p>
-<pre><code>SchoolBox.prototype.show = function(sourceId){
-    // 记录当前打开SchoolBox的触发元素
-    if(sourceId){
-        this.curSourceId = sourceId;
-    }
-
-    //以下省略...
-};
-
-SchoolBox.prototype.hide = function(){
-    // 清空sourceId触发元素
-    if(this.curSourceId){
-        this.curSourceId = null;
-    }
-
-    //以下省略...
-};
-</code></pre><p>最后应用层的监听代码就像这样</p>
-<pre><code>$(&apos;.choose-school&apos;).click(function(){
-    var $source = $(this);
-    var id = $source.attr(&apos;id&apos;);
-
-    // 监听自定义事件
-    schoolBox.on(&apos;schoolChosen&apos;, id, function(data){
-        $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
-        $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
-    });
-
-    schoolBox.show(id);
-});
-</code></pre><p>虽然每次show时都要传入当前元素的ID，但是肯定比每次click都先unbind全部，再重新bind要好。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">SchoolBox.prototype = &#123;</span><br><span class="line">    on: <span class="function"><span class="keyword">function</span>(<span class="params">type, sourceId, handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.handlers[type] === <span class="string">'undefined'</span>)&#123;</span><br><span class="line">            <span class="keyword">this</span>.handlers[type] = &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.handlers[type][sourceId] = handler;</span><br><span class="line">    &#125;,</span><br><span class="line">    fire: <span class="function"><span class="keyword">function</span>(<span class="params">type, data</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> handler = <span class="keyword">this</span>.handlers[type][<span class="keyword">this</span>.curSourceId];</span><br><span class="line">        handler &amp;&amp; handler(data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里<code>on</code>时由<code>type + sourceId</code>来确定handler，注意这里<code>fire</code>时根据<code>type + this.curSourceId</code>来取出相应的handler回调函数。而这个<code>this.curSourceId</code>需要在SchoolBox每次被打开的时候更新，每次被关闭的时候清空其值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">SchoolBox.prototype.show = <span class="function"><span class="keyword">function</span>(<span class="params">sourceId</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 记录当前打开SchoolBox的触发元素</span></span><br><span class="line">    <span class="keyword">if</span>(sourceId)&#123;</span><br><span class="line">        <span class="keyword">this</span>.curSourceId = sourceId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//以下省略...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">SchoolBox.prototype.hide = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 清空sourceId触发元素</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.curSourceId)&#123;</span><br><span class="line">        <span class="keyword">this</span>.curSourceId = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>最后应用层的监听代码就像这样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.choose-school'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $source = $(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">var</span> id = $source.attr(<span class="string">'id'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听自定义事件</span></span><br><span class="line">    schoolBox.on(<span class="string">'schoolChosen'</span>, id, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">        $source.siblings(<span class="string">'.school-input'</span>).val(data.schoolName);</span><br><span class="line">        $source.siblings(<span class="string">'.school-id'</span>).val(data.schoolId);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    schoolBox.show(id);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>虽然每次show时都要传入当前元素的ID，但是肯定比每次click都先unbind全部，再重新bind要好。</p>
 <p><a href="/demo/SchoolBox/v9/demo.html">学校选择器v9 Demo</a></p>
 <h2 id="看起来是没错"><a href="#看起来是没错" class="headerlink" title="看起来是没错"></a>看起来是没错</h2><p>像上面的应用层代码，在监听时判断的话，每个监听者元素被click时，都会重新去执行schoolBox的<code>on</code>方法，反复地生成同一个匿名的回调函数并绑定到同一个位置（<code>handlers[type][id]</code>）。显然上面的代码能够改成这样。</p>
-<pre><code>var $source;
-
-var callback = function(data){
-    $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
-    $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
-};
-
-$(&apos;.choose-school&apos;).each(function(){
-    // 监听自定义事件
-    schoolBox.on(&apos;schoolChosen&apos;, $(this).attr(&apos;id&apos;), callback);
-});
-
-$(&apos;.choose-school&apos;).click(function(){
-    $source = $(this);
-    schoolBox.show($source.attr(&apos;id&apos;));
-});
-</code></pre><p>引入了一个全局的<code>$source</code>变量去记录当前click的元素（以使回调中能够正确操作相应的元素），虽然这样很矬，但是至少避免了每次click时都去执行schoolBox的<code>on</code>方法，而且在循环中使用了<code>callback</code>函数的引用，避免了重复生成相同的匿名函数。总的来说，虽然长得丑，但是效率上是有提高的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $source;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> callback = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    $source.siblings(<span class="string">'.school-input'</span>).val(data.schoolName);</span><br><span class="line">    $source.siblings(<span class="string">'.school-id'</span>).val(data.schoolId);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$(<span class="string">'.choose-school'</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 监听自定义事件</span></span><br><span class="line">    schoolBox.on(<span class="string">'schoolChosen'</span>, $(<span class="keyword">this</span>).attr(<span class="string">'id'</span>), callback);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$(<span class="string">'.choose-school'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $source = $(<span class="keyword">this</span>);</span><br><span class="line">    schoolBox.show($source.attr(<span class="string">'id'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>引入了一个全局的<code>$source</code>变量去记录当前click的元素（以使回调中能够正确操作相应的元素），虽然这样很矬，但是至少避免了每次click时都去执行schoolBox的<code>on</code>方法，而且在循环中使用了<code>callback</code>函数的引用，避免了重复生成相同的匿名函数。总的来说，虽然长得丑，但是效率上是有提高的。</p>
 <h3 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h3><p>但是对于其中这小段代码</p>
-<pre><code>$(&apos;.choose-school&apos;).each(function(){
-    // 监听自定义事件
-    schoolBox.on(&apos;schoolChosen&apos;, $(this).attr(&apos;id&apos;), callback);
-});
-</code></pre><p>我开始怀疑自己，<em>为什么在一个循环中反复去为不同的元素ID监听同一个事件类型，更可笑的是使用同一个回调函数？</em>于是我开始反思当初设计监听者回调函数的初衷。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.choose-school'</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 监听自定义事件</span></span><br><span class="line">    schoolBox.on(<span class="string">'schoolChosen'</span>, $(<span class="keyword">this</span>).attr(<span class="string">'id'</span>), callback);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我开始怀疑自己，<em>为什么在一个循环中反复去为不同的元素ID监听同一个事件类型，更可笑的是使用同一个回调函数？</em>于是我开始反思当初设计监听者回调函数的初衷。</p>
 <p>最早在<a href="/blog/2015/01/step-by-step-js-component-schoolbox-2.html#schoolbox重构">一步步做组件-学校选择器(2)</a>中我是这样使用回调的。</p>
-<pre><code>var schoolBox = new SchoolBox({
-    appendTo: &apos;#schoolBoxWrapper&apos;,
-    schoolClickCallback: function(){
-        // 省略...
-    }
-});
-</code></pre><p>这样的缺点是，如果页面中有多个不同的元素都要对“学校选中”做出响应，那么这部分响应代码都得写在这个<code>schoolClickCallback</code>这里。如果需要响应的那些元素来自页面的不同区域，负责完全不同的功能，这样把响应代码都揉在一个地方的话，会造成一定的耦合。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> schoolBox = <span class="keyword">new</span> SchoolBox(&#123;</span><br><span class="line">    appendTo: <span class="string">'#schoolBoxWrapper'</span>,</span><br><span class="line">    schoolClickCallback: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 省略...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这样的缺点是，如果页面中有多个不同的元素都要对“学校选中”做出响应，那么这部分响应代码都得写在这个<code>schoolClickCallback</code>这里。如果需要响应的那些元素来自页面的不同区域，负责完全不同的功能，这样把响应代码都揉在一个地方的话，会造成一定的耦合。</p>
 <p>所以出于这样的考虑，我想到使用观察者模式（即自定义事件），不同的元素各自监听自己需要的事件，自己维护自己如何响应。</p>
-<pre><code>$(&apos;.choose-school&apos;).each(function(){
-    // 监听自定义事件
-    schoolBox.on(&apos;schoolChosen&apos;, $(this).attr(&apos;id&apos;), callback);
-});
-</code></pre><p>而这段代码似乎与这个初衷有点走歪路了，首先它们确实是不同的元素，但也是相似的元素，而它们监听的事件类型也相同，对事件响应的方式也相似。如此“强行”为不同的元素各自监听，是不是有点生搬硬套的意思了？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.choose-school'</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 监听自定义事件</span></span><br><span class="line">    schoolBox.on(<span class="string">'schoolChosen'</span>, $(<span class="keyword">this</span>).attr(<span class="string">'id'</span>), callback);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>而这段代码似乎与这个初衷有点走歪路了，首先它们确实是不同的元素，但也是相似的元素，而它们监听的事件类型也相同，对事件响应的方式也相似。如此“强行”为不同的元素各自监听，是不是有点生搬硬套的意思了？</p>
 <h2 id="在回调时判断"><a href="#在回调时判断" class="headerlink" title="在回调时判断"></a>在回调时判断</h2><p>我从<a href="/blog/2014/12/js-pattern-part7-browser-pattern.html#事件委托">事件委托</a>那里得到了启发，为何不为相似的元素统一监听一个事件，并且只有唯一一个回调函数。具体做法就是在<code>fire</code>事件时加入“由哪个元素触发”，以避免对所有元素都做出响应。</p>
-<pre><code>SchoolBox.prototype = {
-    on: function(type, handler){
-        if(typeof this.handlers[type] === &apos;undefined&apos;){
-            this.handlers[type] = [];
-        }
-        this.handlers[type].push(handler);
-    },
-    fire: function(type, data){
-        // 加入sourceId给回调参数
-        if(this.curSourceId){
-            data[&apos;sourceId&apos;] = this.curSourceId;
-        }
-
-        if(this.handlers[type] instanceof Array){
-            var handlers = this.handlers[type];
-            for(var i=0, len=handlers.length; i&lt;len; i++){
-                handlers[i](data);
-            }
-        }
-    }
-};
-</code></pre><p>这里对<code>on</code>不做改变，<code>this.handlers</code>还是原来的<code>{ eventType1: [ function(){} ]}</code>格式。在<code>fire</code>内部，在handlers回调前，把当前的<code>this.curSourceId</code>（当前打开SchoolBox的触发元素ID）也塞到回调参数data中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">SchoolBox.prototype = &#123;</span><br><span class="line">    on: <span class="function"><span class="keyword">function</span>(<span class="params">type, handler</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.handlers[type] === <span class="string">'undefined'</span>)&#123;</span><br><span class="line">            <span class="keyword">this</span>.handlers[type] = [];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.handlers[type].push(handler);</span><br><span class="line">    &#125;,</span><br><span class="line">    fire: <span class="function"><span class="keyword">function</span>(<span class="params">type, data</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 加入sourceId给回调参数</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.curSourceId)&#123;</span><br><span class="line">            data[<span class="string">'sourceId'</span>] = <span class="keyword">this</span>.curSourceId;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.handlers[type] <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> handlers = <span class="keyword">this</span>.handlers[type];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=handlers.length; i&lt;len; i++)&#123;</span><br><span class="line">                handlers[i](data);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里对<code>on</code>不做改变，<code>this.handlers</code>还是原来的<code>{ eventType1: [ function(){} ]}</code>格式。在<code>fire</code>内部，在handlers回调前，把当前的<code>this.curSourceId</code>（当前打开SchoolBox的触发元素ID）也塞到回调参数data中。</p>
 <p>这里同样要为SchoolBox的<code>show</code>和<code>hide</code>方法里加入<code>curSourceId</code>的判断，代码同<a href="#section-1">从监听上入手</a>。</p>
 <p>然后应用层具体的回调函数中只需要加入对<code>sourceId</code>的判断。</p>
-<pre><code>// 监听自定义事件
-schoolBox.on(&apos;schoolChosen&apos;, function(data){
-    if(data.sourceId){
-        var $source = $(&apos;#&apos; + data.sourceId);
-        $source.siblings(&apos;.school-input&apos;).val(data.schoolName);
-        $source.siblings(&apos;.school-id&apos;).val(data.schoolId);
-    }
-});
-
-$(&apos;.choose-school&apos;).click(function(event){
-    schoolBox.show($(this).attr(&apos;id&apos;));
-});
-</code></pre><p>在回调时找到“打开SchoolBox”的触发元素，然后只对相应的元素做出响应。正如事件委托比“为所有子元素都绑定事件”要好一样，这里“在回调时判断”也比“在监听时判断”效率要高。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 监听自定义事件</span></span><br><span class="line">schoolBox.on(<span class="string">'schoolChosen'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(data.sourceId)&#123;</span><br><span class="line">        <span class="keyword">var</span> $source = $(<span class="string">'#'</span> + data.sourceId);</span><br><span class="line">        $source.siblings(<span class="string">'.school-input'</span>).val(data.schoolName);</span><br><span class="line">        $source.siblings(<span class="string">'.school-id'</span>).val(data.schoolId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$(<span class="string">'.choose-school'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    schoolBox.show($(<span class="keyword">this</span>).attr(<span class="string">'id'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在回调时找到“打开SchoolBox”的触发元素，然后只对相应的元素做出响应。正如事件委托比“为所有子元素都绑定事件”要好一样，这里“在回调时判断”也比“在监听时判断”效率要高。</p>
 <p><a href="/demo/SchoolBox/v10/demo.html">学校选择器v10 Demo</a></p>
 <h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>这个系列的文章从第1篇到现在第8篇，前后跨度2个半月，而最早在项目中做这部分功能已经是半年前了。经过这段反复审视代码和写博客的过程，自己得到了不少的提高，把以前看书看别人博客所记下的一堆零碎的知识融合了起来。也正是这个项目和这个博客，在我找实习面试的时候帮我加了很多分。</p>
 <p>我会继续坚持走下去，回头看看走过的路和踩过的坑。谢谢~~（本系列完结）</p>

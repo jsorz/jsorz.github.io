@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="本章主要讲述了javascript中如何使用封装的方式来创建对象，这些模式有命名空间模式、模块模式和沙箱模式。而链模式是实现对象链式调用语法的方式。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.830Z">
+<meta property="og:updated_time" content="2019-02-20T06:16:01.729Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript模式之四-对象创建模式">
 <meta name="twitter:description" content="本章主要讲述了javascript中如何使用封装的方式来创建对象，这些模式有命名空间模式、模块模式和沙箱模式。而链模式是实现对象链式调用语法的方式。">
@@ -397,163 +397,24 @@
       
 
       
-        <h2 id="命名空间模式"><a href="#命名空间模式" class="headerlink" title="命名空间模式"></a>命名空间模式</h2><pre><code>var MYAPP = MYAPP || {};
-MYAPP.namespace = function(ns_string){
-    var parts = ns_string.split(&apos;.&apos;);
-    var parent = MYAPP;
-
-    //剥离最前面的冗余全局变量
-    if(parts[0] === &apos;MYAPP&apos;){
-        parts = parts.slice(1);
-    }
-
-    for(var i=0; i&lt;parts.length; i++){
-        //如果它不存在，就创建一个属性
-        if(typeof parent[parts[i]] === &apos;undefined&apos;){
-            parent[parts[i]] = {};
-        }
-        parent = parent[parts[i]];
-    }
-    return parent;
-};
-
-//使用
-var module2 = MYAPP.namespace(&apos;MYAPP.modules.module2&apos;);
-module2 === MYAPP.modules.module2;  //true
-</code></pre><h2 id="模块模式"><a href="#模块模式" class="headerlink" title="模块模式"></a>模块模式</h2><pre><code>MYAPP.namespace(&apos;MYAPP.utilities.array&apos;);
-MYAPP.utilities.array = (function(){
-    //依赖
-    var uobj = MYAPP.utilities.object;
-    var ulang = MYAPP.utilities.lang;
-
-    //私有属性
-    var array_string = &apos;[object Array]&apos;;
-    var ops = Object.prototype.toString;
-
-    //私有方法
-    //...
-
-    //可选的一次性初始化过程
-    //...
-
-    //公有API
-    return {
-        isArray: function(a){
-            return ops.call(a) === array_string;
-        },
-        //更多方法和属性...
-    };
-}());
-</code></pre><p>模块模式的变体<br>揭示模块模式：所有的方法都需要保持私有性，并且只能暴露那些最后决定设立API的那些方法。<br>创建构造函数的模块：包装了模块的即时函数最终将会返回一个函数，而不是返回一个对象。<br>将全局变量导入到模块中：将全局变量以参数的形式传递到包装了模块的即时函数中。</p>
+        <h2 id="命名空间模式"><a href="#命名空间模式" class="headerlink" title="命名空间模式"></a>命名空间模式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> MYAPP = MYAPP || &#123;&#125;;</span><br><span class="line">MYAPP.namespace = <span class="function"><span class="keyword">function</span>(<span class="params">ns_string</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> parts = ns_string.split(<span class="string">'.'</span>);</span><br><span class="line">	<span class="keyword">var</span> parent = MYAPP;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//剥离最前面的冗余全局变量</span></span><br><span class="line">	<span class="keyword">if</span>(parts[<span class="number">0</span>] === <span class="string">'MYAPP'</span>)&#123;</span><br><span class="line">		parts = parts.slice(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;parts.length; i++)&#123;</span><br><span class="line">		<span class="comment">//如果它不存在，就创建一个属性</span></span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">typeof</span> parent[parts[i]] === <span class="string">'undefined'</span>)&#123;</span><br><span class="line">			parent[parts[i]] = &#123;&#125;;</span><br><span class="line">		&#125;</span><br><span class="line">		parent = parent[parts[i]];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> parent;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用</span></span><br><span class="line"><span class="keyword">var</span> module2 = MYAPP.namespace(<span class="string">'MYAPP.modules.module2'</span>);</span><br><span class="line">module2 === MYAPP.modules.module2;  <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<h2 id="模块模式"><a href="#模块模式" class="headerlink" title="模块模式"></a>模块模式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">MYAPP.namespace(<span class="string">'MYAPP.utilities.array'</span>);</span><br><span class="line">MYAPP.utilities.array = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">//依赖</span></span><br><span class="line">	<span class="keyword">var</span> uobj = MYAPP.utilities.object;</span><br><span class="line">	<span class="keyword">var</span> ulang = MYAPP.utilities.lang;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//私有属性</span></span><br><span class="line">	<span class="keyword">var</span> array_string = <span class="string">'[object Array]'</span>;</span><br><span class="line">	<span class="keyword">var</span> ops = <span class="built_in">Object</span>.prototype.toString;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//私有方法</span></span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//可选的一次性初始化过程</span></span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//公有API</span></span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		isArray: <span class="function"><span class="keyword">function</span>(<span class="params">a</span>)</span>&#123;</span><br><span class="line">			<span class="keyword">return</span> ops.call(a) === array_string;</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="comment">//更多方法和属性...</span></span><br><span class="line">	&#125;;</span><br><span class="line">&#125;());</span><br></pre></td></tr></table></figure>
+<p>模块模式的变体<br>揭示模块模式：所有的方法都需要保持私有性，并且只能暴露那些最后决定设立API的那些方法。<br>创建构造函数的模块：包装了模块的即时函数最终将会返回一个函数，而不是返回一个对象。<br>将全局变量导入到模块中：将全局变量以参数的形式传递到包装了模块的即时函数中。</p>
 <h2 id="沙箱模式"><a href="#沙箱模式" class="headerlink" title="沙箱模式"></a>沙箱模式</h2><p>沙箱模式提供了一个可用于模块运行的环境，且不会对其他模块和个人沙箱造成任何影响。<br>在命名空间模式中，有一个全局对象。在沙箱模式中，则是一个全局构造函数，让我们称之为<code>Sandbox()</code>。可以使用该构造函数创建对象并且还可以传递回调函数，它变成了代码的隔离沙箱运行环境。</p>
 <p>使用示例</p>
-<pre><code>Sandbox([&apos;dom&apos;, &apos;event&apos;], function(box){
-    //使用DOM和事件来运行...
-
-    Sandbox(&apos;ajax&apos;, function(box){
-        //另一个沙箱
-        //使用Ajax来处理...
-    });
-
-    //这里没有Ajax模块
-});
-</code></pre><p>使用本沙箱模式时，可以通过将代码包装到回调函数中从而保护全局命名空间。可以根据所需要的模块类型创建不同的沙箱实例，并且这些实例互相独立运行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Sandbox([<span class="string">'dom'</span>, <span class="string">'event'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">box</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//使用DOM和事件来运行...</span></span><br><span class="line"></span><br><span class="line">	Sandbox(<span class="string">'ajax'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">box</span>)</span>&#123;</span><br><span class="line">		<span class="comment">//另一个沙箱</span></span><br><span class="line">		<span class="comment">//使用Ajax来处理...</span></span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//这里没有Ajax模块</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用本沙箱模式时，可以通过将代码包装到回调函数中从而保护全局命名空间。可以根据所需要的模块类型创建不同的沙箱实例，并且这些实例互相独立运行。</p>
 <p>具体实现</p>
-<pre><code>function Sandbox(){
-    //将参数转换成一个数组
-    var args = Array.prototype.slice.call(arguments);
-    //最后一个参数是回调函数
-    var callback = args.pop();
-    //模块可以作为一个数组传递，或作为单独的参数传递
-    var modules = (args[0] &amp;&amp; typeof args[0] === &apos;string&apos;) ? args : args[0];
-
-    //确保该函数作为够咱函数被调用
-    //参见&quot;Javascript模式之二&quot;中的&quot;强制使用new模式&quot;
-    if(!(this instanceof Sandbox)){
-        return new Sandbox(modules, callback);
-    }
-
-    //需要向this添加的属性
-    //example
-    this.a = 1;
-    this.b = 2;
-
-    //现在向该核心this对象添加模块
-    //不指定模块名称或制定&apos;*&apos;，都表示使用所有模块
-    if(!modules || modules === &apos;*&apos;){
-        modules = [];
-        for(i in Sandbox.modules){
-            if(Sandbox.modules.hasOwnProperty(i)){
-                modules.push(i);
-            }
-        }
-    }
-
-    //初始化所需的模块
-    for(var i=0; i&lt;modules.length; i++){
-        Sandbox.modules[modules[i]](this);
-    }
-
-    //回调
-    //注：改变的是this即回调函数的参数box所拥有的属性和方法
-    callback(this);
-}
-
-//需要的任何原型属性
-Sandbox.prototype = {
-    name: &apos;My Application&apos;,
-    version: &apos;1.0&apos;,
-    getName: function(){
-        return this.name;
-    }
-};
-
-//添加模块
-Sandbox.modules = {};
-
-Sandbox.modules.dom = function(box){
-    box.getElement = function(){};
-    box.getStyle = function(){};
-    box.foo = &apos;bar&apos;;
-};
-
-Sandbox.modules.event = function(box){
-    //如果需要，就访问Sandbox原型，如下语句
-    //box.constructor.prototype.m = &apos;mmm&apos;;
-    box.attachEvent = function(){};
-    box.dettachEvent = function(){};
-};
-
-Sandbox.modules.ajax = function(box){
-    box.makeRequest = function(){};
-    box.getResponse = function(){};
-};
-</code></pre><p>在这个示例实现中，我们并不关心从其他文件中加载所需的功能，但这绝对也是一个可选的实现功能。比如YUI3库中就支持这种功能。<br>当我们知道所需的模块时，便可以据此进行初始化，这表示可以调用实现每个模块的函数。<br>该构造函数的最后一个参数是一个回调函数。该回调函数将会在使用新创建的实例时最后被调用。这个回调函数实际上是用户的沙箱，它可以获得一个填充了所需功能的<code>box</code>对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Sandbox</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">//将参数转换成一个数组</span></span><br><span class="line">	<span class="keyword">var</span> args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);</span><br><span class="line">	<span class="comment">//最后一个参数是回调函数</span></span><br><span class="line">	<span class="keyword">var</span> callback = args.pop();</span><br><span class="line">	<span class="comment">//模块可以作为一个数组传递，或作为单独的参数传递</span></span><br><span class="line">	<span class="keyword">var</span> modules = (args[<span class="number">0</span>] &amp;&amp; <span class="keyword">typeof</span> args[<span class="number">0</span>] === <span class="string">'string'</span>) ? args : args[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">	<span class="comment">//确保该函数作为够咱函数被调用</span></span><br><span class="line">	<span class="comment">//参见"Javascript模式之二"中的"强制使用new模式"</span></span><br><span class="line">	<span class="keyword">if</span>(!(<span class="keyword">this</span> <span class="keyword">instanceof</span> Sandbox))&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Sandbox(modules, callback);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//需要向this添加的属性</span></span><br><span class="line">	<span class="comment">//example</span></span><br><span class="line">	<span class="keyword">this</span>.a = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">this</span>.b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//现在向该核心this对象添加模块</span></span><br><span class="line">	<span class="comment">//不指定模块名称或制定'*'，都表示使用所有模块</span></span><br><span class="line">	<span class="keyword">if</span>(!modules || modules === <span class="string">'*'</span>)&#123;</span><br><span class="line">		modules = [];</span><br><span class="line">		<span class="keyword">for</span>(i <span class="keyword">in</span> Sandbox.modules)&#123;</span><br><span class="line">			<span class="keyword">if</span>(Sandbox.modules.hasOwnProperty(i))&#123;</span><br><span class="line">				modules.push(i);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">     </span><br><span class="line">	<span class="comment">//初始化所需的模块</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;modules.length; i++)&#123;</span><br><span class="line">		Sandbox.modules[modules[i]](<span class="keyword">this</span>);</span><br><span class="line">	&#125;</span><br><span class="line">     </span><br><span class="line">	<span class="comment">//回调</span></span><br><span class="line">	<span class="comment">//注：改变的是this即回调函数的参数box所拥有的属性和方法</span></span><br><span class="line">	callback(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//需要的任何原型属性</span></span><br><span class="line">Sandbox.prototype = &#123;</span><br><span class="line">	name: <span class="string">'My Application'</span>,</span><br><span class="line">	version: <span class="string">'1.0'</span>,</span><br><span class="line">	getName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加模块</span></span><br><span class="line">Sandbox.modules = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">Sandbox.modules.dom = <span class="function"><span class="keyword">function</span>(<span class="params">box</span>)</span>&#123;</span><br><span class="line">	box.getElement = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	box.getStyle = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	box.foo = <span class="string">'bar'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Sandbox.modules.event = <span class="function"><span class="keyword">function</span>(<span class="params">box</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//如果需要，就访问Sandbox原型，如下语句</span></span><br><span class="line">	<span class="comment">//box.constructor.prototype.m = 'mmm';</span></span><br><span class="line">	box.attachEvent = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	box.dettachEvent = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Sandbox.modules.ajax = <span class="function"><span class="keyword">function</span>(<span class="params">box</span>)</span>&#123;</span><br><span class="line">	box.makeRequest = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	box.getResponse = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在这个示例实现中，我们并不关心从其他文件中加载所需的功能，但这绝对也是一个可选的实现功能。比如YUI3库中就支持这种功能。<br>当我们知道所需的模块时，便可以据此进行初始化，这表示可以调用实现每个模块的函数。<br>该构造函数的最后一个参数是一个回调函数。该回调函数将会在使用新创建的实例时最后被调用。这个回调函数实际上是用户的沙箱，它可以获得一个填充了所需功能的<code>box</code>对象。</p>
 <p>我觉得沙箱模式的缺点是<code>Sandbox.modules</code>暴露在外，应该使用更好的<a href="http://addyosmani.com/writing-modular-js/" target="_blank" rel="noopener">AMD(Asynchronous Module Definition)</a>模式</p>
 <h2 id="链模式"><a href="#链模式" class="headerlink" title="链模式"></a>链模式</h2><p>链模式的优点在于它可以帮助你考虑分割函数，以创建更加简短、具有特定功能的函数，而不是创建尝试实现太多功能的函数。从长远看来，这提高了代码的可维护性。<br>链模式的缺点在于以这种方式编写的代码更加难以调试。或许知道在某个特定的代码行中发生错误，但是在此行中实际执行了太多的步骤。当链中多个方法的其中一个静默失效时，无法知道是哪一个方法发生失效。<br>在任何情况下，识别出这种模式都很有好处。当编写的方法并没有明显和有意义的返回值时，可以总是返回<code>this</code>。</p>
 <p><code>method()</code>方法思想（并不是很推荐）</p>
 <p>example.</p>
-<pre><code>var Person = function(name){
-    this.name = name;
-}.
-    method(&apos;getName&apos;, function(){
-        return this.name;
-    }).
-    method(&apos;setName&apos;, function(name){
-        this.name = name;
-        return this;
-    });
-
-var a = new Person(&apos;Adam&apos;);
-a.setName(&apos;Eve&apos;).getName();
-</code></pre><p><code>method()</code>方法实现</p>
-<pre><code>if(typeof Function.prototype.method !== &apos;function&apos;){
-    Function.prototype.method = function(name, implementation){
-        this.prototype[name] = implementation;
-        return this.
-    }
-}
-</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;.</span><br><span class="line">	method(<span class="string">'getName'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">	&#125;).</span><br><span class="line">	method(<span class="string">'setName'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.name = name;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> Person(<span class="string">'Adam'</span>);</span><br><span class="line">a.setName(<span class="string">'Eve'</span>).getName();</span><br></pre></td></tr></table></figure>
+<p><code>method()</code>方法实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">Function</span>.prototype.method !== <span class="string">'function'</span>)&#123;</span><br><span class="line">	<span class="built_in">Function</span>.prototype.method = <span class="function"><span class="keyword">function</span>(<span class="params">name, implementation</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.prototype[name] = implementation;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>
 
       
     </div>

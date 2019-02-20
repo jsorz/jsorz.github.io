@@ -100,7 +100,7 @@
 <meta property="og:description" content="在上一篇中我们用观察者模式实现了自定义事件的功能，让应用层的事件回调更加松耦合。但是到此为止学校选择器仅仅做了基本的省份和学校的级联功能，现在我们要为它添加搜索的功能。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20150125_01.jpg">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.833Z">
+<meta property="og:updated_time" content="2019-02-20T12:06:07.193Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一步步做组件-学校选择器(4)">
 <meta name="twitter:description" content="在上一篇中我们用观察者模式实现了自定义事件的功能，让应用层的事件回调更加松耦合。但是到此为止学校选择器仅仅做了基本的省份和学校的级联功能，现在我们要为它添加搜索的功能。">
@@ -400,171 +400,27 @@
 <h2 id="界面设计"><a href="#界面设计" class="headerlink" title="界面设计"></a>界面设计</h2><p>依旧模仿<a href="http://www.renren.com" target="_blank" rel="noopener">人人网</a>的学校设计，它也有个动态搜索框，如图。</p>
 <p><img src="/images/captures/20150125_01.jpg"></p>
 <p>先依样画葫芦把元素和样式搞出来</p>
-<pre><code>&lt;div class=&quot;search-school-wrapper&quot;&gt;
-    &lt;div class=&quot;inline-block&quot;&gt;&lt;label&gt;搜索：&lt;/label&gt;&lt;/div&gt;
-    &lt;div class=&quot;inline-block&quot;&gt;
-        &lt;input type=&quot;text&quot; class=&quot;search-school-input&quot;/&gt;
-        &lt;div class=&quot;search-school-div&quot;&gt;
-            &lt;ul class=&quot;search-school-list&quot;&gt;&lt;/ul&gt;
-            &lt;div class=&quot;search-school-empty&quot;&gt;
-                &lt;span class=&quot;text-error&quot;&gt;找不到该学校&lt;/span&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre><p>这里的元素最后都要搬到js中去生成，先写在html里为了调样式。</p>
-<pre><code>.search-school-wrapper{
-    float: right;
-    font-size: 12px;
-}
-.search-school-input{
-    padding: 2px 4px;
-    width: 180px;
-}
-.search-school-div{
-    background-color: #fff;
-    border: 1px solid #C3C3C3;
-    border-top: none;
-    color: #005EAC;
-    display: none;
-    font-size: 12px;
-    font-weight: normal;
-    max-height: 200px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    position: absolute;
-    width: 188px;
-}
-.search-school-list li{
-    cursor: pointer;
-    height: 20px;
-    line-height: 20px;
-    padding-left: 5px;
-}
-.search-school-list li.active,
-.search-school-list li.hover,
-.search-school-list li:hover{
-    background-color: #005EAC;
-    color: white;
-}
-.search-school-empty{
-    display: none;
-    padding: 5px 0;
-    text-align: center;
-}
-</code></pre><h2 id="如何搜索"><a href="#如何搜索" class="headerlink" title="如何搜索"></a>如何搜索</h2><p>我们当然首先想到发送一个Ajax请求，然后后台去数据库模糊查询，最后返回一个学校列表的数据。甚至做的更好一些的话，可以定义关键词匹配度，然后根据这个值来调整返回的学校列表的顺序。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"search-school-wrapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"inline-block"</span>&gt;</span><span class="tag">&lt;<span class="name">label</span>&gt;</span>搜索：<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"inline-block"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">class</span>=<span class="string">"search-school-input"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"search-school-div"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"search-school-list"</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"search-school-empty"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"text-error"</span>&gt;</span>找不到该学校<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里的元素最后都要搬到js中去生成，先写在html里为了调样式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.search-school-wrapper</span>&#123;</span><br><span class="line">    <span class="attribute">float</span>: right;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.search-school-input</span>&#123;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">2px</span> <span class="number">4px</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">180px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.search-school-div</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#fff</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#C3C3C3</span>;</span><br><span class="line">    <span class="attribute">border-top</span>: none;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#005EAC</span>;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>: normal;</span><br><span class="line">    <span class="attribute">max-height</span>: <span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">overflow-x</span>: hidden;</span><br><span class="line">    <span class="attribute">overflow-y</span>: scroll;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">188px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.search-school-list</span> <span class="selector-tag">li</span>&#123;</span><br><span class="line">    <span class="attribute">cursor</span>: pointer;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">20px</span>;</span><br><span class="line">    <span class="attribute">line-height</span>: <span class="number">20px</span>;</span><br><span class="line">    <span class="attribute">padding-left</span>: <span class="number">5px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.search-school-list</span> <span class="selector-tag">li</span><span class="selector-class">.active</span>,</span><br><span class="line"><span class="selector-class">.search-school-list</span> <span class="selector-tag">li</span><span class="selector-class">.hover</span>,</span><br><span class="line"><span class="selector-class">.search-school-list</span> <span class="selector-tag">li</span><span class="selector-pseudo">:hover</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#005EAC</span>;</span><br><span class="line">    <span class="attribute">color</span>: white;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.search-school-empty</span>&#123;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">5px</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="如何搜索"><a href="#如何搜索" class="headerlink" title="如何搜索"></a>如何搜索</h2><p>我们当然首先想到发送一个Ajax请求，然后后台去数据库模糊查询，最后返回一个学校列表的数据。甚至做的更好一些的话，可以定义关键词匹配度，然后根据这个值来调整返回的学校列表的顺序。</p>
 <p>在之前的章节中，我们将一个很大的<code>SCHOOL_LIST</code>变量存在了js中，包含了后台数据库中的所有学校。这里我们继续这个思路，采用的是直接在js本地搜索。</p>
-<pre><code>var reg = eval(&apos;/&apos; + keywords.split(&apos;&apos;).join(&apos;\\S*&apos;) + &apos;/&apos;);
-</code></pre><p>这里<code>keywords</code>就是用户输入的text，我们用这样一个正则去匹配<code>SCHOOL_LIST</code>的学校名称，最后将一个列表刷新到页面元素上。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="built_in">eval</span>(<span class="string">'/'</span> + keywords.split(<span class="string">''</span>).join(<span class="string">'\\S*'</span>) + <span class="string">'/'</span>);</span><br></pre></td></tr></table></figure>
+<p>这里<code>keywords</code>就是用户输入的text，我们用这样一个正则去匹配<code>SCHOOL_LIST</code>的学校名称，最后将一个列表刷新到页面元素上。</p>
 <h2 id="扩展组件功能"><a href="#扩展组件功能" class="headerlink" title="扩展组件功能"></a>扩展组件功能</h2><p>1.在私有静态变量里添加元素copy</p>
-<pre><code>var $searchSchoolCopy = $(&apos;...省略...即上面那段html&apos;);
-</code></pre><p>2.初始化新的元素</p>
-<pre><code>var initSearchSchool = function(instance){
-    // 生成元素
-    var $el = $(instance.opts.appendTo).find(&apos;.school-box-wrapper&apos;);
-    $el.find(&apos;.school-box-header&apos;).append($searchSchoolCopy.clone());
-
-    // 释放变量
-    $el = null;
-};
-
-var init = function(instance){
-    // 以上省略...
-
-    // 附加功能
-    if(instance.opts.searchSchool){
-        initSearchSchool(instance);
-    }
-};
-</code></pre><p>3.搜索学校的动态刷新</p>
-<pre><code>var updateSearchList = function(schools, $searchDiv, $searchList, $searchEmpty){
-    $searchEmpty.hide();
-    $searchDiv.show();
-    $searchList.empty();
-
-    for(var i=0; i&lt;schools.length; i++){
-        $searchList.append(&apos;&lt;li class=&quot;school-item&quot; data-school=&quot;&apos; + schools[i][&apos;id&apos;] + &apos;&quot;&gt;&apos; + schools[i][&apos;name&apos;] + &apos;&lt;/li&gt;&apos;);
-    }
-
-    // no result hint
-    if(schools.length == 0){
-        $searchEmpty.show();
-    }
-};
-
-var searchSchool = function(keywords, $searchDiv, $searchList, $searchEmpty){
-    // 从provinces缓存里搜索
-    var reg = eval(&apos;/&apos; + keywords.split(&apos;&apos;).join(&apos;\\S*&apos;) + &apos;/&apos;);
-    var result = [];
-    var schools = [];
-
-    for(var key in provinces){
-        schools = provinces[key][&apos;school&apos;];
-        for(var i=0, len=schools.length; i&lt;len; i++){
-            if(reg.test(schools[i][&apos;name&apos;])){
-                result.push(schools[i]);
-            }
-        }
-    }
-
-    updateSearchList(result, $searchDiv, $searchList, $searchEmpty);
-};
-</code></pre><p>这里采用与之前实现省份-学校级联功能类似的办法，由于这些方法写成了类的静态私有方法（因为我不想把它们暴露到类的外面，也不想让每个类的实例都存有该方法的备份），所以需要把具体实例涉及到的DOM元素作为参数传到这些方法中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $searchSchoolCopy = $(<span class="string">'...省略...即上面那段html'</span>);</span><br></pre></td></tr></table></figure>
+<p>2.初始化新的元素</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> initSearchSchool = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 生成元素</span></span><br><span class="line">    <span class="keyword">var</span> $el = $(instance.opts.appendTo).find(<span class="string">'.school-box-wrapper'</span>);</span><br><span class="line">    $el.find(<span class="string">'.school-box-header'</span>).append($searchSchoolCopy.clone());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放变量</span></span><br><span class="line">    $el = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> init = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 附加功能</span></span><br><span class="line">    <span class="keyword">if</span>(instance.opts.searchSchool)&#123;</span><br><span class="line">        initSearchSchool(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>3.搜索学校的动态刷新</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> updateSearchList = <span class="function"><span class="keyword">function</span>(<span class="params">schools, $searchDiv, $searchList, $searchEmpty</span>)</span>&#123;</span><br><span class="line">    $searchEmpty.hide();</span><br><span class="line">    $searchDiv.show();</span><br><span class="line">    $searchList.empty();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;schools.length; i++)&#123;</span><br><span class="line">        $searchList.append(<span class="string">'&lt;li class="school-item" data-school="'</span> + schools[i][<span class="string">'id'</span>] + <span class="string">'"&gt;'</span> + schools[i][<span class="string">'name'</span>] + <span class="string">'&lt;/li&gt;'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// no result hint</span></span><br><span class="line">    <span class="keyword">if</span>(schools.length == <span class="number">0</span>)&#123;</span><br><span class="line">        $searchEmpty.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> searchSchool = <span class="function"><span class="keyword">function</span>(<span class="params">keywords, $searchDiv, $searchList, $searchEmpty</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 从provinces缓存里搜索</span></span><br><span class="line">    <span class="keyword">var</span> reg = <span class="built_in">eval</span>(<span class="string">'/'</span> + keywords.split(<span class="string">''</span>).join(<span class="string">'\\S*'</span>) + <span class="string">'/'</span>);</span><br><span class="line">    <span class="keyword">var</span> result = [];</span><br><span class="line">    <span class="keyword">var</span> schools = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> provinces)&#123;</span><br><span class="line">        schools = provinces[key][<span class="string">'school'</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=schools.length; i&lt;len; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(reg.test(schools[i][<span class="string">'name'</span>]))&#123;</span><br><span class="line">                result.push(schools[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    updateSearchList(result, $searchDiv, $searchList, $searchEmpty);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里采用与之前实现省份-学校级联功能类似的办法，由于这些方法写成了类的静态私有方法（因为我不想把它们暴露到类的外面，也不想让每个类的实例都存有该方法的备份），所以需要把具体实例涉及到的DOM元素作为参数传到这些方法中。</p>
 <p>4.为搜索学校绑定事件</p>
-<pre><code>var initSearchSchool = function(instance){
-    // 生成元素
-    // 省略...
-
-    // 目标元素
-    var $searchInput = $el.find(&apos;.search-school-input&apos;);
-    var $searchDiv = $el.find(&apos;.search-school-div&apos;);
-    var $searchList = $el.find(&apos;.search-school-list&apos;);
-    var $searchEmpty = $el.find(&apos;.search-school-empty&apos;);
-
-    // 事件
-    $searchInput.bind(&apos;keyup&apos;, function(event){
-        var keywords = $.trim($(this).val());
-        // 空格or拼音没输完时暂不search
-        if(keywords.length == 0 || keywords.indexOf(&quot;&apos;&quot;) &gt; -1){
-            $searchDiv.hide();
-            return false;
-        }
-
-        searchSchool(keywords, $searchDiv, $searchList, $searchEmpty);
-    });
-
-    // 以下省略...
-};
-</code></pre><p>5.搜索框中选定学校，触发自定义事件（给类的外部）</p>
-<pre><code>var initSearchSchool = function(instance){
-    // 以上省略...
-
-    // 选定学校
-    $searchList.find(&apos;li&apos;).live(&apos;click&apos;, function(){
-        // 配置里定义的事件回调
-        if(instance.opts.schoolClickCallback){
-            instance.opts.schoolClickCallback.apply(this, []);
-        }
-        // 自定义事件回调
-        instance.fire(&apos;schoolChosen&apos;, {
-            schoolId: $(this).attr(&apos;data-school&apos;),
-            schoolName: $(this).text()
-        });
-        // 自动收起
-        instance.hide();
-        // 清空搜索内容
-        $searchInput.val(&apos;&apos;);
-        $searchDiv.hide();
-    });
-
-    // 以下省略...
-};
-</code></pre><p>6.应用层使用组件时添加一项初始化参数</p>
-<pre><code>var schoolBox = new SchoolBox({
-    appendTo: &apos;#schoolBoxWrapper&apos;,
-    searchSchool: true
-});
-</code></pre><p>这里通过搜索框选择的学校触发的也是<code>schoolChosen</code>事件，所以对应用层来说是透明的。即应用层不需要知道该事件来自省份-学校级联，还是来自学校搜索框。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> initSearchSchool = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 生成元素</span></span><br><span class="line">    <span class="comment">// 省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 目标元素</span></span><br><span class="line">    <span class="keyword">var</span> $searchInput = $el.find(<span class="string">'.search-school-input'</span>);</span><br><span class="line">    <span class="keyword">var</span> $searchDiv = $el.find(<span class="string">'.search-school-div'</span>);</span><br><span class="line">    <span class="keyword">var</span> $searchList = $el.find(<span class="string">'.search-school-list'</span>);</span><br><span class="line">    <span class="keyword">var</span> $searchEmpty = $el.find(<span class="string">'.search-school-empty'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 事件</span></span><br><span class="line">    $searchInput.bind(<span class="string">'keyup'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> keywords = $.trim($(<span class="keyword">this</span>).val());</span><br><span class="line">        <span class="comment">// 空格or拼音没输完时暂不search</span></span><br><span class="line">        <span class="keyword">if</span>(keywords.length == <span class="number">0</span> || keywords.indexOf(<span class="string">"'"</span>) &gt; <span class="number">-1</span>)&#123;</span><br><span class="line">            $searchDiv.hide();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        searchSchool(keywords, $searchDiv, $searchList, $searchEmpty);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>5.搜索框中选定学校，触发自定义事件（给类的外部）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> initSearchSchool = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 选定学校</span></span><br><span class="line">    $searchList.find(<span class="string">'li'</span>).live(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 配置里定义的事件回调</span></span><br><span class="line">        <span class="keyword">if</span>(instance.opts.schoolClickCallback)&#123;</span><br><span class="line">            instance.opts.schoolClickCallback.apply(<span class="keyword">this</span>, []);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 自定义事件回调</span></span><br><span class="line">        instance.fire(<span class="string">'schoolChosen'</span>, &#123;</span><br><span class="line">            schoolId: $(<span class="keyword">this</span>).attr(<span class="string">'data-school'</span>),</span><br><span class="line">            schoolName: $(<span class="keyword">this</span>).text()</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">// 自动收起</span></span><br><span class="line">        instance.hide();</span><br><span class="line">        <span class="comment">// 清空搜索内容</span></span><br><span class="line">        $searchInput.val(<span class="string">''</span>);</span><br><span class="line">        $searchDiv.hide();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>6.应用层使用组件时添加一项初始化参数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> schoolBox = <span class="keyword">new</span> SchoolBox(&#123;</span><br><span class="line">    appendTo: <span class="string">'#schoolBoxWrapper'</span>,</span><br><span class="line">    searchSchool: <span class="literal">true</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这里通过搜索框选择的学校触发的也是<code>schoolChosen</code>事件，所以对应用层来说是透明的。即应用层不需要知道该事件来自省份-学校级联，还是来自学校搜索框。</p>
 <p><a href="/demo/SchoolBox/v5/demo.html">学校选择器v5 Demo</a></p>
 <h2 id="精益求精"><a href="#精益求精" class="headerlink" title="精益求精"></a>精益求精</h2><p>虽然简单实现了搜索框的功能，其实只能算“过滤”，这个系列就要这样结束了吗？细心的同学会发现上面的demo搜索框出来的结果只能用鼠标点击，不支持键盘事件。而根据我们平时使用别人软件的习惯，经常是输入完关键字后按方向键选择匹配的项，然后直接按回车键进入下一步。我将在下一篇中来实现这个功能。</p>
 

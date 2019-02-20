@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="对于JS中的闭包closure，官方给出的定义为：A “closure” is an expression (typically a function) that can have free variables together with an environment that binds those variables (that “closes” the expression)。 对此我的理解">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.836Z">
+<meta property="og:updated_time" content="2019-02-20T12:17:52.594Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JS中的闭包及使用场合">
 <meta name="twitter:description" content="对于JS中的闭包closure，官方给出的定义为：A “closure” is an expression (typically a function) that can have free variables together with an environment that binds those variables (that “closes” the expression)。 对此我的理解">
@@ -399,113 +399,26 @@
 <h2 id="词法性质的作用域"><a href="#词法性质的作用域" class="headerlink" title="词法性质的作用域"></a>词法性质的作用域</h2><p>JS具有函数级的作用域，这意味着定义在函数内部的变量在函数外部不能被访问。</p>
 <p>JS的作用域又是词法性质的（lexically scoped），这意味着函数运行在定义它的作用域中，而不是在调用它的作用域中。因此，函数执行时的变量可见性范围就是它被定义时的变量可见性范围。</p>
 <h2 id="闭包的创建方式"><a href="#闭包的创建方式" class="headerlink" title="闭包的创建方式"></a>闭包的创建方式</h2><p>创建闭包最简单最通常的方式就是：创建一个<a href="http://www.cnblogs.com/TomXu/archive/2011/12/31/2289423.html" target="_blank" rel="noopener">自执行函数</a>，然后在其内部再嵌一个供外调用的函数，这样这个自执行函数就形成了一个闭包。</p>
-<pre><code>var someVar = &apos;global&apos;;
-var someFunc;
-
-(function(){
-    var someVar = &apos;inner&apos;;
-    someFunc = function(){
-        alert(someVar);
-    };
-})();
-
-someFunc();
-</code></pre><p>可以看到最后执行结果是“inner”，因为<code>someFunc</code>在自执行函数的闭包中被定义，虽然<code>someFunc</code>在自执行函数执行完后才被调用，但是<strong>函数执行时可访问到的变量，就是该函数被定义时函数内部可访问到的变量</strong>。因此<code>someFunc</code>定义时看到的<code>someVar</code>值是inner，就是最后执行时的结果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> someVar = <span class="string">'global'</span>;</span><br><span class="line"><span class="keyword">var</span> someFunc;</span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> someVar = <span class="string">'inner'</span>;</span><br><span class="line">    someFunc = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(someVar);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line">someFunc();</span><br></pre></td></tr></table></figure>
+<p>可以看到最后执行结果是“inner”，因为<code>someFunc</code>在自执行函数的闭包中被定义，虽然<code>someFunc</code>在自执行函数执行完后才被调用，但是<strong>函数执行时可访问到的变量，就是该函数被定义时函数内部可访问到的变量</strong>。因此<code>someFunc</code>定义时看到的<code>someVar</code>值是inner，就是最后执行时的结果。</p>
 <h2 id="使用场合"><a href="#使用场合" class="headerlink" title="使用场合"></a>使用场合</h2><h3 id="减少全局变量"><a href="#减少全局变量" class="headerlink" title="减少全局变量"></a>减少全局变量</h3><p>闭包的最大作用就是<strong>变量共享</strong>，以减少全局变量的使用。举个例子</p>
-<pre><code>var some = (function(){
-    var count = 0;
-    var doSomething = function(){
-        for(var i=0; i&lt;100; i++){
-            count++;
-        }
-    }
-
-    return {
-        getResult: function(){
-            doSomething();
-            return count;
-        }
-    }
-})();
-</code></pre><p>最后调用<code>some.getResult()</code>结果当然是100。对外部来说，我们只关心最后得到的结果，而无所谓它是怎么算出来的。因此在外部，只存在一个全局变量<code>some</code>，我们成功的将中间变量<code>count</code>和过程<code>doSomething</code>变成了闭包内的自由变量（上述定义中的free variables），而不是全局变量。内部函数<code>getResult</code>能访问到外部函数的变量，因此闭包能够减少全局变量的使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> some = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">var</span> doSomething = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="number">100</span>; i++)&#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        getResult: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            doSomething();</span><br><span class="line">            <span class="keyword">return</span> count;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>最后调用<code>some.getResult()</code>结果当然是100。对外部来说，我们只关心最后得到的结果，而无所谓它是怎么算出来的。因此在外部，只存在一个全局变量<code>some</code>，我们成功的将中间变量<code>count</code>和过程<code>doSomething</code>变成了闭包内的自由变量（上述定义中的free variables），而不是全局变量。内部函数<code>getResult</code>能访问到外部函数的变量，因此闭包能够减少全局变量的使用。</p>
 <h3 id="模块化模式"><a href="#模块化模式" class="headerlink" title="模块化模式"></a>模块化模式</h3><p>由上面的再往下过渡，就是JS中的模块化模式了。这是面向对象的编程思想，用来管理方法和属性的可见度。在以前封装<a href="/blog/2015/01/step-by-step-js-component-schoolbox-2.html#封装设计模式">学校选择器</a>的时候，就写过一段面向对象的例子。</p>
-<pre><code>var Book = (function(){
-    // 私有静态属性
-    var numOfBooks = 0;
-
-    // 私有静态方法
-    function checkIsbn(isbn){
-
-    }
-
-    // 返回真正的构造函数
-    return function(newIsbn, newTitle, newAuthor){
-        // 私有属性
-        var isbn, title, author;
-
-        // 特权方法（每个实例都会有一个方法的备份）
-        this.getIsbn = function(){
-            return isbn;
-        };
-        this.setIsbn = function(newIsbn){
-            if(!checkIsbn(newIsbn)){
-                throw new Error(&apos;Book: ISBN无效&apos;);
-            }
-            isbn = newIsbn;
-        };
-
-        // 执行构造
-        numOfBooks++;
-        if(numOfBooks &gt; 50){
-            throw new Error(&apos;Book: 最多创建50个实例&apos;);
-        }
-
-        this.setIsbn(newIsbn);
-    }
-})();
-</code></pre><p>这里就是通过创建一个自执行函数，里面再返回一个函数，以实现类的构造函数，并将私有属性封装在内部。对外部来说，<code>Book</code>就是一个封装好的模块。注意，这里省略了<code>prototype</code>部分，具体请看<a href="/blog/2015/01/step-by-step-js-component-schoolbox-2.html#封装设计模式">这里</a>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Book = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 私有静态属性</span></span><br><span class="line">    <span class="keyword">var</span> numOfBooks = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 私有静态方法</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">checkIsbn</span>(<span class="params">isbn</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回真正的构造函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">newIsbn, newTitle, newAuthor</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 私有属性</span></span><br><span class="line">        <span class="keyword">var</span> isbn, title, author;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 特权方法（每个实例都会有一个方法的备份）</span></span><br><span class="line">        <span class="keyword">this</span>.getIsbn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> isbn;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">this</span>.setIsbn = <span class="function"><span class="keyword">function</span>(<span class="params">newIsbn</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(!checkIsbn(newIsbn))&#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Book: ISBN无效'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            isbn = newIsbn;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行构造</span></span><br><span class="line">        numOfBooks++;</span><br><span class="line">        <span class="keyword">if</span>(numOfBooks &gt; <span class="number">50</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Book: 最多创建50个实例'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.setIsbn(newIsbn);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>这里就是通过创建一个自执行函数，里面再返回一个函数，以实现类的构造函数，并将私有属性封装在内部。对外部来说，<code>Book</code>就是一个封装好的模块。注意，这里省略了<code>prototype</code>部分，具体请看<a href="/blog/2015/01/step-by-step-js-component-schoolbox-2.html#封装设计模式">这里</a>。</p>
 <h3 id="偏函数应用"><a href="#偏函数应用" class="headerlink" title="偏函数应用"></a>偏函数应用</h3><p>关于偏函数的具体定义，我也不是很清楚。不过很好理解，假设有个函数定义了3个参数，那么可以先把第一个参数的值绑定到该函数中，以后调用时只需要传入后两个参数值就可以了。</p>
-<pre><code>function say(word){
-    return function(name){
-        alert(word + &apos; &apos; + name);
-    }
-}
-
-var sayHello = say(&apos;Hello&apos;);
-sayHello(&apos;World&apos;);
-</code></pre><p>我们想做的事是想写个<code>say(word, name)</code>这样的函数，可以先让<code>say(&#39;Hello&#39;)</code>返回一个函数，然后再传入第二个参数即可。这是偏函数的最最简单的例子。JS中支持可变参数，可以为偏函数绑定多个参数的值，也叫做<em>curry化</em>。更复杂的例子请看司徒先生的<a href="http://www.cnblogs.com/rubylouvre/archive/2009/11/09/1598761.html" target="_blank" rel="noopener">这篇文章</a>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">say</span>(<span class="params">word</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">        alert(word + <span class="string">' '</span> + name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sayHello = say(<span class="string">'Hello'</span>);</span><br><span class="line">sayHello(<span class="string">'World'</span>);</span><br></pre></td></tr></table></figure>
+<p>我们想做的事是想写个<code>say(word, name)</code>这样的函数，可以先让<code>say(&#39;Hello&#39;)</code>返回一个函数，然后再传入第二个参数即可。这是偏函数的最最简单的例子。JS中支持可变参数，可以为偏函数绑定多个参数的值，也叫做<em>curry化</em>。更复杂的例子请看司徒先生的<a href="http://www.cnblogs.com/rubylouvre/archive/2009/11/09/1598761.html" target="_blank" rel="noopener">这篇文章</a>。</p>
 <h3 id="循环引用问题"><a href="#循环引用问题" class="headerlink" title="循环引用问题"></a>循环引用问题</h3><p>这是使用闭包的最经典的场合。先来看个例子。</p>
-<pre><code>// 假设页面中有4个div
-var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    var div = elems[i];
-    div.onclick = function(){
-        alert(i);
-    };
-}
-</code></pre><p>页面中有4个div元素，我们希望为它们绑上事件，点击第一个div弹出0，点击第二个div弹出1，依此类推。很可惜，上面的代码执行后，不管点击哪个div，弹出的都是4。这是为什么呢？当for循环结束时，<code>i</code>的值是4，因此当div元素被点击时，<code>onclick</code>函数内部看到的变量<code>i</code>值其实就是<code>i</code>最终的值，即4。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设页面中有4个div</span></span><br><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    <span class="keyword">var</span> div = elems[i];</span><br><span class="line">    div.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(i);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>页面中有4个div元素，我们希望为它们绑上事件，点击第一个div弹出0，点击第二个div弹出1，依此类推。很可惜，上面的代码执行后，不管点击哪个div，弹出的都是4。这是为什么呢？当for循环结束时，<code>i</code>的值是4，因此当div元素被点击时，<code>onclick</code>函数内部看到的变量<code>i</code>值其实就是<code>i</code>最终的值，即4。</p>
 <p>使用闭包可以解决这个问题</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    (function(j){
-        var div = elems[j];
-        div.onclick = function(){
-            alert(j);
-        };
-    })(i);
-}
-</code></pre><p>在for循环里面创建了一个自执行函数，把当前的i值传进去，即匿名函数的参数j（为了区分我这里写成了<code>j</code>，当然令它为<code>i</code>也可以）。这样就形成了一个闭包，<code>onclick</code>执行时看到的变量<code>j</code>就是匿名函数的参数<code>j</code>。而匿名函数是自执行的，它在for循环中已经被执行过了，因此匿名函数的参数<code>j</code>的值就是它被定义时传入的变量<code>i</code>值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params">j</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> div = elems[j];</span><br><span class="line">        div.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            alert(j);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在for循环里面创建了一个自执行函数，把当前的i值传进去，即匿名函数的参数j（为了区分我这里写成了<code>j</code>，当然令它为<code>i</code>也可以）。这样就形成了一个闭包，<code>onclick</code>执行时看到的变量<code>j</code>就是匿名函数的参数<code>j</code>。而匿名函数是自执行的，它在for循环中已经被执行过了，因此匿名函数的参数<code>j</code>的值就是它被定义时传入的变量<code>i</code>值。</p>
 <p>如果我把代码改成这样</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    (function(i){
-        var div = elems[i];
-        div.onclick = function(){
-            alert(i);
-        };
-    })(i);
-}
-</code></pre><p>依旧不会对结果产生影响，因为匿名函数在for循环中已经被执行过了，因此<code>onclick</code>中看到的<code>i</code>始终是匿名函数被定义时的参数<code>i</code>值，for循环的循环变量i不会对它产生影响。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params">i</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> div = elems[i];</span><br><span class="line">        div.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            alert(i);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>依旧不会对结果产生影响，因为匿名函数在for循环中已经被执行过了，因此<code>onclick</code>中看到的<code>i</code>始终是匿名函数被定义时的参数<code>i</code>值，for循环的循环变量i不会对它产生影响。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>综上所以我感觉，闭包就像一个壳子，把它里面的东西罩住了。正如本文一开头引用的官方定义，闭包把它里面的free variables罩住了保护住了，使它们免受外部的污染，包括全局变量的污染，或者是循环变量终值的污染。因此闭包内部的函数运行时看到的变量值，就是它们被定义时看到的变量的值。</p>
 <p>由于本篇写的是闭包的使用场合，解决循环引用问题只是其中的一种，还有更多循环引用的例子，我改天再写一篇^_^</p>
 <h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://www.cnblogs.com/TomXu/archive/2011/12/31/2289423.html" target="_blank" rel="noopener">深入理解JavaScript系列（4）：立即调用的函数表达式</a></p>

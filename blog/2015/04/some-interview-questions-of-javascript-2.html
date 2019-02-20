@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="现在坐在去北京的高铁上，刚才玩了两把极品飞车，配着列车的座位和颠簸，很带感！眼睛累了，最近确实比较忙，又是拖了好久就想写的博客，在这个特殊的地方，强烈抵制自己的拖延症！ 上一篇JS面试题都是基本数据类型，同一个人面试的话不会问太多，而JS中的原型、作用域和闭包是面试官问的最多的，我称之为“吉祥三宝”。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.837Z">
+<meta property="og:updated_time" content="2019-02-20T12:23:20.825Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="几道JS面试题-吉祥三宝">
 <meta name="twitter:description" content="现在坐在去北京的高铁上，刚才玩了两把极品飞车，配着列车的座位和颠簸，很带感！眼睛累了，最近确实比较忙，又是拖了好久就想写的博客，在这个特殊的地方，强烈抵制自己的拖延症！ 上一篇JS面试题都是基本数据类型，同一个人面试的话不会问太多，而JS中的原型、作用域和闭包是面试官问的最多的，我称之为“吉祥三宝”。">
@@ -398,81 +398,31 @@
 <a id="more"></a>
 <h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><p>说白了就是某个函数执行时<code>this</code>指向谁的问题。</p>
 <p>问题1：</p>
-<pre><code>var obj = {
-    run: function(){
-        function test(){ alert(this); }
-        test();
-    }
-};
-
-obj.run();
-</code></pre><p><code>obj.run()</code>进入函数主体时，因为调用者是<code>obj</code>，因此<code>run()</code>内部<code>this</code>是指向<code>obj</code>的。但是<code>run()</code>内部又定义了一个function，直接执行了<code>test()</code>，因此<code>test()</code>内部的<code>this</code>未显式指定，<code>this</code>默认指向就是<code>window</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    run: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123; alert(<span class="keyword">this</span>); &#125;</span><br><span class="line">        test();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.run();</span><br></pre></td></tr></table></figure>
+<p><code>obj.run()</code>进入函数主体时，因为调用者是<code>obj</code>，因此<code>run()</code>内部<code>this</code>是指向<code>obj</code>的。但是<code>run()</code>内部又定义了一个function，直接执行了<code>test()</code>，因此<code>test()</code>内部的<code>this</code>未显式指定，<code>this</code>默认指向就是<code>window</code>。</p>
 <p>问题2：</p>
-<pre><code>var name = &apos;window&apos;;
-var obj = {
-    name: &apos;obj&apos;,
-
-    child: {
-        // name: &apos;child&apos;,
-
-        getName: function () {
-            return this.name;
-        }
-    }
-
-};
-
-var getName = obj.child.getName;
-alert(getName());
-alert(obj.child.getName());
-</code></pre><p>因为直接把<code>obj.child.getName</code>赋给了<code>getName</code>变量，因此<code>getName</code>就是个function，直接调用<code>getName()</code>时其内部<code>this</code>指向的是默认值<code>window</code>，因此alert结果是<code>window</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'window'</span>;</span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    name: <span class="string">'obj'</span>,</span><br><span class="line"></span><br><span class="line">    child: &#123;</span><br><span class="line">        <span class="comment">// name: 'child',</span></span><br><span class="line"></span><br><span class="line">        getName: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> getName = obj.child.getName;</span><br><span class="line">alert(getName());</span><br><span class="line">alert(obj.child.getName());</span><br></pre></td></tr></table></figure>
+<p>因为直接把<code>obj.child.getName</code>赋给了<code>getName</code>变量，因此<code>getName</code>就是个function，直接调用<code>getName()</code>时其内部<code>this</code>指向的是默认值<code>window</code>，因此alert结果是<code>window</code>。</p>
 <p>而调用<code>obj.child.getName()</code>时，指定了调用者对象，因此函数内部的<code>this</code>指向<code>obj.child</code>对象。由于<code>child</code>里面的<code>name</code>给我注释掉了，因此<code>obj.child.getName()</code>里访问不到<code>this.name</code>，就alert出<code>undefined</code>（<code>obj.name</code>是用来迷惑的）。如果将此注释去掉的话，alert结果就是<code>child</code>。</p>
 <p>问题3：</p>
-<pre><code>function a(x, y){
-    y = function(){
-        x = 2;
-    };
-
-    return function(){
-        var x = 3;
-        y();
-        console.log(x);
-    }.apply(this, arguments);
-}
-
-a();
-</code></pre><p>这题是在<a href="http://weibo.com/ruanyf" target="_blank" rel="noopener">ruanyf</a>老师的微博上看到的，意思是很难的一道面试题，在console里试了下才想通了结果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params">x, y</span>)</span>&#123;</span><br><span class="line">    y = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        x = <span class="number">2</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> x = <span class="number">3</span>;</span><br><span class="line">        y();</span><br><span class="line">        <span class="built_in">console</span>.log(x);</span><br><span class="line">    &#125;.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a();</span><br></pre></td></tr></table></figure>
+<p>这题是在<a href="http://weibo.com/ruanyf" target="_blank" rel="noopener">ruanyf</a>老师的微博上看到的，意思是很难的一道面试题，在console里试了下才想通了结果。</p>
 <p>执行<code>a()</code>未传入实际参数，所以<code>a()</code>刚进入时，<code>x`</code>y<code>都是</code>undefined<code>。然后对</code>y<code>变量赋值成一个函数，函数内部将改变</code>x<code>的值，这里的</code>x<code>就是</code>a<code>函数定义时的形式参数</code>x`。</p>
 <p><strong>函数定义时括号里的叫形式参数，JS中函数调用时传入的实际参数可与形式参数数目不一致。</strong>而<code>arguments</code>指的是实际参数，因此<code>a()</code>里面<code>this</code>指向<code>window</code>，而<code>arguments</code>就是空数组。</p>
 <p>然后执行<code>a()</code>里面的匿名函数，重新定义了局部变量<code>x = 3</code>，然后调用匿名函数外部的<code>y()</code>。而上面已说<code>y</code>内部改变的是<code>a</code>函数的形式参数<code>x</code>的值，因此不会影响匿名函数内部的<code>x</code>，所以输出结果就是3。这里也可以用闭包来解释，<code>console.log(x)</code>看到的就是匿名函数内部的变量<code>x</code>，<code>y</code>函数内部看不到匿名函数内部的变量。</p>
 <h2 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h2><p>原型prototype是用来实现JS中的对象继承的，具体可看我以前这篇<a href="/blog/2014/03/js-pattern-part5-code-reuse-pattern.html">Javascript模式之五-代码复用模式</a>。</p>
 <p>问题1：</p>
-<pre><code>var A = function(){
-    this.name = &apos;A&apos;;
-};
-A.prototype.say = function(){
-    alert(this.name);
-};
-
-var B = function(){ };
-</code></pre><p>Q1：写段代码让B继承A</p>
-<pre><code>var F = function(){};
-F.prototype = A.prototype;
-B.prototype = new F();
-</code></pre><p>我使用了<a href="/blog/2014/03/js-pattern-part5-code-reuse-pattern.html#阶段6-圣杯">圣杯模式</a>的思想来继承，通过一个中间的空函数，使得B的原型对象实例最小，不会包含A的实例变量<code>name</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> A = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">'A'</span>;</span><br><span class="line">&#125;;</span><br><span class="line">A.prototype.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> B = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; &#125;;</span><br></pre></td></tr></table></figure>
+<p>Q1：写段代码让B继承A</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">F.prototype = A.prototype;</span><br><span class="line">B.prototype = <span class="keyword">new</span> F();</span><br></pre></td></tr></table></figure>
+<p>我使用了<a href="/blog/2014/03/js-pattern-part5-code-reuse-pattern.html#阶段6-圣杯">圣杯模式</a>的思想来继承，通过一个中间的空函数，使得B的原型对象实例最小，不会包含A的实例变量<code>name</code>。</p>
 <p>Q2：下面输出结果是多少？</p>
-<pre><code>var objB = new B();
-objB.say();
-</code></pre><p>如果按照我上面那种继承方法的话，由于B的原型对象其实<code>F</code>的实例（F的原型指向A的原型），<code>F</code>的实例中并没有<code>name</code>属性，所以<code>objB.say()</code>访问不到<code>this.name</code>，结果就是<code>undefined</code>啦。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> objB = <span class="keyword">new</span> B();</span><br><span class="line">objB.say();</span><br></pre></td></tr></table></figure>
+<p>如果按照我上面那种继承方法的话，由于B的原型对象其实<code>F</code>的实例（F的原型指向A的原型），<code>F</code>的实例中并没有<code>name</code>属性，所以<code>objB.say()</code>访问不到<code>this.name</code>，结果就是<code>undefined</code>啦。</p>
 <p>如果上面的继承代码改成<code>B.prototype = new A()</code>就这一句，那么B的原型对象就是<code>A</code>的实例，因此B的原型中就有<code>A</code>的实例属性<code>name</code>，所以<code>objB.say()</code>能访问到<code>this.name</code>。</p>
 <p>问题2：</p>
-<pre><code>Function.prototype.f = function(){};
-Object.prototype.o = function(){};
-
-function Factory(){}
-
-var car = new Factory();
-</code></pre><p>Q：能调用<code>car.f()</code>和<code>car.o()</code>吗？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.f = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.prototype.o = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Factory</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> car = <span class="keyword">new</span> Factory();</span><br></pre></td></tr></table></figure>
+<p>Q：能调用<code>car.f()</code>和<code>car.o()</code>吗？</p>
 <p>首先<code>car</code>是个new出来的对象，而JS中所有对象的原型链追溯到顶层都是<code>Object</code>，即<strong>所有对象都继承自Object</strong>，因此<code>car.o()</code>肯定没问题。</p>
 <p><code>typeof car</code>是<code>object</code>，而<code>car.constructor</code>是<code>Factory</code>。<code>typeof Factory</code>是<code>function</code>，而<strong>JS中所有function的constructor默认都是<code>Function</code></strong>，因此<code>Factory.f()</code>是能调用到的。即<code>car.constructor.f()</code>能调用到，而<code>car.f()</code>是无法调用到的。</p>
 <h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>面试中问闭包问的最多的就是循环引用问题，我在<a href="/blog/2015/03/apply-closure-to-forloop.html">使用闭包解决循环引用问题</a>这篇文章中已经列出很多例子了。比如，有一个数组<code>var array = [1, 2, 3, 4]</code>，请每隔1秒依次输出数组中的元素。这里就不多写了。</p>

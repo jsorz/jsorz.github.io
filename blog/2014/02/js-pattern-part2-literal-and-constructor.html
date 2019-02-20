@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="对象创建方式 对象字面量：这是一种优美的对象创建方式，它以包装在大括号中的逗号分割的键-值（key-value）对的方式创建对象。构造函数：主要包括内置构造函数（几乎总是有一个更好且更短的字面量表示法）和自定义构造函数。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.830Z">
+<meta property="og:updated_time" content="2019-02-20T06:11:49.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript模式之二-字面量和构造函数">
 <meta name="twitter:description" content="对象创建方式 对象字面量：这是一种优美的对象创建方式，它以包装在大括号中的逗号分割的键-值（key-value）对的方式创建对象。构造函数：主要包括内置构造函数（几乎总是有一个更好且更短的字面量表示法）和自定义构造函数。">
@@ -399,79 +399,36 @@
       
         <h2 id="对象创建方式"><a href="#对象创建方式" class="headerlink" title="对象创建方式"></a>对象创建方式</h2><p>对象字面量：这是一种优美的对象创建方式，它以包装在大括号中的逗号分割的键-值（key-value）对的方式创建对象。<br>构造函数：主要包括内置构造函数（几乎总是有一个更好且更短的字面量表示法）和自定义构造函数。</p>
 <p>example.</p>
-<pre><code>//使用字面量
-var car = {goes: &apos;far&apos;};
-//使用内置构造函数（反模式）
-var car = new Object();
-car.goes = &apos;far&apos;;
-</code></pre><p>优先选择字面量模式创建对象的另一个原因在于它强调了该对象仅是一个可变哈希映射，而不是从对象中提取的属性或方法。<br>与使用<code>Object</code>构造函数相对，使用字面量的另一个原因在于它并没有作用域解析。因为可能以同样的名字创建了一个局部构造函数，解释器需要从调用<code>Object()</code>的位置开始一直向上查询作用域链，直到发现全局<code>Object</code>构造函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用字面量</span></span><br><span class="line"><span class="keyword">var</span> car = &#123;<span class="attr">goes</span>: <span class="string">'far'</span>&#125;;</span><br><span class="line"><span class="comment">//使用内置构造函数（反模式）</span></span><br><span class="line"><span class="keyword">var</span> car = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">car.goes = <span class="string">'far'</span>;</span><br></pre></td></tr></table></figure>
+<p>优先选择字面量模式创建对象的另一个原因在于它强调了该对象仅是一个可变哈希映射，而不是从对象中提取的属性或方法。<br>与使用<code>Object</code>构造函数相对，使用字面量的另一个原因在于它并没有作用域解析。因为可能以同样的名字创建了一个局部构造函数，解释器需要从调用<code>Object()</code>的位置开始一直向上查询作用域链，直到发现全局<code>Object</code>构造函数。</p>
 <p><code>Object()</code>构造函数仅接受一个参数，并且还依赖传递的值，该<code>Object()</code>可能会委派另一个内置构造函数来创建对象，并且返回了一个并非期望的不同对象。当传递给<code>Object()</code>构造函数的值是动态的，并且直到运行时才能确定其类型时，<code>Object()</code>构造函数的这种行为可能会导致意料不到的结果。因此，不要使用<code>new Object()</code>构造函数，相反应该使用更为简单、可靠的对象字面量模式。</p>
-<h2 id="自定义构造函数"><a href="#自定义构造函数" class="headerlink" title="自定义构造函数"></a>自定义构造函数</h2><pre><code>var Person = function(name){
-    this.name = name;
-    this.say = function(){
-    return &apos;I am &apos; + this.name;
-    };
-};
-</code></pre><p>当以<code>new</code>操作符调用构造函数时，函数内部将会发生以下情况：</p>
+<h2 id="自定义构造函数"><a href="#自定义构造函数" class="headerlink" title="自定义构造函数"></a>自定义构造函数</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">'I am '</span> + <span class="keyword">this</span>.name;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>当以<code>new</code>操作符调用构造函数时，函数内部将会发生以下情况：</p>
 <ol>
 <li>创建一个空对象并且<code>this</code>变量引用了该对象，同时还继承了该函数的原型。</li>
 <li>属性和方法被加入到<code>this</code>引用的对象中。</li>
 <li>新创建的对象由<code>this</code>所引用，并且最后隐式地返回<code>this</code>（如果没有显式地返回其它对象）。</li>
 </ol>
 <p>以上情况看起来就像是在后台发生了如下事情：</p>
-<pre><code>var Person = function(name){
-    //使用对象字面量创建一个新对象
-    //var this = {};
-    //向this添加属性和方法
-    this.name = name;
-    this.say = function(){
-        return &apos;I am &apos; + this.name;
-    };
-    //return this;
-};
-</code></pre><p>在本例中，将<code>say()</code>方法添加到<code>this</code>中，其造成的结果是在任何时候调用<code>new Person()</code>时都会在内存中创建一个新的函数。这种方法显然是低效的，因为多个实例之间的<code>say()</code>方法实际上并没有改变。更好的选择应该是将方法添加到<code>Person</code>类的原型中。可重用的成员，比如可重用的方法，都应该放置到对象的原型中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//使用对象字面量创建一个新对象</span></span><br><span class="line">	<span class="comment">//var this = &#123;&#125;;</span></span><br><span class="line">	<span class="comment">//向this添加属性和方法</span></span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">'I am '</span> + <span class="keyword">this</span>.name;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="comment">//return this;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在本例中，将<code>say()</code>方法添加到<code>this</code>中，其造成的结果是在任何时候调用<code>new Person()</code>时都会在内存中创建一个新的函数。这种方法显然是低效的，因为多个实例之间的<code>say()</code>方法实际上并没有改变。更好的选择应该是将方法添加到<code>Person</code>类的原型中。可重用的成员，比如可重用的方法，都应该放置到对象的原型中。</p>
 <p>本例中，<code>var this = {};</code>并不是真相的全部，因为“空”对象实际上并不空，它已经从<code>Person</code>的原型中继承了许多成员。因此，它更像是下面的语句：</p>
-<pre><code>var this = Object.create(Person.prototype);
-</code></pre><p>注意，构造函数将隐式地返回<code>this</code>，甚至于在函数中没有显式地加入<code>return</code>语句。但是，可以根据需要返回任意其他对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">this</span> = <span class="built_in">Object</span>.create(Person.prototype);</span><br></pre></td></tr></table></figure>
+<p>注意，构造函数将隐式地返回<code>this</code>，甚至于在函数中没有显式地加入<code>return</code>语句。但是，可以根据需要返回任意其他对象。</p>
 <h2 id="强制使用new的模式"><a href="#强制使用new的模式" class="headerlink" title="强制使用new的模式"></a>强制使用new的模式</h2><p>在调用构造函数时如果忘记使用<code>new</code>操作符，将导致构造函数中的<code>this</code>指向了全局对象（在浏览器中，<code>this</code>将会指向<code>window</code>）。</p>
 <p>example.</p>
-<pre><code>function Waffle(){
-    this.tastes = &apos;yummy&apos;;
-}
-//反模式：忘记使用new操作符
-var mm = Waffle();
-console.log(typeof mm);  //output: undefined
-console.log(window.tastes);  //output: yummy
-</code></pre><p>上面的这种意外行为在ECMAScript 5中得到了解决，并且在strict模式中，<code>this</code>不会指向全局对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Waffle</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.tastes = <span class="string">'yummy'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//反模式：忘记使用new操作符</span></span><br><span class="line"><span class="keyword">var</span> mm = Waffle();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> mm);  <span class="comment">//output: undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.tastes);  <span class="comment">//output: yummy</span></span><br></pre></td></tr></table></figure>
+<p>上面的这种意外行为在ECMAScript 5中得到了解决，并且在strict模式中，<code>this</code>不会指向全局对象。</p>
 <p><strong>方案1：使用that</strong></p>
-<pre><code>function Waffle(){
-    var that = {};
-    that.tastes = &apos;yummy&apos;;
-    return that;
-}
-</code></pre><p>这种模式的问题在于它会丢失到原型的链接，因此任何添加到<code>Waffle()</code>原型的成员，对于对象来说都是不可用的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Waffle</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> that = &#123;&#125;;</span><br><span class="line">	that.tastes = <span class="string">'yummy'</span>;</span><br><span class="line">	<span class="keyword">return</span> that;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种模式的问题在于它会丢失到原型的链接，因此任何添加到<code>Waffle()</code>原型的成员，对于对象来说都是不可用的。</p>
 <p><strong>方案2：自调用构造函数</strong></p>
 <p>可以在构造函数中检查<code>this</code>是否为构造函数的一个实例，如果为否，构造函数可以再次调用自身，并且在这次调用中正确地使用<code>new</code>操作符。</p>
 <p>example.</p>
-<pre><code>function Waffle(){
-    if(!(this instanceof Waffle)){
-        return new Waffle();
-    }
-    this.tastes = &apos;yummy&apos;;
-}
-Waffle.prototype.wantAnother = true;
-
-var first = new Waffle();
-var second = Waffle();
-console.log(first.tastes);  //output: yummy
-console.log(second.tastes);  //output: yummy
-console.log(first.wantAnother);  //output: true
-console.log(second.wantAnother);  //output: true
-</code></pre><p>另一种用于检测实例对象的通用方法是将其与<code>arguments.callee</code>进行比较，而不是在代码中硬编码构造函数名称。</p>
-<pre><code>if(!(this instanceof arguments.callee)){
-    return new arguments.callee();
-}
-</code></pre><p>注：在ES5的strict模式中并不支持<code>arguments.callee</code>属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Waffle</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!(<span class="keyword">this</span> <span class="keyword">instanceof</span> Waffle))&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Waffle();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.tastes = <span class="string">'yummy'</span>;</span><br><span class="line">&#125;</span><br><span class="line">Waffle.prototype.wantAnother = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> first = <span class="keyword">new</span> Waffle();</span><br><span class="line"><span class="keyword">var</span> second = Waffle();</span><br><span class="line"><span class="built_in">console</span>.log(first.tastes);  <span class="comment">//output: yummy</span></span><br><span class="line"><span class="built_in">console</span>.log(second.tastes);  <span class="comment">//output: yummy</span></span><br><span class="line"><span class="built_in">console</span>.log(first.wantAnother);  <span class="comment">//output: true</span></span><br><span class="line"><span class="built_in">console</span>.log(second.wantAnother);  <span class="comment">//output: true</span></span><br></pre></td></tr></table></figure>
+<p>另一种用于检测实例对象的通用方法是将其与<code>arguments.callee</code>进行比较，而不是在代码中硬编码构造函数名称。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!(<span class="keyword">this</span> <span class="keyword">instanceof</span> <span class="built_in">arguments</span>.callee))&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">arguments</span>.callee();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注：在ES5的strict模式中并不支持<code>arguments.callee</code>属性。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>
 
       

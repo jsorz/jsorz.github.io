@@ -104,7 +104,7 @@
 <meta property="og:image" content="http://jsorz.cn/images/captures/20160124_03.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20160124_04.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20160124_05.png">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.840Z">
+<meta property="og:updated_time" content="2019-02-20T14:00:54.979Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mooctest项目总结">
 <meta name="twitter:description" content="慕测平台（简称mooctest），这个项目致力于编程类考试和练习的服务平台，教师可以轻松监管考试流程，学生可以自由练习编程。系统负责编程练习的自动化评估及可视化展现，配合当下红火的MOOC慕课课程，慕测平台将是学生自学编程的好帮手。目前已支持的编程类型有：Java覆盖测试，Java测试驱动编程，Python统计编程，C++编程，Jmeter性能测试，以及Android应用测试。之所以叫“mooct">
@@ -533,106 +533,18 @@
 </ul>
 <h2 id="数据库与ORM"><a href="#数据库与ORM" class="headerlink" title="数据库与ORM"></a>数据库与ORM</h2><p>本系统中使用 MySQL 数据库，Play框架中使用JPA提供ORM(Object Relational Mapping)的功能。</p>
 <p>一个简单的Model类定义如下</p>
-<pre><code>import javax.persistence.*;
-import play.db.jpa.Model;
-
-@Entity
-@Table(name=&quot;exam&quot;)
-public class Exam extends Model {
-
-    @Column(name=&quot;exam_name&quot;)
-    private String examName;
-
-    @ManyToOne
-    @JoinColumn(name=&quot;tea_id&quot;, referencedColumnName=&quot;id&quot;)
-    private Teacher teacher;
-
-    public String getExamName() {
-        return examName;
-    }
-    public void setExamName(String examName) {
-        this.examName = examName;
-    }
-    public Teacher getTeacher() {
-        return teacher;
-    }
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
-}
-</code></pre><p>也是通过简单的Annotation来配置数据库字段和成员变量的对应关系，以及一对多/多对多的关系。注意，这里不需要给<code>Exam</code>添加额外的<code>id</code>字段了，因为在<code>Model</code>父类中已经由JPA自带了<code>id</code>字段，格式为<code>Long</code>，所以数据库表里定义id字段时要注意设置“自增”和<code>int(32)</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"><span class="keyword">import</span> play.db.jpa.Model;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table</span>(name=<span class="string">"exam"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Column</span>(name=<span class="string">"exam_name"</span>)</span><br><span class="line">	<span class="keyword">private</span> String examName;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@ManyToOne</span></span><br><span class="line">	<span class="meta">@JoinColumn</span>(name=<span class="string">"tea_id"</span>, referencedColumnName=<span class="string">"id"</span>)</span><br><span class="line">	<span class="keyword">private</span> Teacher teacher;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getExamName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> examName;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setExamName</span><span class="params">(String examName)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.examName = examName;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Teacher <span class="title">getTeacher</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> teacher;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTeacher</span><span class="params">(Teacher teacher)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.teacher = teacher;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也是通过简单的Annotation来配置数据库字段和成员变量的对应关系，以及一对多/多对多的关系。注意，这里不需要给<code>Exam</code>添加额外的<code>id</code>字段了，因为在<code>Model</code>父类中已经由JPA自带了<code>id</code>字段，格式为<code>Long</code>，所以数据库表里定义id字段时要注意设置“自增”和<code>int(32)</code>。</p>
 <h2 id="DAO事务与泛型编程"><a href="#DAO事务与泛型编程" class="headerlink" title="DAO事务与泛型编程"></a>DAO事务与泛型编程</h2><p>如上面定义了<code>Exam</code>类后，该Model就被注入了JPA提供的增删改查操作了，为了防止职责乱用，我们统一约定由DAO层来封装数据库事务。这样<code>Exam</code>就会有个<code>ExamDao</code>，<code>Teacher</code>就会有个<code>TeacherDao</code>，我们会发现简单的增删改查对所有Model都适用的，为了避免简单操作方法的重复，我们引入“泛型Dao”的概念。</p>
 <p>我在以前的文章中写过关于<a href="/blog/2015/02/generic-dao-for-jpa.html">JPA泛型DAO</a>，需要定义一个泛型的<code>GenericDao</code>类，提供通用的增删改查操作。</p>
-<pre><code>public abstract class GenericDao&lt;T, PK extends Serializable&gt; {
-
-    private Class&lt;T&gt; clazz;
-
-    public GenericDao(){
-        // 反射获取T.class，实参类型
-        clazz = (Class&lt;T&gt;)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    }
-
-    public T findById(PK id){
-        return (T) JPA.em().find(clazz, id);
-    }
-
-    public List&lt;T&gt; findByColumn(String columnName , Object value){
-        String[] columnNames = new String[1];
-        Object[] values = new Object[1];
-
-        columnNames[0] = columnName;
-        values[0] = value;
-
-        return findByColumns(columnNames , values);
-    }
-
-    public List&lt;T&gt; findByColumns(String[] columnNames , Object[] value){
-        String sqlPart = &quot;&quot;;
-        for (int columnIdx = 0 ; columnIdx &lt; columnNames.length ; columnIdx++){
-            sqlPart += &quot;e.&quot; + columnNames[columnIdx] + &quot; = &apos;&quot; + value[columnIdx].toString() + &quot;&apos;&quot;;
-            if (columnIdx &lt; columnNames.length - 1){
-                sqlPart += &quot; and &quot;;
-            }
-        }
-
-        return (List&lt;T&gt;) JPA.em().createQuery(&quot;select e from &quot; + clazz.getName() + &quot; e where &quot; + sqlPart).getResultList();
-    }
-}
-</code></pre><p>而具体Model都有具体的Dao去继承它</p>
-<pre><code>public class ExamDao extends GenericDao&lt;Exam, Long&gt; {
-
-    public Exam findByTeaIdAndExamName(long teaId, String examName) {
-        String[] columns = {&quot;teacher.id&quot; , &quot;examName&quot;};
-        Object[] values = {teaId , examName};
-        List&lt;Exam&gt; list = this.findByColumns(columns, values);
-
-        if (list != null &amp;&amp; list.size() &gt; 0){
-            return list.get(0);
-        }
-        return null;
-    }
-
-    public List&lt;Exam&gt; findByTeaOpenid(String teaOpenid) {
-        return this.findByColumn(&quot;teacher.teaOpenid&quot;, teaOpenid);
-    }
-}
-</code></pre><p>关于<code>GenericDao</code>的更多细节请看<a href="/blog/2015/02/generic-dao-for-jpa.html">JPA泛型DAO</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericDao</span>&lt;<span class="title">T</span>, <span class="title">PK</span> <span class="keyword">extends</span> <span class="title">Serializable</span>&gt; </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> Class&lt;T&gt; clazz;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">GenericDao</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">// 反射获取T.class，实参类型</span></span><br><span class="line">		clazz = (Class&lt;T&gt;)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[<span class="number">0</span>];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">findById</span><span class="params">(PK id)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> (T) JPA.em().find(clazz, id);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findByColumn</span><span class="params">(String columnName , Object value)</span></span>&#123;</span><br><span class="line">		String[] columnNames = <span class="keyword">new</span> String[<span class="number">1</span>];</span><br><span class="line">		Object[] values = <span class="keyword">new</span> Object[<span class="number">1</span>];</span><br><span class="line">		</span><br><span class="line">		columnNames[<span class="number">0</span>] = columnName;</span><br><span class="line">		values[<span class="number">0</span>] = value;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> findByColumns(columnNames , values);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findByColumns</span><span class="params">(String[] columnNames , Object[] value)</span></span>&#123;</span><br><span class="line">		String sqlPart = <span class="string">""</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> columnIdx = <span class="number">0</span> ; columnIdx &lt; columnNames.length ; columnIdx++)&#123;</span><br><span class="line">			sqlPart += <span class="string">"e."</span> + columnNames[columnIdx] + <span class="string">" = '"</span> + value[columnIdx].toString() + <span class="string">"'"</span>;</span><br><span class="line">			<span class="keyword">if</span> (columnIdx &lt; columnNames.length - <span class="number">1</span>)&#123;</span><br><span class="line">				sqlPart += <span class="string">" and "</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> (List&lt;T&gt;) JPA.em().createQuery(<span class="string">"select e from "</span> + clazz.getName() + <span class="string">" e where "</span> + sqlPart).getResultList();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而具体Model都有具体的Dao去继承它</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExamDao</span> <span class="keyword">extends</span> <span class="title">GenericDao</span>&lt;<span class="title">Exam</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Exam <span class="title">findByTeaIdAndExamName</span><span class="params">(<span class="keyword">long</span> teaId, String examName)</span> </span>&#123;</span><br><span class="line">		String[] columns = &#123;<span class="string">"teacher.id"</span> , <span class="string">"examName"</span>&#125;;</span><br><span class="line">		Object[] values = &#123;teaId , examName&#125;;</span><br><span class="line">		List&lt;Exam&gt; list = <span class="keyword">this</span>.findByColumns(columns, values);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span> (list != <span class="keyword">null</span> &amp;&amp; list.size() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> list.get(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;Exam&gt; <span class="title">findByTeaOpenid</span><span class="params">(String teaOpenid)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.findByColumn(<span class="string">"teacher.teaOpenid"</span>, teaOpenid);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于<code>GenericDao</code>的更多细节请看<a href="/blog/2015/02/generic-dao-for-jpa.html">JPA泛型DAO</a></p>
 <h2 id="后端MVC框架"><a href="#后端MVC框架" class="headerlink" title="后端MVC框架"></a>后端MVC框架</h2><p>从上面的项目结构中已经看到，后端调用层次结构为 <code>Controller</code>-&gt;<code>Manager</code>-&gt;<code>Dao</code>-&gt;<code>Model</code>，<code>Controller</code>最终拿到<code>Model</code>数据传给前端页面，可见这是伪MVC。更准确来说是“分层”结构：上层可以调用下层，下层不能调用上层；同时上层也不能跨层调用。</p>
 <p>我们这里说框架的MVC，更着重于<code>Controller</code>怎么和页面<code>View</code>挂钩起来，并不太涉及<code>Model</code>的事，这里就需要路由(url)配置。</p>
-<h3 id="route配置规范"><a href="#route配置规范" class="headerlink" title="route配置规范"></a>route配置规范</h3><pre><code># 非登录的页面
-GET        /                                        Application.index
-GET        /faq/{category}/{sub}                    Application.{category}{sub}FAQ
-
-# 登录和注册
-POST    /login                                    LoginController.login
-
-# 角色的功能模块
-*        /tea/{action}                            TeacherController.{action}
-*       /tea/exam/{action}                        TeaExamController.{action}
-
-# Map static resources from the /app/public folder to the /public path
-GET     /public/                                staticDir:public
-</code></pre><p>路由配置支持定义请求方式<code>GET</code> or <code>POST</code>，也可以使用通配符，注意对于“更改”操作一定要使用<code>POST</code>，这是http的规范。url和<code>Controller</code>中的方法一一对应，并且支持变量替代，减少相似的配置条目。</p>
+<h3 id="route配置规范"><a href="#route配置规范" class="headerlink" title="route配置规范"></a>route配置规范</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 非登录的页面</span><br><span class="line">GET		/										Application.index</span><br><span class="line">GET		/faq/&#123;category&#125;/&#123;sub&#125;					Application.&#123;category&#125;&#123;sub&#125;FAQ</span><br><span class="line"></span><br><span class="line"># 登录和注册</span><br><span class="line">POST	/login									LoginController.login</span><br><span class="line"></span><br><span class="line"># 角色的功能模块</span><br><span class="line">*		/tea/&#123;action&#125;							TeacherController.&#123;action&#125;</span><br><span class="line">*       /tea/exam/&#123;action&#125;            			TeaExamController.&#123;action&#125;</span><br><span class="line"></span><br><span class="line"># Map static resources from the /app/public folder to the /public path</span><br><span class="line">GET     /public/                                staticDir:public</span><br></pre></td></tr></table></figure>
+<p>路由配置支持定义请求方式<code>GET</code> or <code>POST</code>，也可以使用通配符，注意对于“更改”操作一定要使用<code>POST</code>，这是http的规范。url和<code>Controller</code>中的方法一一对应，并且支持变量替代，减少相似的配置条目。</p>
 <h2 id="前端页面继承与复用"><a href="#前端页面继承与复用" class="headerlink" title="前端页面继承与复用"></a>前端页面继承与复用</h2><p>对于前端页面模板，Play框架里同样支持页面继承，Play中使用<a href="https://www.playframework.com/documentation/1.2.x/templates" target="_blank" rel="noopener">Groovy模板引擎</a>。关于页面继承细节可看这篇文章<a href="/blog/2015/12/twisted-way-to-awesome-fe.html#页面继承">前端要给力 — 平凡之路</a>，虽然里面是以Django框架的模板引擎为例，但是原理相同，模板语法略有不同而已。</p>
 <h2 id="前端UI组件的沉淀"><a href="#前端UI组件的沉淀" class="headerlink" title="前端UI组件的沉淀"></a>前端UI组件的沉淀</h2><p>在mooctest这个项目中，前端总体上用页面继承和<a href="https://www.playframework.com/documentation/1.2.x/templates#tags" target="_blank" rel="noopener">自定义页面tags</a>来组织。虽然项目起步时偷懒没有引入<a href="/blog/2015/12/twisted-way-to-awesome-fe.html#模块化开发">RequireJS</a>来组织js，但最终还是拎出了不少js组件，使用最朴素的js类定义和jquery插件的写法来封装代码。</p>
 <h3 id="1、动态图表"><a href="#1、动态图表" class="headerlink" title="1、动态图表"></a>1、动态图表</h3><p><img src="/images/captures/20160124_01.png"></p>
@@ -652,274 +564,40 @@ GET     /public/                                staticDir:public
 </ul>
 <p>这是系列长文，讲述了如何把一段生硬实现的代码一步一步封装和扩展成为一个可配置的UI组件！</p>
 <h2 id="多语言的支持"><a href="#多语言的支持" class="headerlink" title="多语言的支持"></a>多语言的支持</h2><p>前端部分讲完了，我们最后再看个和前端略有挂钩的需求，就是多语言支持。要在首页提供中文和英文的选项，并且默认使用系统语言。</p>
-<h3 id="系统语言判断"><a href="#系统语言判断" class="headerlink" title="系统语言判断"></a>系统语言判断</h3><pre><code>public class Application extends Controller {
-
-    static final String DEFAULT_LANGUAGE = &quot;zh_CN&quot;;
-
-    @Before
-    static void setGlobalLang(){
-        // langAction会将lang存入session
-        String lang = SessionUtil.getLang(session);
-        if(lang == null){
-            // 获取浏览器系统语言
-            List&lt;String&gt; langs = request.acceptLanguage();
-            for(String temp : langs){
-                // 浏览器发送的为 zh-CN
-                if(temp.contains(&quot;zh&quot;)){
-                    temp = DEFAULT_LANGUAGE;
-                }
-                if(Play.langs.contains(temp)){
-                    lang = temp;
-                    break;
-                }
-            }
-            if(lang == null){
-                lang = DEFAULT_LANGUAGE;
-            }
-            // 更新到session
-            SessionUtil.putLang(session, lang);
-        }
-        Lang.set(lang);
-    }
-}
-</code></pre><p>这里使用Play框架里的<strong>拦截器</strong>的概念，即上面Annotation的<code>@Before</code>，使得每个页面的action都会先执行<code>setGlobalLang</code>。语言的判断顺序为：先取session里存的语言，再取浏览器request头里传来的系统支持语言，都取不到时再提供个默认语言。</p>
+<h3 id="系统语言判断"><a href="#系统语言判断" class="headerlink" title="系统语言判断"></a>系统语言判断</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_LANGUAGE = <span class="string">"zh_CN"</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setGlobalLang</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">// langAction会将lang存入session</span></span><br><span class="line">		String lang = SessionUtil.getLang(session);</span><br><span class="line">    	<span class="keyword">if</span>(lang == <span class="keyword">null</span>)&#123;</span><br><span class="line">    		<span class="comment">// 获取浏览器系统语言</span></span><br><span class="line">    		List&lt;String&gt; langs = request.acceptLanguage();</span><br><span class="line">    		<span class="keyword">for</span>(String temp : langs)&#123;</span><br><span class="line">    			<span class="comment">// 浏览器发送的为 zh-CN</span></span><br><span class="line">    			<span class="keyword">if</span>(temp.contains(<span class="string">"zh"</span>))&#123;</span><br><span class="line">    				temp = DEFAULT_LANGUAGE;</span><br><span class="line">    			&#125;</span><br><span class="line">    			<span class="keyword">if</span>(Play.langs.contains(temp))&#123;</span><br><span class="line">    				lang = temp;</span><br><span class="line">    				<span class="keyword">break</span>;</span><br><span class="line">    			&#125;</span><br><span class="line">    		&#125;</span><br><span class="line">    		<span class="keyword">if</span>(lang == <span class="keyword">null</span>)&#123;</span><br><span class="line">    			lang = DEFAULT_LANGUAGE;</span><br><span class="line">    		&#125;</span><br><span class="line">    		<span class="comment">// 更新到session</span></span><br><span class="line">    		SessionUtil.putLang(session, lang);</span><br><span class="line">    	&#125;</span><br><span class="line">    	Lang.set(lang);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里使用Play框架里的<strong>拦截器</strong>的概念，即上面Annotation的<code>@Before</code>，使得每个页面的action都会先执行<code>setGlobalLang</code>。语言的判断顺序为：先取session里存的语言，再取浏览器request头里传来的系统支持语言，都取不到时再提供个默认语言。</p>
 <p>此外，还需为首页的中英文切换再提供个额外的action</p>
-<pre><code>public class Application extends Controller {
-
-    /** 多语言 */
-    public static void langAction(){
-        String lang = params.get(&quot;lang&quot;);
-        setLang(lang);
-        index(&quot;&quot;);
-    }
-
-    static void setLang(String lang){
-        if(lang == null || !Play.langs.contains(lang)){
-            lang = DEFAULT_LANGUAGE;
-        }
-        // 更新到session
-        SessionUtil.putLang(session, lang);
-        Lang.set(lang);
-    }
-}
-</code></pre><h3 id="语言字典"><a href="#语言字典" class="headerlink" title="语言字典"></a>语言字典</h3><p>在本文最初提到的项目<a href="#section-2">目录结构</a>中就有关于messages的文件，<code>messages.zh_CN</code>和<code>messages.en</code>就是中英文的字典文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/** 多语言 */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">langAction</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	String lang = params.get(<span class="string">"lang"</span>);</span><br><span class="line">    	setLang(lang);</span><br><span class="line">    	index(<span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setLang</span><span class="params">(String lang)</span></span>&#123;</span><br><span class="line">    	<span class="keyword">if</span>(lang == <span class="keyword">null</span> || !Play.langs.contains(lang))&#123;</span><br><span class="line">    		lang = DEFAULT_LANGUAGE;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="comment">// 更新到session</span></span><br><span class="line">    	SessionUtil.putLang(session, lang);</span><br><span class="line">    	Lang.set(lang);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="语言字典"><a href="#语言字典" class="headerlink" title="语言字典"></a>语言字典</h3><p>在本文最初提到的项目<a href="#section-2">目录结构</a>中就有关于messages的文件，<code>messages.zh_CN</code>和<code>messages.en</code>就是中英文的字典文件。</p>
 <p>Play框架在这一点方面做的比较简陋，好像一个语言只能有一个字典文件，因此我们需要使用“命名空间”的概念进行分组管理。</p>
-<pre><code>#key格式：页面名.[groupName].xxx
-#通用页面   common.[groupName].xxx
-
-#首页
-################################
-index.links.guide = GUIDE
-index.links.download = DOWNLOADS
-</code></pre><p>这里配置了英文文案，同样也要在<code>messages.zh_CN</code>文件里配置相同key的中文文案。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#key格式：页面名.[groupName].xxx</span><br><span class="line">#通用页面   common.[groupName].xxx</span><br><span class="line"></span><br><span class="line">#首页</span><br><span class="line">################################</span><br><span class="line">index.links.guide = GUIDE</span><br><span class="line">index.links.download = DOWNLOADS</span><br></pre></td></tr></table></figure>
+<p>这里配置了英文文案，同样也要在<code>messages.zh_CN</code>文件里配置相同key的中文文案。</p>
 <h3 id="后端返回文案"><a href="#后端返回文案" class="headerlink" title="后端返回文案"></a>后端返回文案</h3><p>如果要在后端的<code>Controller</code>里向前端返回错误文案，多语言的支持得使用 <code>play.i18n.Messages</code></p>
-<pre><code>// import play.i18n.Messages;
-
-// 这里的文案key与上面的语言字典中保持一致
-Messages.get(&quot;LoginController.accountNotExist&quot;)
-</code></pre><h3 id="前端的文案"><a href="#前端的文案" class="headerlink" title="前端的文案"></a>前端的文案</h3><p>在前端的页面模板中，直接使用 <code>&amp;{&#39;common.browserTitles.mooctest&#39;}</code> 就可使用语言字典中的key</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import play.i18n.Messages;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里的文案key与上面的语言字典中保持一致</span></span><br><span class="line">Messages.get(<span class="string">"LoginController.accountNotExist"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="前端的文案"><a href="#前端的文案" class="headerlink" title="前端的文案"></a>前端的文案</h3><p>在前端的页面模板中，直接使用 <code>&amp;{&#39;common.browserTitles.mooctest&#39;}</code> 就可使用语言字典中的key</p>
 <p>但是Play框架只会对模板文件做处理，对其注入通用变量和后端数据，模板文件其实是由后端负责渲染(转成标准html)的。由后端处理的页面模板中可以任意使用 <code>&amp;{&#39;your_text_key&#39;}</code> 语言标记，但是这在<code>.js</code>文件中是不被支持的。</p>
 <p>我们需要在所有页面的base父页面中定义一个内联script，事先定义好所有<code>.js</code>中需要使用到的文案。</p>
-<pre><code>&lt;!-- 全局多语言文案，供通用js使用 --&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-window.LANG_TEXT = {
-    OK: &quot;&amp;{&apos;common.btn.ok&apos;}&quot;,
-    CANCEL: &quot;&amp;{&apos;common.btn.cancel&apos;}&quot;,
-    DONE: &quot;&amp;{&apos;common.btn.done&apos;}&quot;
-};
-&lt;/script&gt;
-</code></pre><p>内联script是在模板文件中的，可以被Play框架处理，于是语言文案就被存在了全局<code>window</code>里。在具体功能的<code>.js</code>文件中可以直接使用<code>window.LANG_TEXT</code>变量。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 全局多语言文案，供通用js使用 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="built_in">window</span>.LANG_TEXT = &#123;</span></span><br><span class="line"><span class="javascript">    OK: <span class="string">"&amp;&#123;'common.btn.ok'&#125;"</span>,</span></span><br><span class="line"><span class="javascript">    CANCEL: <span class="string">"&amp;&#123;'common.btn.cancel'&#125;"</span>,</span></span><br><span class="line"><span class="javascript">    DONE: <span class="string">"&amp;&#123;'common.btn.done'&#125;"</span></span></span><br><span class="line"><span class="undefined">&#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>内联script是在模板文件中的，可以被Play框架处理，于是语言文案就被存在了全局<code>window</code>里。在具体功能的<code>.js</code>文件中可以直接使用<code>window.LANG_TEXT</code>变量。</p>
 <h2 id="邮件队列与定时任务"><a href="#邮件队列与定时任务" class="headerlink" title="邮件队列与定时任务"></a>邮件队列与定时任务</h2><p>最后我再来说一个后端额外的小功能，发送邮件，由第三方EDM(Email Direct Marketing)商提供服务。</p>
 <h3 id="EDM服务购买"><a href="#EDM服务购买" class="headerlink" title="EDM服务购买"></a>EDM服务购买</h3><p>可以在网上找到很多这样的EDM服务商，有的是专门做企业短信和邮件营销的，也有的是域名主机和服务都做的。我这儿就不打广告了，自行找一家有点规模的稳定一点的EDM服务商即可。</p>
 <h3 id="域名配置"><a href="#域名配置" class="headerlink" title="域名配置"></a>域名配置</h3><p>买好EDM账号后，在EDM管理平台上就可发邮件了，但是它们默认会给你分配一个带 <a href="mailto:`edm04621@service.xxx.com" target="_blank" rel="noopener">`edm04621@service.xxx.com</a>` 类似这样的邮箱。这种邮箱发出来的邮件十有八九会被扔进垃圾箱或者被拦截掉，因此我们要配置自己域名的邮箱。</p>
 <p>设置一个域名的mx、txt和cname记录，以example.com域为例：</p>
-<pre><code>edm.example.com CNAME edm.edmcn.cn
-edm.example.com MX sender.f.wsztest.com
-edm.example.com TXT v=spf1 include:spf.ezcdn.cn ~all
-</code></pre><p>域名解析成功后，就可在EDM管理平台使用自己域名验证过的邮箱地址了，比如叫<a href="mailto:`service@edm.mooctest.net" target="_blank" rel="noopener">`service@edm.mooctest.net</a>`，就可以大大减少邮件被扔进垃圾箱的概率。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">edm.example.com CNAME edm.edmcn.cn</span><br><span class="line">edm.example.com MX sender.f.wsztest.com</span><br><span class="line">edm.example.com TXT v=spf1 include:spf.ezcdn.cn ~all</span><br></pre></td></tr></table></figure>
+<p>域名解析成功后，就可在EDM管理平台使用自己域名验证过的邮箱地址了，比如叫<a href="mailto:`service@edm.mooctest.net" target="_blank" rel="noopener">`service@edm.mooctest.net</a>`，就可以大大减少邮件被扔进垃圾箱的概率。</p>
 <h3 id="SMTP接口"><a href="#SMTP接口" class="headerlink" title="SMTP接口"></a>SMTP接口</h3><p>上面的配置都完成后，确保在EDM管理平台上可以成功发邮件后，就可以去申请开通EDM-SMTP服务。在程序中可以通过<code>javax.mail</code>库去建立邮件Transport协议。</p>
-<pre><code>import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Properties;
-
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
-
-import common.Constants;
-
-public class SimpleMailSender {
-
-    private static final String SMTP_EDM = &quot;smtp.trigger.edmcn.cn&quot;;
-
-    private final transient Properties props = System.getProperties();
-    private transient MailAuthenticator authenticator;
-    private transient Session session;
-
-    public SimpleMailSender(final String smtpHostName, final String username,
-        final String password) {
-        init(username, password, smtpHostName);
-    }
-
-    public SimpleMailSender(final String username, final String password) {
-        String smtpHost;
-        // EDM帐号
-        if(isEDM(username)){
-            smtpHost = SMTP_EDM;
-        }
-        else{
-            smtpHost = &quot;smtp.&quot; + username.split(&quot;@&quot;)[1];
-        }
-
-        init(username, password, smtpHost);
-    }
-
-    private void init(String username, String password, String smtpHostName) {
-        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);
-        props.put(&quot;mail.smtp.host&quot;, smtpHostName);
-        authenticator = new MailAuthenticator(username, password);
-        session = Session.getInstance(props, authenticator);
-    }
-
-    private boolean isEDM(String account){
-        if(account.startsWith(&quot;edmc&quot;) &amp;&amp; !account.contains(&quot;@&quot;)){
-            return true;
-        }
-        return false;
-    }
-
-    private InternetAddress getSenderAddress() throws AddressException, UnsupportedEncodingException{
-        if(isEDM(authenticator.getUsername())){
-            return new InternetAddress(Constants.EDM_SENDER_ADDRESS, Constants.EDM_SENDER_NAME);
-        }
-        return new InternetAddress(authenticator.getUsername(), Constants.DEFAULT_SENDER_NAME);
-    }
-
-    public void send(List&lt;String&gt; recipients, String subject, Object content)
-        throws AddressException, MessagingException, UnsupportedEncodingException {
-        final MimeMessage message = new MimeMessage(session);
-        message.setFrom(getSenderAddress());
-
-        final int num = recipients.size();
-        InternetAddress[] addresses = new InternetAddress[num];
-        for (int i = 0; i &lt; num; i++) {
-            addresses[i] = new InternetAddress(recipients.get(i));
-        }
-        message.setRecipients(RecipientType.TO, addresses);
-
-        message.setSubject(subject);
-        message.setContent(content.toString(), &quot;text/html;charset=utf-8&quot;);
-        Transport.send(message);
-    }
-}
-</code></pre><h3 id="队列设计"><a href="#队列设计" class="headerlink" title="队列设计"></a>队列设计</h3><p>使用过EDM发送邮件的人会知道，就算我们配置了自己域名的邮箱地址，在使用SMTP协议发送时，也会遇到频率过快，或者对方邮箱拒收，等失败情况。因此我们要设计一套容错和重试的机制。</p>
-<pre><code>import javax.persistence.*;
-import play.db.jpa.Model;
-
-@Entity
-@Table(name=&quot;email_task&quot;)
-public class EmailTask extends Model {
-    @Column(name=&quot;receiver&quot;)
-    private String receiver;
-
-    @Column(name=&quot;subject&quot;)
-    private String subject;
-
-    @Column(name=&quot;content&quot;)
-    private String content;
-
-    @Column(name=&quot;try_times&quot;)
-    private Integer tryTimes;
-
-    public EmailTask(){
-        // default
-        this.tryTimes = 0;
-    }
-    // 省略getter和setter
-}
-</code></pre><p>如本文上面提到的<a href="#orm">数据库与ORM</a>所述，这里设计一个<code>EmailTask</code>的Model，记录下收件人、主题和正文内容，再额外存个<code>tryTimes</code>字段。这里我们可以规定，当重试3次仍失败后，就忽略该邮件任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.mail.MessagingException;</span><br><span class="line"><span class="keyword">import</span> javax.mail.Session;</span><br><span class="line"><span class="keyword">import</span> javax.mail.Transport;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.AddressException;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.InternetAddress;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMessage;</span><br><span class="line"><span class="keyword">import</span> javax.mail.internet.MimeMessage.RecipientType;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> common.Constants;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleMailSender</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SMTP_EDM = <span class="string">"smtp.trigger.edmcn.cn"</span>;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">transient</span> Properties props = System.getProperties();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> MailAuthenticator authenticator;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Session session;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleMailSender</span><span class="params">(<span class="keyword">final</span> String smtpHostName, <span class="keyword">final</span> String username,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">final</span> String password)</span> </span>&#123;</span><br><span class="line">    	init(username, password, smtpHostName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleMailSender</span><span class="params">(<span class="keyword">final</span> String username, <span class="keyword">final</span> String password)</span> </span>&#123;</span><br><span class="line">    	String smtpHost;</span><br><span class="line">    	<span class="comment">// EDM帐号</span></span><br><span class="line">    	<span class="keyword">if</span>(isEDM(username))&#123;</span><br><span class="line">    		smtpHost = SMTP_EDM;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">else</span>&#123;</span><br><span class="line">    		smtpHost = <span class="string">"smtp."</span> + username.split(<span class="string">"@"</span>)[<span class="number">1</span>];</span><br><span class="line">    	&#125;</span><br><span class="line">    	</span><br><span class="line">    	init(username, password, smtpHost);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(String username, String password, String smtpHostName)</span> </span>&#123;</span><br><span class="line">	    props.put(<span class="string">"mail.smtp.auth"</span>, <span class="string">"true"</span>);</span><br><span class="line">	    props.put(<span class="string">"mail.smtp.host"</span>, smtpHostName);</span><br><span class="line">	    authenticator = <span class="keyword">new</span> MailAuthenticator(username, password);</span><br><span class="line">	    session = Session.getInstance(props, authenticator);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isEDM</span><span class="params">(String account)</span></span>&#123;</span><br><span class="line">    	<span class="keyword">if</span>(account.startsWith(<span class="string">"edmc"</span>) &amp;&amp; !account.contains(<span class="string">"@"</span>))&#123;</span><br><span class="line">    		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> InternetAddress <span class="title">getSenderAddress</span><span class="params">()</span> <span class="keyword">throws</span> AddressException, UnsupportedEncodingException</span>&#123;</span><br><span class="line">    	<span class="keyword">if</span>(isEDM(authenticator.getUsername()))&#123;</span><br><span class="line">    		<span class="keyword">return</span> <span class="keyword">new</span> InternetAddress(Constants.EDM_SENDER_ADDRESS, Constants.EDM_SENDER_NAME);</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">return</span> <span class="keyword">new</span> InternetAddress(authenticator.getUsername(), Constants.DEFAULT_SENDER_NAME);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(List&lt;String&gt; recipients, String subject, Object content)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> AddressException, MessagingException, UnsupportedEncodingException </span>&#123;</span><br><span class="line">	    <span class="keyword">final</span> MimeMessage message = <span class="keyword">new</span> MimeMessage(session);</span><br><span class="line">	    message.setFrom(getSenderAddress());</span><br><span class="line">	    </span><br><span class="line">	    <span class="keyword">final</span> <span class="keyword">int</span> num = recipients.size();</span><br><span class="line">	    InternetAddress[] addresses = <span class="keyword">new</span> InternetAddress[num];</span><br><span class="line">	    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</span><br><span class="line">	        addresses[i] = <span class="keyword">new</span> InternetAddress(recipients.get(i));</span><br><span class="line">	    &#125;</span><br><span class="line">	    message.setRecipients(RecipientType.TO, addresses);</span><br><span class="line">	    </span><br><span class="line">	    message.setSubject(subject);</span><br><span class="line">	    message.setContent(content.toString(), <span class="string">"text/html;charset=utf-8"</span>);</span><br><span class="line">	    Transport.send(message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="队列设计"><a href="#队列设计" class="headerlink" title="队列设计"></a>队列设计</h3><p>使用过EDM发送邮件的人会知道，就算我们配置了自己域名的邮箱地址，在使用SMTP协议发送时，也会遇到频率过快，或者对方邮箱拒收，等失败情况。因此我们要设计一套容错和重试的机制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"><span class="keyword">import</span> play.db.jpa.Model;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table</span>(name=<span class="string">"email_task"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmailTask</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Column</span>(name=<span class="string">"receiver"</span>)</span><br><span class="line">	<span class="keyword">private</span> String receiver;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Column</span>(name=<span class="string">"subject"</span>)</span><br><span class="line">	<span class="keyword">private</span> String subject;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Column</span>(name=<span class="string">"content"</span>)</span><br><span class="line">	<span class="keyword">private</span> String content;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Column</span>(name=<span class="string">"try_times"</span>)</span><br><span class="line">	<span class="keyword">private</span> Integer tryTimes;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">EmailTask</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">// default</span></span><br><span class="line">		<span class="keyword">this</span>.tryTimes = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 省略getter和setter</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如本文上面提到的<a href="#orm">数据库与ORM</a>所述，这里设计一个<code>EmailTask</code>的Model，记录下收件人、主题和正文内容，再额外存个<code>tryTimes</code>字段。这里我们可以规定，当重试3次仍失败后，就忽略该邮件任务。</p>
 <p>当发送立即邮件时，比如“忘记密码”的邮件，直接使用上面的<code>SimpleMailSender</code>发送邮件，如果失败，则将邮件信息存成<code>EmailTask</code>存到数据库。而当发送非立即的邮件时，比如通知类的邮件，只需将邮件内容生成<code>EmailTask</code>对象存到数据库，供定时任务来调度。</p>
 <h3 id="立即任务与定时任务"><a href="#立即任务与定时任务" class="headerlink" title="立即任务与定时任务"></a>立即任务与定时任务</h3><p>上面的邮件队列设计中所说的“立即邮件”和“非立即邮件”，其实就是“立即任务”和“定时任务”。在Play框架中有<a href="https://www.playframework.com/documentation/1.2.x/jobs" target="_blank" rel="noopener">Jobs</a>来实现任务调度。</p>
-<pre><code>import play.jobs.Job;
-
-public class InstantMailJob extends Job {
-
-    private static EmailTaskDao taskDao = new EmailTaskDao();
-
-    private String receiver;
-    private String subject;
-    private String content;
-
-    public InstantMailJob(String receiver, String subject, String content){
-        this.receiver = receiver;
-        this.subject = subject;
-        this.content = content;
-    }
-
-    public void doJob(){
-        try {
-            MailJobUtil.sendMail(receiver, subject, content);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(&quot;Send mail error for receiver &quot; + receiver);
-
-            // 发送失败，加入task，待下次再发
-            EmailTask task = new EmailTask();
-            task.setReceiver(receiver);
-            task.setSubject(subject);
-            task.setContent(content);
-            // 已失败1次
-            task.setTryTimes(1);
-
-            taskDao.save(task);
-        }
-    }
-}
-</code></pre><p>这就是“立即邮件”任务的Job，得 override <code>doJob</code>方法，邮件发送失败的话就加入<code>EmailTask</code>。使用时如下调用即可</p>
-<pre><code>new InstantMailJob(receiver, subject, content).now();
-</code></pre><p>而对于“非立即邮件”任务，要使用Play框架的定时任务Job，并且设置间隔时间。</p>
-<pre><code>import play.jobs.Every;
-import play.jobs.Job;
-
-@Every(&quot;1mn&quot;)
-public class BackgroundMailJob extends Job {
-
-    private static EmailTaskDao taskDao = new EmailTaskDao();
-
-    public void doJob(){
-        // 避免邮件服务器异常，一次只发前10个
-        List&lt;EmailTask&gt; tasks = taskDao.getTopTasks();
-
-        for(EmailTask task : tasks){
-            try {
-                MailJobUtil.sendMail(task.getReceiver(), task.getSubject(), task.getContent());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println(&quot;Send mail error for receiver &quot; + task.getReceiver());
-
-                // 把当前任务加到队尾
-                EmailTask failedTask = new EmailTask();
-                failedTask.setReceiver(task.getReceiver());
-                failedTask.setSubject(task.getSubject());
-                failedTask.setContent(task.getContent());
-                // 累计失败次数
-                failedTask.setTryTimes(task.getTryTimes() + 1);
-
-                taskDao.save(failedTask);
-            }
-
-            // 删除成功的任务
-            taskDao.remove(task);
-        }
-    }
-}
-</code></pre><p>同样也要 override <code>doJob</code>方法，但这里还得设置任务周期 <code>@Every(&quot;1mn&quot;)</code>，这个有点类似linux中的crontab。我这里设置了每1分钟执行一次任务，为了避免邮件SMTP调用频率太快而失败，每次执行Job时只取队列中前几个<code>EmailTask</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> play.jobs.Job;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InstantMailJob</span> <span class="keyword">extends</span> <span class="title">Job</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> EmailTaskDao taskDao = <span class="keyword">new</span> EmailTaskDao();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> String receiver;</span><br><span class="line">	<span class="keyword">private</span> String subject;</span><br><span class="line">	<span class="keyword">private</span> String content;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">InstantMailJob</span><span class="params">(String receiver, String subject, String content)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.receiver = receiver;</span><br><span class="line">		<span class="keyword">this</span>.subject = subject;</span><br><span class="line">		<span class="keyword">this</span>.content = content;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doJob</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			MailJobUtil.sendMail(receiver, subject, content);</span><br><span class="line">			</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			System.out.println(<span class="string">"Send mail error for receiver "</span> + receiver);</span><br><span class="line">			</span><br><span class="line">			<span class="comment">// 发送失败，加入task，待下次再发</span></span><br><span class="line">			EmailTask task = <span class="keyword">new</span> EmailTask();</span><br><span class="line">			task.setReceiver(receiver);</span><br><span class="line">			task.setSubject(subject);</span><br><span class="line">			task.setContent(content);</span><br><span class="line">			<span class="comment">// 已失败1次</span></span><br><span class="line">			task.setTryTimes(<span class="number">1</span>);</span><br><span class="line">			</span><br><span class="line">			taskDao.save(task);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就是“立即邮件”任务的Job，得 override <code>doJob</code>方法，邮件发送失败的话就加入<code>EmailTask</code>。使用时如下调用即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> InstantMailJob(receiver, subject, content).now();</span><br></pre></td></tr></table></figure>
+<p>而对于“非立即邮件”任务，要使用Play框架的定时任务Job，并且设置间隔时间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> play.jobs.Every;</span><br><span class="line"><span class="keyword">import</span> play.jobs.Job;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Every</span>(<span class="string">"1mn"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BackgroundMailJob</span> <span class="keyword">extends</span> <span class="title">Job</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> EmailTaskDao taskDao = <span class="keyword">new</span> EmailTaskDao();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doJob</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">// 避免邮件服务器异常，一次只发前10个</span></span><br><span class="line">		List&lt;EmailTask&gt; tasks = taskDao.getTopTasks();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(EmailTask task : tasks)&#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				MailJobUtil.sendMail(task.getReceiver(), task.getSubject(), task.getContent());</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">				System.out.println(<span class="string">"Send mail error for receiver "</span> + task.getReceiver());</span><br><span class="line">				</span><br><span class="line">				<span class="comment">// 把当前任务加到队尾</span></span><br><span class="line">				EmailTask failedTask = <span class="keyword">new</span> EmailTask();</span><br><span class="line">				failedTask.setReceiver(task.getReceiver());</span><br><span class="line">				failedTask.setSubject(task.getSubject());</span><br><span class="line">				failedTask.setContent(task.getContent());</span><br><span class="line">				<span class="comment">// 累计失败次数</span></span><br><span class="line">				failedTask.setTryTimes(task.getTryTimes() + <span class="number">1</span>);</span><br><span class="line">				</span><br><span class="line">				taskDao.save(failedTask);</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="comment">// 删除成功的任务</span></span><br><span class="line">			taskDao.remove(task);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样也要 override <code>doJob</code>方法，但这里还得设置任务周期 <code>@Every(&quot;1mn&quot;)</code>，这个有点类似linux中的crontab。我这里设置了每1分钟执行一次任务，为了避免邮件SMTP调用频率太快而失败，每次执行Job时只取队列中前几个<code>EmailTask</code>。</p>
 <h3 id="邮件统计数据"><a href="#邮件统计数据" class="headerlink" title="邮件统计数据"></a>邮件统计数据</h3><p>这是一开始在EDM管理平台上批量发送邮件的统计数据，发现软退率不低，查看邮局统计后发现是QQ邮箱普遍网关拦截。</p>
 <p><img src="/images/captures/20160124_04.png"></p>
 <p>而下面是使用了EDM-SMTP协议和邮件队列发送的结果统计，可见成功率稍微高一点。倒数第二条记录软退很高，是因为几乎都是QQ邮箱！</p>

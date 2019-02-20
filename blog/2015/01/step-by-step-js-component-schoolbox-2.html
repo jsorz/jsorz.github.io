@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="在第一篇中我们已经实现了学校选择器的基本功能，但是当其他页面也需要同样的功能的时候，我们当然不希望大段的复制代码，我们希望能够降低js和页面的耦合，提供一种更简单的初始化和调用方式。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.832Z">
+<meta property="og:updated_time" content="2019-02-20T12:04:45.809Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一步步做组件-学校选择器(2)">
 <meta name="twitter:description" content="在第一篇中我们已经实现了学校选择器的基本功能，但是当其他页面也需要同样的功能的时候，我们当然不希望大段的复制代码，我们希望能够降低js和页面的耦合，提供一种更简单的初始化和调用方式。">
@@ -396,272 +396,29 @@
         <p>在第一篇中我们已经实现了学校选择器的基本功能，但是当其他页面也需要同样的功能的时候，我们当然不希望大段的复制代码，我们希望能够降低js和页面的耦合，提供一种更简单的初始化和调用方式。</p>
 <a id="more"></a>
 <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们希望在页面上只需要定义一个父元素，然后直接<code>new</code>一个选择器出来即可。</p>
-<pre><code>var schoolBox = new SchoolBox({
-    appendTo: &apos;#schoolBoxWrapper&apos;
-});
-</code></pre><p>并且<code>SchoolBox</code>只暴露一些必要的供外使用的API，如<code>schoolBox.show()</code>、<code>schoolBox.hide()</code>等。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> schoolBox = <span class="keyword">new</span> SchoolBox(&#123;</span><br><span class="line">    appendTo: <span class="string">'#schoolBoxWrapper'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>并且<code>SchoolBox</code>只暴露一些必要的供外使用的API，如<code>schoolBox.show()</code>、<code>schoolBox.hide()</code>等。</p>
 <h2 id="封装设计模式"><a href="#封装设计模式" class="headerlink" title="封装设计模式"></a>封装设计模式</h2><p>为了实现“简单”的目标，我们需要先了解下“封装”。其实js提供了非常弱的语法能力，它是弱类型语言，没有class的概念，没有<code>public</code>和<code>private</code>，也没有函数重载。但另一方面，正是它的弱语法，它提供了更高的自由度，利用它本身的closure和prototype的机制，完全可以模拟出“类”和公有/私有属性。</p>
-<pre><code>var Book = (function(){
-    // 私有静态属性
-    var numOfBooks = 0;
-
-    // 私有静态方法
-    function checkIsbn(isbn){
-
-    }
-
-    // 返回真正的构造函数
-    return function(newIsbn, newTitle, newAuthor){
-        // 私有属性
-        var isbn, title, author;
-
-        // 特权方法（每个实例都会有一个方法的备份）
-        this.getIsbn = function(){
-            return isbn;
-        };
-        this.setIsbn = function(newIsbn){
-            if(!checkIsbn(newIsbn)){
-                throw new Error(&apos;Book: ISBN无效&apos;);
-            }
-            isbn = newIsbn;
-        };
-
-        // 执行构造
-        numOfBooks++;
-        if(numOfBooks &gt; 50){
-            throw new Error(&apos;Book: 最多创建50个实例&apos;);
-        }
-
-        this.setIsbn(newIsbn);
-    }
-})();
-
-// 公有静态方法（类的静态方法）
-Book.convertToTitleCase = function(inputString){
-
-};
-
-// 公有非特权方法（每个实例的方法都指向同一个备份）
-Book.prototype = {
-    display: function(){
-
-    }
-};
-</code></pre><p>特权方法能够访问私有属性和方法，但是必须声明在<code>this</code>中。任何不需要直接访问私有属性的方法都可以在<code>prototype</code>中声明。<code>prototype</code>中的方法可以通过访问特权方法来间接访问私有属性。只有那些需要直接访问私有成员的方法才应该被设计为特权方法，但是每个对象实例都会包含所有特权方法的新副本，容易占内存。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Book = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 私有静态属性</span></span><br><span class="line">    <span class="keyword">var</span> numOfBooks = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 私有静态方法</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">checkIsbn</span>(<span class="params">isbn</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回真正的构造函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">newIsbn, newTitle, newAuthor</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 私有属性</span></span><br><span class="line">        <span class="keyword">var</span> isbn, title, author;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 特权方法（每个实例都会有一个方法的备份）</span></span><br><span class="line">        <span class="keyword">this</span>.getIsbn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> isbn;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">this</span>.setIsbn = <span class="function"><span class="keyword">function</span>(<span class="params">newIsbn</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(!checkIsbn(newIsbn))&#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Book: ISBN无效'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            isbn = newIsbn;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行构造</span></span><br><span class="line">        numOfBooks++;</span><br><span class="line">        <span class="keyword">if</span>(numOfBooks &gt; <span class="number">50</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Book: 最多创建50个实例'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.setIsbn(newIsbn);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 公有静态方法（类的静态方法）</span></span><br><span class="line">Book.convertToTitleCase = <span class="function"><span class="keyword">function</span>(<span class="params">inputString</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 公有非特权方法（每个实例的方法都指向同一个备份）</span></span><br><span class="line">Book.prototype = &#123;</span><br><span class="line">    display: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>特权方法能够访问私有属性和方法，但是必须声明在<code>this</code>中。任何不需要直接访问私有属性的方法都可以在<code>prototype</code>中声明。<code>prototype</code>中的方法可以通过访问特权方法来间接访问私有属性。只有那些需要直接访问私有成员的方法才应该被设计为特权方法，但是每个对象实例都会包含所有特权方法的新副本，容易占内存。</p>
 <h2 id="SchoolBox重构"><a href="#SchoolBox重构" class="headerlink" title="SchoolBox重构"></a>SchoolBox重构</h2><p>根据上面的封装模式，我们先搭出<code>SchoolBox</code>的框子。</p>
-<pre><code>(function($){
-
-    var SchoolBox = (function(){
-
-        // 元素copy
-        // 省略...
-
-        // 缓存
-        var provinces = SCHOOL_LIST;
-
-        // 私有静态方法
-        // 省略...
-
-        // 真正的构造函数
-        return function(options){
-            // 初始化特权属性
-            // 初始化生成
-            // 省略...
-        };
-    })();
-
-    SchoolBox.prototype = {
-        init: function(){
-
-        },
-        show: function(){
-
-        },
-        hide: function(){
-
-        }
-    };
-
-    // export
-    window.SchoolBox = SchoolBox;
-
-})(jQuery);
-</code></pre><p>1.将目标元素和元素copy定义成私有静态属性</p>
-<pre><code>var $schoolBoxCopy = $(
-    &apos;&lt;div class=&quot;school-box&quot;&gt;&apos; + 
-        &apos;&lt;div class=&quot;school-box-header&quot;&gt;选择学校&lt;/div&gt;&apos; + 
-        &apos;&lt;div class=&quot;school-box-provinces&quot;&gt;&lt;/div&gt;&apos; + 
-        &apos;&lt;div class=&quot;school-box-schools&quot;&gt;&lt;/div&gt;&apos; + 
-    &apos;&lt;/div&gt;&apos;);
-
-var $provinceCopy = $(&apos;&lt;a href=&quot;javascript:void(0)&quot; class=&quot;province-item&quot;&gt;&lt;/a&gt;&apos;);
-var $schoolCopy = $(&apos;&lt;a href=&quot;javascript:void(0)&quot; class=&quot;school-item&quot;&gt;&lt;/a&gt;&apos;);
-
-// 非实例化缓存
-var provinces = SCHOOL_LIST;
-</code></pre><p>2.将初始化province和school定义成私有静态方法</p>
-<pre><code>var getProvinceById = function(pid){
-    for(var i=0; i&lt;provinces.length; i++){
-        // NOTE: 前置条件province id可以转成数字
-        if(Number(provinces[i][&apos;id&apos;]) == Number(pid)){
-            return provinces[i];
-        }
-    }
-    return undefined;
-};
-
-var initProvinces = function($provinceDiv){
-    for(var i=0; i&lt;provinces.length; i++){
-        var province = provinces[i];
-        var $province = $provinceCopy.clone();
-        $province.attr(&apos;data-province&apos;, province[&apos;id&apos;])
-                    .text(province[&apos;name&apos;]);
-        $provinceDiv.append($province);
-    }
-};
-
-var initSchools = function($schoolDiv, provinceId){
-    var province = getProvinceById(provinceId);
-    if(typeof province !== &apos;undefined&apos;){
-        var schools = province[&apos;school&apos;];
-        $schoolDiv.empty();
-
-        for(var i=0; i&lt;schools.length; i++){
-            var school = schools[i];
-            var $school = $schoolCopy.clone();
-            $school.attr(&apos;data-school&apos;, school[&apos;id&apos;])
-                    .text(school[&apos;name&apos;]);
-            $schoolDiv.append($school);
-        }
-    }
-    return false;
-};
-
-var onProvinceClick = function($provinceDiv, $schoolDiv, cache){
-    cache.lastProvinceIndex = $(this).index();
-    var pid = $(this).attr(&apos;data-province&apos;);
-
-    if(cache.curProvince != pid){
-        // set chosen
-        $provinceDiv.find(&apos;a[data-province=&quot;&apos; + cache.curProvince + &apos;&quot;]&apos;).removeClass(&apos;chosen&apos;);
-        $provinceDiv.find(&apos;a[data-province=&quot;&apos; + pid + &apos;&quot;]&apos;).addClass(&apos;chosen&apos;);
-        // update
-        cache.curProvince = pid;
-        initSchools($schoolDiv, pid);
-    }
-    // 滚动条置顶
-    $schoolDiv.scrollTop(0);
-};
-</code></pre><p>注意这里与先前不一样的是，需要操作元素的方法中得把目标元素作为参数传进去，而实例化的缓存（当前选中的province）也需要作为对象指针传入。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">$</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> SchoolBox = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 元素copy</span></span><br><span class="line">        <span class="comment">// 省略...</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 缓存</span></span><br><span class="line">        <span class="keyword">var</span> provinces = SCHOOL_LIST;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 私有静态方法</span></span><br><span class="line">        <span class="comment">// 省略...</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 真正的构造函数</span></span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">            <span class="comment">// 初始化特权属性</span></span><br><span class="line">            <span class="comment">// 初始化生成</span></span><br><span class="line">            <span class="comment">// 省略...</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    SchoolBox.prototype = &#123;</span><br><span class="line">        init: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;,</span><br><span class="line">        show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;,</span><br><span class="line">        hide: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// export</span></span><br><span class="line">    <span class="built_in">window</span>.SchoolBox = SchoolBox;</span><br><span class="line"></span><br><span class="line">&#125;)(jQuery);</span><br></pre></td></tr></table></figure>
+<p>1.将目标元素和元素copy定义成私有静态属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $schoolBoxCopy = $(</span><br><span class="line">    <span class="string">'&lt;div class="school-box"&gt;'</span> + </span><br><span class="line">        <span class="string">'&lt;div class="school-box-header"&gt;选择学校&lt;/div&gt;'</span> + </span><br><span class="line">        <span class="string">'&lt;div class="school-box-provinces"&gt;&lt;/div&gt;'</span> + </span><br><span class="line">        <span class="string">'&lt;div class="school-box-schools"&gt;&lt;/div&gt;'</span> + </span><br><span class="line">    <span class="string">'&lt;/div&gt;'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> $provinceCopy = $(<span class="string">'&lt;a href="javascript:void(0)" class="province-item"&gt;&lt;/a&gt;'</span>);</span><br><span class="line"><span class="keyword">var</span> $schoolCopy = $(<span class="string">'&lt;a href="javascript:void(0)" class="school-item"&gt;&lt;/a&gt;'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 非实例化缓存</span></span><br><span class="line"><span class="keyword">var</span> provinces = SCHOOL_LIST;</span><br></pre></td></tr></table></figure>
+<p>2.将初始化province和school定义成私有静态方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> getProvinceById = <span class="function"><span class="keyword">function</span>(<span class="params">pid</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;provinces.length; i++)&#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">NOTE:</span> 前置条件province id可以转成数字</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Number</span>(provinces[i][<span class="string">'id'</span>]) == <span class="built_in">Number</span>(pid))&#123;</span><br><span class="line">            <span class="keyword">return</span> provinces[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> initProvinces = <span class="function"><span class="keyword">function</span>(<span class="params">$provinceDiv</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;provinces.length; i++)&#123;</span><br><span class="line">        <span class="keyword">var</span> province = provinces[i];</span><br><span class="line">        <span class="keyword">var</span> $province = $provinceCopy.clone();</span><br><span class="line">        $province.attr(<span class="string">'data-province'</span>, province[<span class="string">'id'</span>])</span><br><span class="line">                    .text(province[<span class="string">'name'</span>]);</span><br><span class="line">        $provinceDiv.append($province);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> initSchools = <span class="function"><span class="keyword">function</span>(<span class="params">$schoolDiv, provinceId</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> province = getProvinceById(provinceId);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> province !== <span class="string">'undefined'</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> schools = province[<span class="string">'school'</span>];</span><br><span class="line">        $schoolDiv.empty();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;schools.length; i++)&#123;</span><br><span class="line">            <span class="keyword">var</span> school = schools[i];</span><br><span class="line">            <span class="keyword">var</span> $school = $schoolCopy.clone();</span><br><span class="line">            $school.attr(<span class="string">'data-school'</span>, school[<span class="string">'id'</span>])</span><br><span class="line">                    .text(school[<span class="string">'name'</span>]);</span><br><span class="line">            $schoolDiv.append($school);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> onProvinceClick = <span class="function"><span class="keyword">function</span>(<span class="params">$provinceDiv, $schoolDiv, cache</span>)</span>&#123;</span><br><span class="line">    cache.lastProvinceIndex = $(<span class="keyword">this</span>).index();</span><br><span class="line">    <span class="keyword">var</span> pid = $(<span class="keyword">this</span>).attr(<span class="string">'data-province'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(cache.curProvince != pid)&#123;</span><br><span class="line">        <span class="comment">// set chosen</span></span><br><span class="line">        $provinceDiv.find(<span class="string">'a[data-province="'</span> + cache.curProvince + <span class="string">'"]'</span>).removeClass(<span class="string">'chosen'</span>);</span><br><span class="line">        $provinceDiv.find(<span class="string">'a[data-province="'</span> + pid + <span class="string">'"]'</span>).addClass(<span class="string">'chosen'</span>);</span><br><span class="line">        <span class="comment">// update</span></span><br><span class="line">        cache.curProvince = pid;</span><br><span class="line">        initSchools($schoolDiv, pid);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 滚动条置顶</span></span><br><span class="line">    $schoolDiv.scrollTop(<span class="number">0</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>注意这里与先前不一样的是，需要操作元素的方法中得把目标元素作为参数传进去，而实例化的缓存（当前选中的province）也需要作为对象指针传入。</p>
 <p>3.初始化方法及构造函数</p>
-<pre><code>var init = function(instance){
-    // 生成元素
-    var $parent = $(instance.opts.appendTo);
-    var $el = $(&apos;&lt;div class=&quot;school-box-wrapper&quot;&gt;&lt;/div&gt;&apos;);
-
-    $el.append($schoolBoxCopy.clone());
-    $parent.append($el);
-
-    // 初始化学校
-    // NOTE: 这里不能用$el来find（否则live click将失效）
-    var $provinceDiv = $parent.find(&apos;.school-box-provinces&apos;);
-    var $schoolDiv = $parent.find(&apos;.school-box-schools&apos;);
-
-    initProvinces($provinceDiv);
-
-    // 事件
-    $provinceDiv.find(&apos;a&apos;).click(function(event){
-        onProvinceClick.apply(this, [$provinceDiv, $schoolDiv, instance.cache]);
-    });
-
-    // 释放变量
-    // NOTE: $provinceDiv和$schoolDiv不能释放，在事件中还用到
-    $schoolBox = null;
-    $parent = null;
-    $el = null;
-};
-
-// 真正的构造函数
-return function(options){
-    // 默认配置
-    this.opts = $.extend({
-        appendTo: &apos;body&apos;
-    }, options);
-
-    // 实例化的缓存
-    this.cache = {
-        curProvince: -1,
-        lastProvinceIndex: 0  //最后一次点击的index，用于初始化选中
-    };
-
-    // 初始化生成
-    init(this);
-};
-</code></pre><p>4.在<code>prototype</code>中添加对外API</p>
-<pre><code>SchoolBox.prototype = {
-    show: function(){
-        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;).slideDown();
-    },
-    hide: function(){
-        $(this.opts.appendTo).find(&apos;.school-box-wrapper&apos;).slideUp();
-    }
-};
-</code></pre><p>5.添加学校<code>click</code>事件的外部回调，将这个回调放在构造函数的<code>options</code>中</p>
-<pre><code>var init = function(instance){
-    // 以上省略...
-
-    $schoolDiv.find(&apos;a&apos;).live(&apos;click&apos;, function(event){
-        // 配置里定义的事件回调
-        if(instance.opts.schoolClickCallback){
-            instance.opts.schoolClickCallback.apply(this, []);
-        }
-        // 自动收起
-        instance.hide();
-    });
-
-    // 以下省略...
-};
-</code></pre><p>6.点缀下，初始化<code>SchoolBox</code>时默认选中第一个province，并对外提供<code>init</code>方法</p>
-<pre><code>var SchoolBox = (function(){
-    // 以上省略...
-
-    // 真正的构造函数
-    return function(options){
-        // 以上省略...
-
-        // 初始化生成
-        init(this);
-        this.init();
-    };
-})();
-
-SchoolBox.prototype.init = function(){
-    $(this.opts.appendTo).find(&apos;.school-box-provinces&apos;).find(&apos;a&apos;).first().click();
-};
-</code></pre><p>7.应用层调用</p>
-<pre><code>// 目标元素
-var $schoolInput = $(&apos;#schoolInput&apos;);
-var $schoolId = $(&apos;#schoolId&apos;);
-var $chooseBoxLink = $(&apos;#openSchoolBoxLink&apos;);
-
-// 实例化对象
-var schoolBox = new SchoolBox({
-    appendTo: &apos;#schoolBoxWrapper&apos;,
-    schoolClickCallback: function(){
-        // NOTE: 这里被调用时this指向事件触发的元素
-        $schoolInput.val($(this).text());
-        $schoolId.val($(this).attr(&apos;data-school&apos;));
-        // 动画
-        $chooseBoxLink.show();
-    }
-});
-
-// bind event
-$chooseBoxLink.click(function(){
-    schoolBox.show();
-    $(this).hide();
-});
-</code></pre><p><a href="/demo/SchoolBox/v3/demo.html">学校选择器v3 Demo</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> init = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 生成元素</span></span><br><span class="line">    <span class="keyword">var</span> $parent = $(instance.opts.appendTo);</span><br><span class="line">    <span class="keyword">var</span> $el = $(<span class="string">'&lt;div class="school-box-wrapper"&gt;&lt;/div&gt;'</span>);</span><br><span class="line"></span><br><span class="line">    $el.append($schoolBoxCopy.clone());</span><br><span class="line">    $parent.append($el);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化学校</span></span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> 这里不能用$el来find（否则live click将失效）</span></span><br><span class="line">    <span class="keyword">var</span> $provinceDiv = $parent.find(<span class="string">'.school-box-provinces'</span>);</span><br><span class="line">    <span class="keyword">var</span> $schoolDiv = $parent.find(<span class="string">'.school-box-schools'</span>);</span><br><span class="line"></span><br><span class="line">    initProvinces($provinceDiv);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 事件</span></span><br><span class="line">    $provinceDiv.find(<span class="string">'a'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">        onProvinceClick.apply(<span class="keyword">this</span>, [$provinceDiv, $schoolDiv, instance.cache]);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放变量</span></span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> $provinceDiv和$schoolDiv不能释放，在事件中还用到</span></span><br><span class="line">    $schoolBox = <span class="literal">null</span>;</span><br><span class="line">    $parent = <span class="literal">null</span>;</span><br><span class="line">    $el = <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 真正的构造函数</span></span><br><span class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 默认配置</span></span><br><span class="line">    <span class="keyword">this</span>.opts = $.extend(&#123;</span><br><span class="line">        appendTo: <span class="string">'body'</span></span><br><span class="line">    &#125;, options);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实例化的缓存</span></span><br><span class="line">    <span class="keyword">this</span>.cache = &#123;</span><br><span class="line">        curProvince: <span class="number">-1</span>,</span><br><span class="line">        lastProvinceIndex: <span class="number">0</span>  <span class="comment">//最后一次点击的index，用于初始化选中</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化生成</span></span><br><span class="line">    init(<span class="keyword">this</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>4.在<code>prototype</code>中添加对外API</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SchoolBox.prototype = &#123;</span><br><span class="line">    show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        $(<span class="keyword">this</span>.opts.appendTo).find(<span class="string">'.school-box-wrapper'</span>).slideDown();</span><br><span class="line">    &#125;,</span><br><span class="line">    hide: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        $(<span class="keyword">this</span>.opts.appendTo).find(<span class="string">'.school-box-wrapper'</span>).slideUp();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>5.添加学校<code>click</code>事件的外部回调，将这个回调放在构造函数的<code>options</code>中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> init = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    $schoolDiv.find(<span class="string">'a'</span>).live(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 配置里定义的事件回调</span></span><br><span class="line">        <span class="keyword">if</span>(instance.opts.schoolClickCallback)&#123;</span><br><span class="line">            instance.opts.schoolClickCallback.apply(<span class="keyword">this</span>, []);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 自动收起</span></span><br><span class="line">        instance.hide();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>6.点缀下，初始化<code>SchoolBox</code>时默认选中第一个province，并对外提供<code>init</code>方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> SchoolBox = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 真正的构造函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化生成</span></span><br><span class="line">        init(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">this</span>.init();</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line">SchoolBox.prototype.init = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="keyword">this</span>.opts.appendTo).find(<span class="string">'.school-box-provinces'</span>).find(<span class="string">'a'</span>).first().click();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>7.应用层调用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目标元素</span></span><br><span class="line"><span class="keyword">var</span> $schoolInput = $(<span class="string">'#schoolInput'</span>);</span><br><span class="line"><span class="keyword">var</span> $schoolId = $(<span class="string">'#schoolId'</span>);</span><br><span class="line"><span class="keyword">var</span> $chooseBoxLink = $(<span class="string">'#openSchoolBoxLink'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例化对象</span></span><br><span class="line"><span class="keyword">var</span> schoolBox = <span class="keyword">new</span> SchoolBox(&#123;</span><br><span class="line">    appendTo: <span class="string">'#schoolBoxWrapper'</span>,</span><br><span class="line">    schoolClickCallback: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">NOTE:</span> 这里被调用时this指向事件触发的元素</span></span><br><span class="line">        $schoolInput.val($(<span class="keyword">this</span>).text());</span><br><span class="line">        $schoolId.val($(<span class="keyword">this</span>).attr(<span class="string">'data-school'</span>));</span><br><span class="line">        <span class="comment">// 动画</span></span><br><span class="line">        $chooseBoxLink.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// bind event</span></span><br><span class="line">$chooseBoxLink.click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    schoolBox.show();</span><br><span class="line">    $(<span class="keyword">this</span>).hide();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><a href="/demo/SchoolBox/v3/demo.html">学校选择器v3 Demo</a></p>
 <h2 id="到此为止？"><a href="#到此为止？" class="headerlink" title="到此为止？"></a>到此为止？</h2><p>到这里我们已经将学校选择器的基本功能封装成了一个“类”，具体页面使用时，只需要定义它被包裹的父元素，可以直接<code>new</code>一个对象出来，并在构造时的配置变量里定义事件回调。虽然大体上实现了本文一开始的目标，但是仅仅实现了基本的级联功能，而且只能定义一个事件回调。如果页面有多个元素都需要根据选中的学校进行一些改变，那么这些代码都得写在<code>schoolClickCallback</code>中，这部分代码可能操作着来自页面不同部分的元素（甚至是其他组件），这样就会造成一些耦合。</p>
 
       

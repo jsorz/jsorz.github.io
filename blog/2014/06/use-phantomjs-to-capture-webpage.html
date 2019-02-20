@@ -103,7 +103,7 @@
 <meta property="og:image" content="http://jsorz.cn/images/captures/20140612_02.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20140612_03.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20140612_04.png">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.831Z">
+<meta property="og:updated_time" content="2019-02-20T07:15:24.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用PhantomJs对网页截图">
 <meta name="twitter:description" content="phantomjs是一个基于webkit的无界面浏览器，你可以通过javascript的语法去控制它。它与传统的爬虫不同，爬虫是直接对Http Response进行处理，只能获取所有的原始数据（包括DOM document和script），至于script执行后会对document产生怎样的改变，它不知道，只能自己写业务逻辑去处理。而phantomjs就是一个浏览器，它包含完整的渲染引擎和js执行">
@@ -414,56 +414,13 @@
 <p>出于这些考虑，我决定朝第2中方法努力。</p>
 <h2 id="phantomjs"><a href="#phantomjs" class="headerlink" title="phantomjs"></a>phantomjs</h2><p><a href="http://phantomjs.org/" target="_blank" rel="noopener">phantomjs</a>是一个基于webkit的无界面浏览器，你可以通过javascript的语法去控制它。它与传统的爬虫不同，爬虫是直接对Http Response进行处理，只能获取所有的原始数据（包括DOM document和script），至于script执行后会对document产生怎样的改变，它不知道，只能自己写业务逻辑去处理。而phantomjs就是一个浏览器，它包含完整的渲染引擎和js执行器，它可以站在浏览器层面（而不是Http Response）去看待问题。因此phantomjs被主要用于网页截图，网络检测（Monitoring），以及界面测试（Testing）等。</p>
 <p>一个最简单的demo</p>
-<pre><code>var page = require(&apos;webpage&apos;).create();
-var url = &apos;http://www.baidu.com/&apos;;
-page.open(url, function() {
-    page.render(&apos;baidu.png&apos;);
-    phantom.exit()
-});
-</code></pre><p>截图效果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> page = <span class="built_in">require</span>(<span class="string">'webpage'</span>).create();</span><br><span class="line"><span class="keyword">var</span> url = <span class="string">'http://www.baidu.com/'</span>;</span><br><span class="line">page.open(url, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    page.render(<span class="string">'baidu.png'</span>);</span><br><span class="line">    phantom.exit()</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>截图效果</p>
 <p><img src="/images/captures/20140612_01.png"></p>
 <h2 id="casperjs"><a href="#casperjs" class="headerlink" title="casperjs"></a>casperjs</h2><p><a href="http://casperjs.org/" target="_blank" rel="noopener">casperjs</a>是对phantomjs的一个封装，提供了浏览器的多步访问，填写表单，点击事件，以及截图的自定义等。最重要的就是它的多步访问，提供了更好的异步操作，可避免callback的多层嵌套。</p>
 <p>多步访问截图demo</p>
-<pre><code>var casper = require(&apos;casper&apos;).create();
-var url = &apos;http://www.baidu.com/&apos;;
-
-casper.start(url, function() {
-    // 填写表单（搜索关键字）
-    // 最后一个参数true表示submit
-    this.fill(&apos;form#form1&apos;, { wd: &apos;phantomjs&apos; }, true);
-});
-
-casper.then(function() {
-    this.viewport(1366, 768);
-    // 注意：这里要等待结果刷新，百度搜索结果是异步刷出来的
-    this.waitFor(function check(){
-        return this.evaluate(function(){
-            return document.querySelectorAll(&apos;#content_left&apos;).length &gt; 0;
-        });
-    }, function then(){
-        this.captureSelector(&apos;phantomjs.png&apos;, &apos;body&apos;);
-    });
-});
-
-casper.then(function() {
-    // 填写表单（搜索关键字）
-    // 注意此时form id不同于之前
-    this.fill(&apos;form#form&apos;, { wd: &apos;casperjs&apos; }, true);
-});
-
-casper.then(function() {
-    this.viewport(1366, 768);
-    this.waitFor(function check(){
-        return this.evaluate(function(){
-            return document.querySelectorAll(&apos;#content_left&apos;).length &gt; 0;
-        });
-    }, function then(){
-        this.captureSelector(&apos;casperjs.png&apos;, &apos;body&apos;);
-    });
-});
-
-casper.run();
-</code></pre><p>截图效果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> casper = <span class="built_in">require</span>(<span class="string">'casper'</span>).create();</span><br><span class="line"><span class="keyword">var</span> url = <span class="string">'http://www.baidu.com/'</span>;</span><br><span class="line"></span><br><span class="line">casper.start(url, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 填写表单（搜索关键字）</span></span><br><span class="line">    <span class="comment">// 最后一个参数true表示submit</span></span><br><span class="line">    <span class="keyword">this</span>.fill(<span class="string">'form#form1'</span>, &#123; <span class="attr">wd</span>: <span class="string">'phantomjs'</span> &#125;, <span class="literal">true</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">casper.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.viewport(<span class="number">1366</span>, <span class="number">768</span>);</span><br><span class="line">    <span class="comment">// 注意：这里要等待结果刷新，百度搜索结果是异步刷出来的</span></span><br><span class="line">    <span class="keyword">this</span>.waitFor(<span class="function"><span class="keyword">function</span> <span class="title">check</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.evaluate(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">document</span>.querySelectorAll(<span class="string">'#content_left'</span>).length &gt; <span class="number">0</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;, <span class="function"><span class="keyword">function</span> <span class="title">then</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.captureSelector(<span class="string">'phantomjs.png'</span>, <span class="string">'body'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">casper.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 填写表单（搜索关键字）</span></span><br><span class="line">    <span class="comment">// 注意此时form id不同于之前</span></span><br><span class="line">    <span class="keyword">this</span>.fill(<span class="string">'form#form'</span>, &#123; <span class="attr">wd</span>: <span class="string">'casperjs'</span> &#125;, <span class="literal">true</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">casper.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.viewport(<span class="number">1366</span>, <span class="number">768</span>);</span><br><span class="line">    <span class="keyword">this</span>.waitFor(<span class="function"><span class="keyword">function</span> <span class="title">check</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.evaluate(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">document</span>.querySelectorAll(<span class="string">'#content_left'</span>).length &gt; <span class="number">0</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;, <span class="function"><span class="keyword">function</span> <span class="title">then</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.captureSelector(<span class="string">'casperjs.png'</span>, <span class="string">'body'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">casper.run();</span><br></pre></td></tr></table></figure>
+<p>截图效果</p>
 <p><img src="/images/captures/20140612_02.png"><br><img src="/images/captures/20140612_03.png"></p>
 <h2 id="回归正题"><a href="#回归正题" class="headerlink" title="回归正题"></a>回归正题</h2><p>我们有了REST API，通过casperjs去遍历访问url给以各种参数，并对页面中的Highchart截图。在实际的操作中需要注意的是</p>
 <ol>
@@ -471,31 +428,8 @@ casper.run();
 <li>如果图表是异步加载，需要等待完再截图</li>
 </ol>
 <p>部分示例代码如下</p>
-<pre><code>// 省略……
-// categories是功能的分类数组
-// pages是对每个category下生成的合法url数组，即pages是url的二维数组
-casper.then(function(){
-    for(var i=0; i&lt;pages.length; i++){
-        (function(that, category, urls){
-            that.each(urls, function(self, link){
-                var params = (link.split(&apos;?&apos;)[1]).split(&apos;&amp;&apos;);
-                // TODO: get params
-
-                self.thenOpen(link, function(){
-                    self.waitFor(function check(){
-                        return self.evaluate(function(){
-                            // TODO: 异步加载的判断
-                            return true;
-                        });
-                    }, function then(){
-                        self.captureSelector(/from/to&apos; + category + &apos;/&apos; + param + &apos;.png&apos;, &apos;#chart&apos;);
-                    });
-                });
-            });
-        })(this, categories[i], pages[i]);
-    }
-});
-</code></pre><p>截图效果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略……</span></span><br><span class="line"><span class="comment">// categories是功能的分类数组</span></span><br><span class="line"><span class="comment">// pages是对每个category下生成的合法url数组，即pages是url的二维数组</span></span><br><span class="line">casper.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;pages.length; i++)&#123;</span><br><span class="line">        (<span class="function"><span class="keyword">function</span>(<span class="params">that, category, urls</span>)</span>&#123;</span><br><span class="line">            that.each(urls, <span class="function"><span class="keyword">function</span>(<span class="params">self, link</span>)</span>&#123;</span><br><span class="line">                <span class="keyword">var</span> params = (link.split(<span class="string">'?'</span>)[<span class="number">1</span>]).split(<span class="string">'&amp;'</span>);</span><br><span class="line">                <span class="comment">// <span class="doctag">TODO:</span> get params</span></span><br><span class="line"></span><br><span class="line">                self.thenOpen(link, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                    self.waitFor(<span class="function"><span class="keyword">function</span> <span class="title">check</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> self.evaluate(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                            <span class="comment">// <span class="doctag">TODO:</span> 异步加载的判断</span></span><br><span class="line">                            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                        &#125;);</span><br><span class="line">                    &#125;, <span class="function"><span class="keyword">function</span> <span class="title">then</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                        self.captureSelector(/from/to' + category + '/' + param + '.png', '#chart');</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)(<span class="keyword">this</span>, categories[i], pages[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>截图效果</p>
 <p><img src="/images/captures/20140612_04.png"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们使用了最低成本的方法实现了在移动端展示数据图表，都是基于PC端使用的Highcharts。省去了在移动端浏览器导入图表js库出现的兼容和性能问题，也省去了自己编写后台代码去生成图片。</p>
 <p>利用phantomjs + casperjs的截图方法，经实验，生成的900 × 600像素的图片平均大小在20K左右，这个大小在移动端是可以接受的。如果一个页面中图片较多，我们还能写js对图片延迟加载（img的src属性延迟赋值）。唯一美中不足的是phantomjs对字体的效果不太好。</p>

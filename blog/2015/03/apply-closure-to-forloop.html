@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="上一篇讲了JS中的闭包以及它的几个使用场合，其中有一个就是解决循环引用问题，这篇我将用更多的例子再来看看这个问题。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.836Z">
+<meta property="og:updated_time" content="2019-02-20T12:18:35.389Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用闭包解决循环引用问题">
 <meta name="twitter:description" content="上一篇讲了JS中的闭包以及它的几个使用场合，其中有一个就是解决循环引用问题，这篇我将用更多的例子再来看看这个问题。">
@@ -396,68 +396,22 @@
         <p>上一篇讲了JS中的闭包以及它的几个使用场合，其中有一个就是解决循环引用问题，这篇我将用更多的例子再来看看这个问题。</p>
 <a id="more"></a>
 <h2 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h2><p>假设页面中有4个div如下</p>
-<pre><code>&lt;div&gt;111&lt;/div&gt;
-&lt;div&gt;222&lt;/div&gt;
-&lt;div&gt;333&lt;/div&gt;
-&lt;div&gt;444&lt;/div&gt;
-</code></pre><p>现在要为每个div添加事件，以使点击它们时能弹出其innerHTML（点击第1个div弹出111，点击第4个div弹出444）。</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    var div = elems[i];
-    div.onclick = function(){
-        alert(div.innerHTML);
-    };
-}
-</code></pre><p>结果并不是想的那样！当for循环结束时，其内部的<code>div</code>变量的最终值是第4个元素，因此当div元素被点击时，<code>onclick</code>函数内部看到的变量<code>div</code>值其实就是第4个元素，因此都弹出的是444。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>111<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>222<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>333<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>444<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>现在要为每个div添加事件，以使点击它们时能弹出其innerHTML（点击第1个div弹出111，点击第4个div弹出444）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    <span class="keyword">var</span> div = elems[i];</span><br><span class="line">    div.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(div.innerHTML);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果并不是想的那样！当for循环结束时，其内部的<code>div</code>变量的最终值是第4个元素，因此当div元素被点击时，<code>onclick</code>函数内部看到的变量<code>div</code>值其实就是第4个元素，因此都弹出的是444。</p>
 <p>再将代码改成这样</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    elems[i].onclick = function(){
-        alert(elems[i].innerHTML);
-    };
-}
-</code></pre><p>结果又与上面的错误不一样！当for循环结束时，最终<code>i</code>的值是4，因此当div元素被点击时，<code>onclick</code>内部<code>elems[i]</code>即<code>elems[4]</code>为undefined，无法弹出值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    elems[i].onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(elems[i].innerHTML);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果又与上面的错误不一样！当for循环结束时，最终<code>i</code>的值是4，因此当div元素被点击时，<code>onclick</code>内部<code>elems[i]</code>即<code>elems[4]</code>为undefined，无法弹出值。</p>
 <h2 id="使用闭包"><a href="#使用闭包" class="headerlink" title="使用闭包"></a>使用闭包</h2><p>在<a href="/blog/2015/03/closure-in-js.html#循环引用问题">上一篇</a>中，我们使用的闭包是这样的。</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    (function(i){
-        var div = elems[i];
-        div.onclick = function(){
-            alert(div.innerHTML);
-        };
-    })(i);
-}
-</code></pre><p>但是有没有觉得这个闭包“包”的范围太大了，可以精简一下。</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    var div = elems[i];
-    div.onclick = (function(div){
-        return function(){
-            alert(div.innerHTML);
-        };
-    })(div);
-}
-</code></pre><p>这里<code>onclick</code>绑的函数是一个匿名的自执行函数，该匿名函数以当前的div作为参数，自执行后又返回了一个函数才是真正的<code>onclick</code>函数。虽然比起前面一段代码，这段代码的闭包范围是小了点，但只是把前面闭包内部声明的变量div，变成了这段代码里匿名函数的参数。本质上闭包对变量的存储开销并没怎么省，上面的代码还能再改进。</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-for(var i=0, len=elems.length; i&lt;len; i++){
-    elems[i].onclick = (function(i){
-        return function(){
-            alert(elems[i].innerHTML);
-        };
-    })(i);
-}
-</code></pre><p>这样的话，闭包中“记住”的变量更小。但是有没有注意到，在循环中会多次去生成同一个匿名函数（只不过自执行时传入的参数值不同），因此可以使用函数的引用进一步优化上面的代码。</p>
-<pre><code>var elems = document.getElementsByTagName(&apos;div&apos;);
-var callback = function(i){
-    return function(){
-        alert(elems[i].innerHTML);
-    };
-};
-
-for(var i=0, len=elems.length; i&lt;len; i++){
-    elems[i].onclick = (callback)(i);
-}
-</code></pre><p>如此，<code>callback</code>函数仅存有一份，在for循环中为它传入不同的参数值进行执行，它返回的函数才是真正绑到<code>onclick</code>上的函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params">i</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> div = elems[i];</span><br><span class="line">        div.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            alert(div.innerHTML);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是有没有觉得这个闭包“包”的范围太大了，可以精简一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    <span class="keyword">var</span> div = elems[i];</span><br><span class="line">    div.onclick = (<span class="function"><span class="keyword">function</span>(<span class="params">div</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            alert(div.innerHTML);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)(div);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里<code>onclick</code>绑的函数是一个匿名的自执行函数，该匿名函数以当前的div作为参数，自执行后又返回了一个函数才是真正的<code>onclick</code>函数。虽然比起前面一段代码，这段代码的闭包范围是小了点，但只是把前面闭包内部声明的变量div，变成了这段代码里匿名函数的参数。本质上闭包对变量的存储开销并没怎么省，上面的代码还能再改进。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    elems[i].onclick = (<span class="function"><span class="keyword">function</span>(<span class="params">i</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            alert(elems[i].innerHTML);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话，闭包中“记住”的变量更小。但是有没有注意到，在循环中会多次去生成同一个匿名函数（只不过自执行时传入的参数值不同），因此可以使用函数的引用进一步优化上面的代码。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elems = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">var</span> callback = <span class="function"><span class="keyword">function</span>(<span class="params">i</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(elems[i].innerHTML);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=elems.length; i&lt;len; i++)&#123;</span><br><span class="line">    elems[i].onclick = (callback)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如此，<code>callback</code>函数仅存有一份，在for循环中为它传入不同的参数值进行执行，它返回的函数才是真正绑到<code>onclick</code>上的函数。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我再引用一句我在上一篇中的总结</p>
 <blockquote>
 <p>闭包就像一个壳子，把它里面的东西罩住了。闭包把它里面的free variables保护住了，使它们免受外部的污染，包括全局变量的污染，或者是循环变量终值的污染。</p>

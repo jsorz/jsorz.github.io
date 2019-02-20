@@ -100,7 +100,7 @@
 <meta property="og:description" content="昨天参加了腾讯2015实习生招聘的线下笔试，之前在他们提供的在线模拟笔试中已经被鄙视了，我真的不会C++，数据结构和算法方面也一点没准备。这次笔试就在我们学校里，就想着去锻炼下，无所谓结果。C++的比重还是不少，多了一些数学方面的题目，我只是想投web前端的，可是看来看去只有一道javascript的题目，也没有web方向的选做题。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20150330_01.jpg">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.836Z">
+<meta property="og:updated_time" content="2019-02-20T12:19:03.159Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一道腾讯笔试题想到的JS中的一些特性">
 <meta name="twitter:description" content="昨天参加了腾讯2015实习生招聘的线下笔试，之前在他们提供的在线模拟笔试中已经被鄙视了，我真的不会C++，数据结构和算法方面也一点没准备。这次笔试就在我们学校里，就想着去锻炼下，无所谓结果。C++的比重还是不少，多了一些数学方面的题目，我只是想投web前端的，可是看来看去只有一道javascript的题目，也没有web方向的选做题。">
@@ -397,25 +397,8 @@
       
         <p>昨天参加了腾讯2015实习生招聘的线下笔试，之前在他们提供的在线模拟笔试中已经被鄙视了，我真的不会C++，数据结构和算法方面也一点没准备。这次笔试就在我们学校里，就想着去锻炼下，无所谓结果。C++的比重还是不少，多了一些数学方面的题目，我只是想投web前端的，可是看来看去只有一道javascript的题目，也没有web方向的选做题。</p>
 <a id="more"></a>
-<h2 id="题目是这样的"><a href="#题目是这样的" class="headerlink" title="题目是这样的"></a>题目是这样的</h2><pre><code>var a = 0;
-
-function one(){
-    for(var i=0; i&lt;10; i++){
-        setTimeout(function(){
-            a += i;
-        }, 0);
-    }
-}
-
-function two(){
-    setTimeout(function(){
-        alert(a);
-    }, 0);
-}
-
-one();
-two();
-</code></pre><p>问：当弹出alert框时里面的值是多少？</p>
+<h2 id="题目是这样的"><a href="#题目是这样的" class="headerlink" title="题目是这样的"></a>题目是这样的</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">one</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="number">10</span>; i++)&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            a += i;</span><br><span class="line">        &#125;, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">two</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(a);</span><br><span class="line">    &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">one();</span><br><span class="line">two();</span><br></pre></td></tr></table></figure>
+<p>问：当弹出alert框时里面的值是多少？</p>
 <p>一看又是<em>循环引用</em>问题，可以看看我前面两篇写<a href="/blog/2015/03/apply-closure-to-forloop.html">闭包的文章</a>。</p>
 <p>这题如果只有这一个point的话，我也不高兴再写了，因为还有一个我觉得比较重要的语言特性。</p>
 <h2 id="JS是单线程的"><a href="#JS是单线程的" class="headerlink" title="JS是单线程的"></a>JS是单线程的</h2><p>说“JS是单线程”可能有点不确切，应该说javascript引擎是单线程的。</p>
@@ -429,47 +412,19 @@ two();
 </li>
 </ul>
 <h2 id="setTimeout与setInterval"><a href="#setTimeout与setInterval" class="headerlink" title="setTimeout与setInterval"></a>setTimeout与setInterval</h2><p>如上图所示，当我们把一个function放到setTimeout中后，该function相当于被加到了图上的Timer队列中。同时JS引擎中还有一个定时触发器，当setTimeout所设的延迟时间到了后，它会去唤醒Timer队列中相应的function。但是定时触发是有前提的，就是<strong>JS引擎处于空闲的时候才会去触发</strong>。</p>
-<pre><code>setTimeout(function(){
-    alert(&apos;hello&apos;);
-}, 1000);
-
-for(var i=0; i&lt;100000; i++){
-    // 开销大的计算
-}
-</code></pre><p>举个例子，先往Timer中放入了函数，指定它1秒后执行。但是随后JS引擎要执行一段超大循环的复杂计算，这个过程需要10秒才能全部计算完。如此的话，那个定时触发的函数也需要在10秒后（等JS引擎空闲下来后）才会被触发。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">'hello'</span>);</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="number">100000</span>; i++)&#123;</span><br><span class="line">    <span class="comment">// 开销大的计算</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>举个例子，先往Timer中放入了函数，指定它1秒后执行。但是随后JS引擎要执行一段超大循环的复杂计算，这个过程需要10秒才能全部计算完。如此的话，那个定时触发的函数也需要在10秒后（等JS引擎空闲下来后）才会被触发。</p>
 <p>而setInterval设置间隔触发的时间，会在JS引擎中反复放该函数块，相当于“时间片”，JS引擎会间隔地去触发这些函数片。但是呢，这个间隔时间也是不一定的，它们被触发的前提都是需要JS引擎在空闲的时候。</p>
-<pre><code>setInterval(function(){
-    for(var i=0; i&lt;100000; i++){
-        // 开销大的计算
-    }
-    alert(&apos;hello&apos;);
-}, 1000);
-</code></pre><p>这个例子跟上面类似，setInterval中设置的函数是一个时间开销很大的过程，如果设置完后JS引擎就空闲了，那么第一次触发的时候会在1秒后。但是第一次触发执行时，需要花费10秒才能执行完，那么该函数执行完后紧接着会继续被触发（因为已经超过了它当初被设置的1秒的间隔）。这样相当于该函数被连续执行并且彼此之间没有时间间隔。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="number">100000</span>; i++)&#123;</span><br><span class="line">        <span class="comment">// 开销大的计算</span></span><br><span class="line">    &#125;</span><br><span class="line">    alert(<span class="string">'hello'</span>);</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<p>这个例子跟上面类似，setInterval中设置的函数是一个时间开销很大的过程，如果设置完后JS引擎就空闲了，那么第一次触发的时候会在1秒后。但是第一次触发执行时，需要花费10秒才能执行完，那么该函数执行完后紧接着会继续被触发（因为已经超过了它当初被设置的1秒的间隔）。这样相当于该函数被连续执行并且彼此之间没有时间间隔。</p>
 <h2 id="小结下"><a href="#小结下" class="headerlink" title="小结下"></a>小结下</h2><p>setTimeout与setInterval设置的时间并不一定就是实际情况下的触发时间，要根据它们被定义完后剩下的JS脚本的执行时间，以及它们被定义的内部函数的执行时间。</p>
 <p>需要注意的是，不能在setInterval中放入时间开销巨大的过程，这样会让JS引擎一直繁忙，页面上的事件回调也就无法被触发了，因为它们<em>都在单线程的JS引擎中</em>。</p>
 <p>如果实际应用中真的有时间开销很大的JS脚本，会导致浏览器UI无法响应用户的任何操作（因为JS执行时UI线程是被挂起的）。应该尽量避免这种情况，可以将JS任务拆分成多个小任务，把每个小任务都放到setTimeout中并设置一点小间隔时间。虽然这样会导致完成整个任务需要花费的时间更长，但是这样能避免JS引擎始终繁忙，给它留有一点空闲时间去响应用户的操作和事件回调，这样用户体验会更好。</p>
 <p>最近的浏览器为长期运行的脚本提供了另外一个解决方案：Web Workers。它为浏览器提供了背景线程支持，可以将任务比较繁重的计算放在单独一个文件中，从主程序（网页）中调用该文件。详细内容超出了本文的范围，具体可以看<a href="http://www.w3.org/TR/workers/" target="_blank" rel="noopener">官方文档</a>。</p>
 <h2 id="setTimeout-0-并不是立即执行"><a href="#setTimeout-0-并不是立即执行" class="headerlink" title="setTimeout(0)并不是立即执行"></a>setTimeout(0)并不是立即执行</h2><p>看了上面，<code>setTimeout(function(){}, 0)</code>仍然会把function加到JS引擎的Timer中。设置timeout时间为1毫秒或者0毫秒，实际上与浏览器和操作系统有关。0毫秒不意味着没有timeout，而是指尽可能快的处理。例如在IE中，最快的时钟周期是15毫秒。</p>
 <h2 id="综合分析题目"><a href="#综合分析题目" class="headerlink" title="综合分析题目"></a>综合分析题目</h2><p>有了上面的理论基础，这道题就迎刃而解了。</p>
-<pre><code>var a = 0;
-
-function one(){
-    for(var i=0; i&lt;10; i++){
-        setTimeout(function(){
-            a += i;
-        }, 0);
-    }
-}
-
-function two(){
-    setTimeout(function(){
-        alert(a);
-    }, 0);
-}
-
-one();
-two();
-</code></pre><p>首先<code>one()</code>被执行时，它里面有个for循环10次，往Timer中添加了10个<code>function(){ a += i; }</code>这样的函数。然后<code>two()</code>被执行时，它往Timer中添加了<code>function(){ alert(a); }</code>这个函数。现在Timer队列中有11个函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">one</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="number">10</span>; i++)&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            a += i;</span><br><span class="line">        &#125;, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">two</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(a);</span><br><span class="line">    &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">one();</span><br><span class="line">two();</span><br></pre></td></tr></table></figure>
+<p>首先<code>one()</code>被执行时，它里面有个for循环10次，往Timer中添加了10个<code>function(){ a += i; }</code>这样的函数。然后<code>two()</code>被执行时，它往Timer中添加了<code>function(){ alert(a); }</code>这个函数。现在Timer队列中有11个函数。</p>
 <p>由于设置的timeout为0毫秒，等待了一个时钟周期后（时间可以忽略不计），就开始依次触发Timer队列中的函数。</p>
 <p>由于<code>one()</code>中的for循环执行完后，变量<code>i</code>的终值是10，所以Timer中的<code>function(){ a += i; }</code>执行时看到的<code>i</code>值就是10。这里不清楚原因的话，可以看这篇<a href="/blog/2015/03/apply-closure-to-forloop.html">使用闭包解决循环引用问题</a>。</p>
 <p>所以Timer中前10个函数执行下来后，全局变量<code>a</code>的值就是100。然后执行第11个函数，alert出100。</p>

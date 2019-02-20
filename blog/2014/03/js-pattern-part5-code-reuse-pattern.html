@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="本章中讲述了javascript中继承的实现方式，由于js中对象是基于原型链的，因此继承方式也分为类式继承（类似Java的继承语法）和原型继承。此外还能通过复制属性实现继承，混入、借用和绑定都可以扩展对象。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.830Z">
+<meta property="og:updated_time" content="2019-02-20T07:13:20.800Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript模式之五-代码复用模式">
 <meta name="twitter:description" content="本章中讲述了javascript中继承的实现方式，由于js中对象是基于原型链的，因此继承方式也分为类式继承（类似Java的继承语法）和原型继承。此外还能通过复制属性实现继承，混入、借用和绑定都可以扩展对象。">
@@ -398,203 +398,59 @@
 
       
         <h2 id="类式继承"><a href="#类式继承" class="headerlink" title="类式继承"></a>类式继承</h2><p>示例</p>
-<pre><code>function Parent(name){
-    this.name = name || &apos;Adam&apos;;
-}
-Parent.prototype.say = function(){
-    return this.name;
-}
-
-function Child(name){}
-inherit(Child, Parent);
-</code></pre><h3 id="阶段1-默认模式"><a href="#阶段1-默认模式" class="headerlink" title="阶段1 - 默认模式"></a>阶段1 - 默认模式</h3><pre><code>function inherit(C, P){
-    C.prototype = new P();
-}
-</code></pre><p>缺点：无法继承父对象自身的属性（如上例中的<code>name</code>）。</p>
-<h3 id="阶段2-借用构造函数"><a href="#阶段2-借用构造函数" class="headerlink" title="阶段2 - 借用构造函数"></a>阶段2 - 借用构造函数</h3><pre><code>function Child(name){
-    Parent.apply(this, arguments);
-}
-</code></pre><p>缺点：只能继承在父构造函数中添加到<code>this</code>的属性。同时并不能继承那些已添加到原型中的成员。<br>优点：不会存在子对象意外覆盖父对象属性的风险。</p>
-<h3 id="阶段3-借用和设置原型"><a href="#阶段3-借用和设置原型" class="headerlink" title="阶段3 - 借用和设置原型"></a>阶段3 - 借用和设置原型</h3><pre><code>function Child(name){
-    Parent.apply(this, arguments);
-}
-Child.prototype = new Parent();
-</code></pre><p>缺点：父构造函数被调用了两次；自身的属性会被继承两次。</p>
-<h3 id="阶段4-共享原型"><a href="#阶段4-共享原型" class="headerlink" title="阶段4 - 共享原型"></a>阶段4 - 共享原型</h3><pre><code>function inherit(C, P){
-    C.prototype = P.prototype;
-}
-</code></pre><p>本模式的经验法则在于：可复用成员应该转移到原型中而不是放置在<code>this</code>中。因此，出于继承的目的，任何值得继承的东西都应该放置在原型中实现。</p>
-<h3 id="阶段5-临时构造函数"><a href="#阶段5-临时构造函数" class="headerlink" title="阶段5 - 临时构造函数"></a>阶段5 - 临时构造函数</h3><pre><code>function inherit(C, P){
-    var F = function(){};
-    F.prototype = P.prototype;
-    C.prototype = new F();
-}
-</code></pre><p>这种模式与阶段1略有不同，这是由于这里的子对象仅继承了原型的属性。这种情况通常来说是很好的，实际上也是更加可取的，因为原型也正是放置可复用功能的位置。在这种模式下，父构造函数添加到<code>this</code>中的任何成员都不会被继承。</p>
-<h3 id="阶段6-圣杯"><a href="#阶段6-圣杯" class="headerlink" title="阶段6 - 圣杯"></a>阶段6 - 圣杯</h3><pre><code>function inherit(C, P){
-    var F = function(){};
-    F.prototype = P.prototype;
-    C.prototype = new F();
-    C.parent = P.prototype;
-    C.prototype.constructor = C;
-}
-</code></pre><p>这种模式也被称为使用代理函数或代理构造函数的模式，而不是使用临时构造函数的模式，这是因为临时构造函数实际上是一个用于获得父对象原型的代理。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name || <span class="string">'Adam'</span>;</span><br><span class="line">&#125;</span><br><span class="line">Parent.prototype.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span>(<span class="params">name</span>)</span>&#123;&#125;</span><br><span class="line">inherit(Child, Parent);</span><br></pre></td></tr></table></figure>
+<h3 id="阶段1-默认模式"><a href="#阶段1-默认模式" class="headerlink" title="阶段1 - 默认模式"></a>阶段1 - 默认模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inherit</span>(<span class="params">C, P</span>)</span>&#123;</span><br><span class="line">	C.prototype = <span class="keyword">new</span> P();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：无法继承父对象自身的属性（如上例中的<code>name</code>）。</p>
+<h3 id="阶段2-借用构造函数"><a href="#阶段2-借用构造函数" class="headerlink" title="阶段2 - 借用构造函数"></a>阶段2 - 借用构造函数</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：只能继承在父构造函数中添加到<code>this</code>的属性。同时并不能继承那些已添加到原型中的成员。<br>优点：不会存在子对象意外覆盖父对象属性的风险。</p>
+<h3 id="阶段3-借用和设置原型"><a href="#阶段3-借用和设置原型" class="headerlink" title="阶段3 - 借用和设置原型"></a>阶段3 - 借用和设置原型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">&#125;</span><br><span class="line">Child.prototype = <span class="keyword">new</span> Parent();</span><br></pre></td></tr></table></figure>
+<p>缺点：父构造函数被调用了两次；自身的属性会被继承两次。</p>
+<h3 id="阶段4-共享原型"><a href="#阶段4-共享原型" class="headerlink" title="阶段4 - 共享原型"></a>阶段4 - 共享原型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inherit</span>(<span class="params">C, P</span>)</span>&#123;</span><br><span class="line">	C.prototype = P.prototype;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本模式的经验法则在于：可复用成员应该转移到原型中而不是放置在<code>this</code>中。因此，出于继承的目的，任何值得继承的东西都应该放置在原型中实现。</p>
+<h3 id="阶段5-临时构造函数"><a href="#阶段5-临时构造函数" class="headerlink" title="阶段5 - 临时构造函数"></a>阶段5 - 临时构造函数</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inherit</span>(<span class="params">C, P</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	F.prototype = P.prototype;</span><br><span class="line">	C.prototype = <span class="keyword">new</span> F();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种模式与阶段1略有不同，这是由于这里的子对象仅继承了原型的属性。这种情况通常来说是很好的，实际上也是更加可取的，因为原型也正是放置可复用功能的位置。在这种模式下，父构造函数添加到<code>this</code>中的任何成员都不会被继承。</p>
+<h3 id="阶段6-圣杯"><a href="#阶段6-圣杯" class="headerlink" title="阶段6 - 圣杯"></a>阶段6 - 圣杯</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inherit</span>(<span class="params">C, P</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	F.prototype = P.prototype;</span><br><span class="line">	C.prototype = <span class="keyword">new</span> F();</span><br><span class="line">	C.parent = P.prototype;</span><br><span class="line">	C.prototype.constructor = C;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种模式也被称为使用代理函数或代理构造函数的模式，而不是使用临时构造函数的模式，这是因为临时构造函数实际上是一个用于获得父对象原型的代理。</p>
 <p>对该圣杯模式的一个常见优化是避免在每次需要继承时都创建临时（代理）构造函数。仅创建一次临时构造函数，并且修改它的原型，这已经是非常充分的。</p>
-<pre><code>var inherit = (function(){
-    var F = function(){};
-    return function(C, P){
-        F.prototype = P.prototype;
-        C.prototype = new F();
-        C.parent = P.prototype;
-        C.prototype.constructor = C;
-    }
-}());
-</code></pre><h3 id="阶段7-Klass"><a href="#阶段7-Klass" class="headerlink" title="阶段7 - Klass"></a>阶段7 - Klass</h3><p>特点：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> inherit = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">C, P</span>)</span>&#123;</span><br><span class="line">		F.prototype = P.prototype;</span><br><span class="line">		C.prototype = <span class="keyword">new</span> F();</span><br><span class="line">		C.parent = P.prototype;</span><br><span class="line">		C.prototype.constructor = C;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;());</span><br></pre></td></tr></table></figure>
+<h3 id="阶段7-Klass"><a href="#阶段7-Klass" class="headerlink" title="阶段7 - Klass"></a>阶段7 - Klass</h3><p>特点：</p>
 <ol>
 <li>有一套有关如何命名类方法的公约，这也被认为是类的构造函数，比如<code>initialize</code>、<code>_init</code>以及一些其他类似的构造函数名，并且在创建对象时这些方法将会被自动调用。</li>
 <li>存在从其他类所继承的类</li>
 <li>在子类中可以访问父类或超类</li>
 </ol>
 <p>使用示例</p>
-<pre><code>var Man = Klass(null, {
-    __construct: function(what){
-        console.log(&apos;constructor of Man&apos;);
-        this.name = what;
-    },
-    getName: function(){
-        return this.name;
-    }
-});
-
-var Batman = Klass(Man, {
-    __construct: function(what){
-        console.log(&apos;constructor of Batman&apos;);
-    },
-    getName: function(){
-        var name = Batman.parent.getName.call(this);
-        return &apos;I am &apos; + name;
-    }
-});
-
-var bruce= new Batman(&apos;Bruce Wayne&apos;);  //控制台第一行输出&apos;constructor of Man&apos;，然后输出&apos;constructor of Batman&apos;
-bruce.getName();  //output: I am Bruce Wayne
-</code></pre><p>每次在调用子类的构造函数时，父类的构造函数也将会被自动调用。</p>
-<pre><code>bruce instanceof Man;  //true
-bruce instanceof Batman;  //true
-</code></pre><p>具体实现</p>
-<pre><code>var Klass = function(Parent, props){
-    //1. 新构造函数
-    var Child = function(){
-        if(Child.parent &amp;&amp; Child.parent.hasOwnProperty(&apos;__construct&apos;)){
-            Child.parent.__construct.apply(this, arguments);
-        }
-        if(Child.prototype.hasOwnProperty(&apos;__construct&apos;)){
-            Child.prototype.__construct.apply(this, arguments);
-        }
-    };
-
-    //2. 继承
-    Parent = Parent || Object;
-    var F = function(){};
-    F.prototype = Parent.prototype;
-    Child.prototype = new F();
-    Child.parent = Parent.prototype;
-    Child.prototype.constructor = Child;
-
-    //3. 添加实现方法
-    for(var i in props){
-        if(props.hasOwnProperty(i)){
-            Child.prototype[i] = props[i];
-        }
-    }
-
-    //返回该class
-    return Child;
-};
-</code></pre><p>说明：创建了<code>Child()</code>构造函数，该函数将是最后返回的，并且该函数也用作类。在这个函数中，如果存在<code>__construct</code>方法，那么将会调用该方法。另外，在此之前，通过使用静态<code>parent</code>属性，其父类的<code>__construct</code>方法如果存在的话也会被自动调用。可能在有些情况下，当没有定义<code>parent</code>属性时，比如直接从<code>Object</code>类中继承时，这与从<code>Man</code>类的定义中继承是相似的情况。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Man = Klass(<span class="literal">null</span>, &#123;</span><br><span class="line">	__construct: <span class="function"><span class="keyword">function</span>(<span class="params">what</span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'constructor of Man'</span>);</span><br><span class="line">		<span class="keyword">this</span>.name = what;</span><br><span class="line">	&#125;,</span><br><span class="line">	getName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Batman = Klass(Man, &#123;</span><br><span class="line">	__construct: <span class="function"><span class="keyword">function</span>(<span class="params">what</span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'constructor of Batman'</span>);</span><br><span class="line">	&#125;,</span><br><span class="line">	getName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">var</span> name = Batman.parent.getName.call(<span class="keyword">this</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="string">'I am '</span> + name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bruce= <span class="keyword">new</span> Batman(<span class="string">'Bruce Wayne'</span>);  <span class="comment">//控制台第一行输出'constructor of Man'，然后输出'constructor of Batman'</span></span><br><span class="line">bruce.getName();  <span class="comment">//output: I am Bruce Wayne</span></span><br></pre></td></tr></table></figure>
+<p>每次在调用子类的构造函数时，父类的构造函数也将会被自动调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bruce <span class="keyword">instanceof</span> Man;  <span class="comment">//true</span></span><br><span class="line">bruce <span class="keyword">instanceof</span> Batman;  <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>具体实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Klass = <span class="function"><span class="keyword">function</span>(<span class="params">Parent, props</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//1. 新构造函数</span></span><br><span class="line">	<span class="keyword">var</span> Child = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(Child.parent &amp;&amp; Child.parent.hasOwnProperty(<span class="string">'__construct'</span>))&#123;</span><br><span class="line">			Child.parent.__construct.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(Child.prototype.hasOwnProperty(<span class="string">'__construct'</span>))&#123;</span><br><span class="line">			Child.prototype.__construct.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//2. 继承</span></span><br><span class="line">	Parent = Parent || <span class="built_in">Object</span>;</span><br><span class="line">	<span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">	F.prototype = Parent.prototype;</span><br><span class="line">	Child.prototype = <span class="keyword">new</span> F();</span><br><span class="line">	Child.parent = Parent.prototype;</span><br><span class="line">	Child.prototype.constructor = Child;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//3. 添加实现方法</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> props)&#123;</span><br><span class="line">		<span class="keyword">if</span>(props.hasOwnProperty(i))&#123;</span><br><span class="line">			Child.prototype[i] = props[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//返回该class</span></span><br><span class="line">	<span class="keyword">return</span> Child;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>说明：创建了<code>Child()</code>构造函数，该函数将是最后返回的，并且该函数也用作类。在这个函数中，如果存在<code>__construct</code>方法，那么将会调用该方法。另外，在此之前，通过使用静态<code>parent</code>属性，其父类的<code>__construct</code>方法如果存在的话也会被自动调用。可能在有些情况下，当没有定义<code>parent</code>属性时，比如直接从<code>Object</code>类中继承时，这与从<code>Man</code>类的定义中继承是相似的情况。</p>
 <h2 id="原型继承"><a href="#原型继承" class="headerlink" title="原型继承"></a>原型继承</h2><p>原型继承是一种“现代”无类继承模式，不涉及类，这个的对象都是继承自其他对象。以这种方式考虑：有一个想要复用的对象，并且想创建的第二个对象需要从第一个对象中获取其功能。</p>
 <p>使用示例</p>
-<pre><code>var parent = {
-    name: &apos;papa&apos;
-};
-var child = object(parent);
-alert(child.name);  //output: papa
-</code></pre><p>具体实现</p>
-<pre><code>function object(o){
-    function F() {}
-    F.prototype = o;
-    return new F();
-}
-</code></pre><p><strong>讨论</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> parent = &#123;</span><br><span class="line">	name: <span class="string">'papa'</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> child = object(parent);</span><br><span class="line">alert(child.name);  <span class="comment">//output: papa</span></span><br></pre></td></tr></table></figure>
+<p>具体实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">o</span>)</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">	F.prototype = o;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>讨论</strong></p>
 <p>在原型继承模式中，并不需要使用字面量来创建父对象（尽管这是一种比较常见的方式）。也可以使用构造函数来创建父对象，但请注意，如果这样做的话，自身（<code>this</code>）属性和原型属性都将被继承。</p>
 <p>在本模式的另外一个变化中，可以选择仅继承现有构造函数的原型对象。请记住，对象继承自对象，而不论父对象是如何创建的。</p>
-<pre><code>var kid = object(Person.prototype);
-</code></pre><p>在ES5中，原型继承模式已经正式成为该语言的一部分。这种模式是通过方法<code>Object.create()</code>来实现的。也就是说，不需要推出与<code>object()</code>相类似的函数，它已经内嵌在该语言中。</p>
-<pre><code>var child = Object.create(parent);
-</code></pre><p><code>Object.create()</code>接受一个额外的参数，即一个对象。这个额外对象的属性将会被添加到新对象中，以此作为新对象自身的属性，然后<code>Object.create()</code>返回该新对象。这提供了很大的方便，使你可以仅采用一个方法调用即可实现继承并在此基础上构建子对象。</p>
-<pre><code>var child = Object.create(parent, {
-    age: { value: 22 }  //ECMA5描述符号
-});
-</code></pre><h2 id="通过复制属性实现继承"><a href="#通过复制属性实现继承" class="headerlink" title="通过复制属性实现继承"></a>通过复制属性实现继承</h2><p>浅复制</p>
-<pre><code>function extend(parent, child){
-    child = child || {};
-    for(var i in parent){
-        if(parent.hasOwnProperty(i)){
-            child[i] = parent[i];
-        }
-    }
-    return child;
-}
-</code></pre><p>深复制</p>
-<pre><code>function extendDeep(parent, child){
-    var toString = Object.prototype.toString;
-    var astr = &apos;[object Array]&apos;;
-
-    child = child || {};
-    for(var i in parent){
-        if(parent.hasOwnProperty(i)){
-            if(typeof parent[i] === &apos;object&apos;){
-                child[i] = (toString.call(parent[i]) === astr) ? [] : {};
-                    extendDeep(parent[i], child[i]);
-                }
-                   else{
-                    child[i] = parent[i];
-                   }
-              }
-    }
-    return child;
-}
-</code></pre><p>这种属性复制模式比较简单且得到了广泛运用。例如，Firebug（使用Javascript编写的Firefox扩展插件）中具有一个名为<code>extend()</code>的方法，该方法就可以实现浅复制，而jquery库中的<code>extend()</code>则可创建深度复制的副本。<br>值得注意的是，在本模式中根本没有涉及任何原型，本模式仅与对象以及它们自身的属性相关。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> kid = object(Person.prototype);</span><br></pre></td></tr></table></figure>
+<p>在ES5中，原型继承模式已经正式成为该语言的一部分。这种模式是通过方法<code>Object.create()</code>来实现的。也就是说，不需要推出与<code>object()</code>相类似的函数，它已经内嵌在该语言中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> child = <span class="built_in">Object</span>.create(parent);</span><br></pre></td></tr></table></figure>
+<p><code>Object.create()</code>接受一个额外的参数，即一个对象。这个额外对象的属性将会被添加到新对象中，以此作为新对象自身的属性，然后<code>Object.create()</code>返回该新对象。这提供了很大的方便，使你可以仅采用一个方法调用即可实现继承并在此基础上构建子对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> child = <span class="built_in">Object</span>.create(parent, &#123;</span><br><span class="line">	age: &#123; <span class="attr">value</span>: <span class="number">22</span> &#125;  <span class="comment">//ECMA5描述符号</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="通过复制属性实现继承"><a href="#通过复制属性实现继承" class="headerlink" title="通过复制属性实现继承"></a>通过复制属性实现继承</h2><p>浅复制</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>(<span class="params">parent, child</span>)</span>&#123;</span><br><span class="line">	child = child || &#123;&#125;;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> parent)&#123;</span><br><span class="line">		<span class="keyword">if</span>(parent.hasOwnProperty(i))&#123;</span><br><span class="line">			child[i] = parent[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> child;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>深复制</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extendDeep</span>(<span class="params">parent, child</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> toString = <span class="built_in">Object</span>.prototype.toString;</span><br><span class="line">	<span class="keyword">var</span> astr = <span class="string">'[object Array]'</span>;</span><br><span class="line">	</span><br><span class="line">	child = child || &#123;&#125;;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> parent)&#123;</span><br><span class="line">		<span class="keyword">if</span>(parent.hasOwnProperty(i))&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="keyword">typeof</span> parent[i] === <span class="string">'object'</span>)&#123;</span><br><span class="line">				child[i] = (toString.call(parent[i]) === astr) ? [] : &#123;&#125;;</span><br><span class="line">					extendDeep(parent[i], child[i]);</span><br><span class="line">				&#125;</span><br><span class="line">               	<span class="keyword">else</span>&#123;</span><br><span class="line">					child[i] = parent[i];</span><br><span class="line">               	&#125;</span><br><span class="line">          	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> child;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种属性复制模式比较简单且得到了广泛运用。例如，Firebug（使用Javascript编写的Firefox扩展插件）中具有一个名为<code>extend()</code>的方法，该方法就可以实现浅复制，而jquery库中的<code>extend()</code>则可创建深度复制的副本。<br>值得注意的是，在本模式中根本没有涉及任何原型，本模式仅与对象以及它们自身的属性相关。</p>
 <h2 id="混入"><a href="#混入" class="headerlink" title="混入"></a>混入</h2><p>可以针对这种通过属性复制实现继承的思想做进一步的扩展，就有了mix-in（混入）模式。mix-in模式并不是复制一个完整的对象，而是从多个对象中复制出任意的成员并将这些成员组合成一个新对象。</p>
 <p>mix-in实现比较简单，只需遍历每个参数，并且复制出传递给该函数的每个对象中的每个属性。可以向它传递任意数量的对象，其结果将获得一个具有所有源对象属性的新对象。</p>
-<pre><code>function mixin(){
-    var child = {};
-    for(var arg=0; arg&lt;arguments.length; arg++){
-        for(var prop in arguments[arg]){
-            if(arguments[arg].hasOwnProperty(prop)){
-                child[prop] = arguments[arg][prop];
-            }
-        }
-    }
-    return child;
-}
-</code></pre><h2 id="借用和绑定"><a href="#借用和绑定" class="headerlink" title="借用和绑定"></a>借用和绑定</h2><pre><code>function bind(o, m){
-    return function(){
-        return m.apply(o, [].slice.call(arguments));  
-    };
-}
-</code></pre><p>ES5中将<code>bind()</code>方法添加到<code>Function.prototype</code>，使得<code>bind()</code>就像<code>apply()</code>和<code>call()</code>一样简单易用。</p>
-<pre><code>if(typeof Function.prototype.bind === &apos;undefined&apos;){
-    Function.prototype.bind = function(thisArg){
-        var fn = this;
-        var slice = Array.prototype.slice;
-        var args = slice.call(arguments, 1);
-
-        return function(){
-            return fn.apply(thisArg, args.concat(slice.call(arguments)));
-        };
-    };
-}
-</code></pre><p>这个实现可能看起来有点熟悉，它使用了部分应用并拼接了参数列表，即那些传递给<code>bind()</code>的参数（除了第一个以外），以及那些传递给由<code>bind()</code>所返回的新函数的参数，其中该新函数将在以后被调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mixin</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> child = &#123;&#125;;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> arg=<span class="number">0</span>; arg&lt;<span class="built_in">arguments</span>.length; arg++)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> prop <span class="keyword">in</span> <span class="built_in">arguments</span>[arg])&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="built_in">arguments</span>[arg].hasOwnProperty(prop))&#123;</span><br><span class="line">				child[prop] = <span class="built_in">arguments</span>[arg][prop];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> child;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="借用和绑定"><a href="#借用和绑定" class="headerlink" title="借用和绑定"></a>借用和绑定</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bind</span>(<span class="params">o, m</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> m.apply(o, [].slice.call(<span class="built_in">arguments</span>));  </span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ES5中将<code>bind()</code>方法添加到<code>Function.prototype</code>，使得<code>bind()</code>就像<code>apply()</code>和<code>call()</code>一样简单易用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">Function</span>.prototype.bind === <span class="string">'undefined'</span>)&#123;</span><br><span class="line">	<span class="built_in">Function</span>.prototype.bind = <span class="function"><span class="keyword">function</span>(<span class="params">thisArg</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">var</span> fn = <span class="keyword">this</span>;</span><br><span class="line">		<span class="keyword">var</span> slice = <span class="built_in">Array</span>.prototype.slice;</span><br><span class="line">		<span class="keyword">var</span> args = slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			<span class="keyword">return</span> fn.apply(thisArg, args.concat(slice.call(<span class="built_in">arguments</span>)));</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个实现可能看起来有点熟悉，它使用了部分应用并拼接了参数列表，即那些传递给<code>bind()</code>的参数（除了第一个以外），以及那些传递给由<code>bind()</code>所返回的新函数的参数，其中该新函数将在以后被调用。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>
 
       

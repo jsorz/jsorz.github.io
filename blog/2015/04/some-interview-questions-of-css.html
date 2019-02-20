@@ -100,7 +100,7 @@
 <meta property="og:description" content="前一阵子参加了几轮电话面试，发现好多不足，赶紧mark下来，与大伙儿分享。先整理下CSS方面的。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20150402_01.jpg">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.837Z">
+<meta property="og:updated_time" content="2019-02-20T12:19:53.924Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="几道CSS面试题">
 <meta name="twitter:description" content="前一阵子参加了几轮电话面试，发现好多不足，赶紧mark下来，与大伙儿分享。先整理下CSS方面的。">
@@ -452,27 +452,8 @@
 </ul>
 <p>回头看笔记：</p>
 <p>还有一种也可以实现水平居中，父元素设relative定位，子元素设absolute定位，子元素left: 50%，margin-left等于负1/2的width即可。模态框的居中一般使用这种办法。</p>
-<pre><code>.mask{
-    background-color: #666;
-    height: 100%;
-    left: 0;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 99;
-}
-.modal{
-    background-color: #fff;
-    height: 300px;
-    left: 50%;
-    margin-left: -200px;
-    position: fixed;
-    top: 120px;
-    z-index: 100;
-    width: 400px;
-}
-</code></pre><h2 id="边框"><a href="#边框" class="headerlink" title="边框"></a>边框</h2><p>问：除了用border，还有什么其他属性可以画边框？只要让用户看起来像个边框即可。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.mask</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#666</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0.3</span>;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">z-index</span>: <span class="number">99</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.modal</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#fff</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">300px</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">margin-left</span>: -<span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">position</span>: fixed;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">120px</span>;</span><br><span class="line">    <span class="attribute">z-index</span>: <span class="number">100</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">400px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="边框"><a href="#边框" class="headerlink" title="边框"></a>边框</h2><p>问：除了用border，还有什么其他属性可以画边框？只要让用户看起来像个边框即可。</p>
 <p>我答：</p>
 <ul>
 <li><p>background，画个边框的图片</p>
@@ -499,20 +480,9 @@
 <li><p>暴力法，父元素overflow: hidden，IE下要加一条<code>*zoom: 1</code>以触发hasLayout</p>
 </li>
 <li><p>clearfix法</p>
-<pre><code>.clearfix {
-    *zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-    display: table;
-    line-height: 0;
-    content: &quot;&quot;;
-}
-.clearfix:after {
-    clear: both;
-}
-</code></pre></li>
+</li>
 </ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">    *zoom: 1;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">:before</span>,</span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">:after</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: table;</span><br><span class="line">    <span class="attribute">line-height</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">""</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">:after</span> &#123;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>接着问：IE下加<code>*zoom: 1</code>就够了吗？</p>
 <p>我：。。。</p>
 <p>回头查资料：</p>

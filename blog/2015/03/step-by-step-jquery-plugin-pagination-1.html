@@ -101,7 +101,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20150303_01.jpg">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20150303_02.jpg">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.835Z">
+<meta property="og:updated_time" content="2019-02-20T12:16:33.131Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自己写的jquery分页插件">
 <meta name="twitter:description" content="经常做信息管理类的网站，分页可以说是最常见的功能之一了。纵然网上可以找到一堆jquery分页插件，但我还是想手把手自己写一个分页，更清楚自己需要怎样的分页功能，不想包含过于复杂的功能。说到分页，我能想到3种：直接刷新页面；Ajax刷新分页；伪分页。伪分页其实就是对页面数据的过滤，页面包含了所有的数据的元素，只不过“一页”仅显示部分数据的元素。Ajax分页则是局部刷新页面上的数据元素。我先实现最简单">
@@ -399,22 +399,12 @@
         <p>经常做信息管理类的网站，<strong>分页</strong>可以说是最常见的功能之一了。纵然网上可以找到一堆jquery分页插件，但我还是想手把手自己写一个分页，更清楚自己需要怎样的分页功能，不想包含过于复杂的功能。说到分页，我能想到3种：直接刷新页面；Ajax刷新分页；伪分页。伪分页其实就是对页面数据的过滤，页面包含了所有的数据的元素，只不过“一页”仅显示部分数据的元素。Ajax分页则是局部刷新页面上的数据元素。我先实现最简单的分页方式，即直接刷新页面。</p>
 <a id="more"></a>
 <h2 id="jquery插件写法"><a href="#jquery插件写法" class="headerlink" title="jquery插件写法"></a>jquery插件写法</h2><p>jquery中提供了<code>fn</code>扩展属性，任何写到<code>fn</code>中的函数，都可以被jquery DOM元素直接调用。</p>
-<pre><code>$.fn.sayHello = function(){
-    return this.each(function(){
-        alert(this);
-    });
-};
-</code></pre><p>有了这个扩展函数，可以直接对元素这样<code>$(&#39;#someElement&#39;).sayHello()</code>调用，也可以同时作用在多个元素上，像<code>$(&#39;.some-class&#39;).sayHello()</code>这样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$.fn.sayHello = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>有了这个扩展函数，可以直接对元素这样<code>$(&#39;#someElement&#39;).sayHello()</code>调用，也可以同时作用在多个元素上，像<code>$(&#39;.some-class&#39;).sayHello()</code>这样。</p>
 <p>注意<code>sayHello</code>中两个<code>this</code>是有区别的，函数进来的第一个<code>this</code>就是指调用<code>sayHello()</code>的元素，而且这里的<code>this</code>就已经是jquery的元素了，不需要再多此一举<code>$(this)</code>了。而<code>this.each()</code>表示对所有调用<code>sayHello()</code>的元素均进行如下操作。<code>each(function(){})</code>里面的<code>this</code>表示的是单个调用<code>sayHello()</code>的元素，注意这里的<code>this</code>是原生DOM元素，如要使用jquery的函数，则需要先<code>$(this)</code>一下。</p>
 <p>完善后的<code>sayHello</code>代码如下。</p>
-<pre><code>$.fn.sayHello = function(){
-    return this.each(function(){
-        $(this).bind(&apos;click&apos;, function(){
-            alert(&apos;hello &apos; + $(this).prop(&apos;tagName&apos;));
-        });
-    });
-};
-</code></pre><p>即这个sayHello插件会为元素绑定一个<code>click</code>事件，点击后会弹出该元素的标签名。效果如下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$.fn.sayHello = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        $(<span class="keyword">this</span>).bind(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            alert(<span class="string">'hello '</span> + $(<span class="keyword">this</span>).prop(<span class="string">'tagName'</span>));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>即这个sayHello插件会为元素绑定一个<code>click</code>事件，点击后会弹出该元素的标签名。效果如下。</p>
 <p><img src="/images/captures/20150303_01.jpg"></p>
 <h2 id="分页插件设计"><a href="#分页插件设计" class="headerlink" title="分页插件设计"></a>分页插件设计</h2><p>令这个分页插件（扩展函数）叫做<code>jqPagination</code>，我们希望它使用起来非常简单，在页面中只需要定义一个<code>&lt;div&gt;</code>，无需定义任何子元素，只需要<code>jqPagination()</code>一下，就会生成一个好看的分页按钮出来。由于页数是不确定的，不可能把所有页码在界面上都显示出来（体验太差），它只显示第一页、最后一页，以及当前页的前后两页。</p>
 <p><img src="/images/captures/20150303_02.jpg"></p>
@@ -427,13 +417,10 @@
 </li>
 </ol>
 <p>这就是这个分页插件的对外接口设计。<code>&lt;div&gt;</code>中支持<code>data-pn</code>和<code>data-tpn</code>两个属性，分别表示当前页码和总页数。</p>
-<pre><code>&lt;div id=&quot;pagination1&quot; data-pn=&quot;5&quot; data-tpn=&quot;12&quot;&gt;&lt;/div&gt;
-</code></pre><p>同时<code>jqPagination</code>也支持配置参数，如下。</p>
-<pre><code>$(&apos;#pagination1&apos;).jqPagination({
-    pn: 5,
-    tpn: 12
-});
-</code></pre><h2 id="插件实现"><a href="#插件实现" class="headerlink" title="插件实现"></a>插件实现</h2><p>大体实现思路就是：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"pagination1"</span> <span class="attr">data-pn</span>=<span class="string">"5"</span> <span class="attr">data-tpn</span>=<span class="string">"12"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>同时<code>jqPagination</code>也支持配置参数，如下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'#pagination1'</span>).jqPagination(&#123;</span><br><span class="line">    pn: <span class="number">5</span>,</span><br><span class="line">    tpn: <span class="number">12</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="插件实现"><a href="#插件实现" class="headerlink" title="插件实现"></a>插件实现</h2><p>大体实现思路就是：</p>
 <ol>
 <li><p>为<code>&lt;div&gt;</code>添加一些子元素，不涉及具体页码。</p>
 </li>
@@ -445,191 +432,27 @@
 </li>
 </ol>
 <p><strong>Step 1</strong></p>
-<pre><code>$.fn.jqPagination = function(options){
-
-    var generatePages = function($el){
-
-        var $list = $(&apos;&lt;ul class=&quot;&apos; + CLASS_PAGE_LIST + &apos;&quot;&gt;&lt;/ul&gt;&apos;);
-        // prePage
-        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PRE_PAGE + &apos;&quot;&gt;&apos; + TEXT_PRE_PAGE + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
-        // firstPage
-        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_ACTIVE + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PAGE + &apos;&quot; data-page=&quot;1&quot;&gt;1&lt;/a&gt;&lt;/li&gt;&apos;);
-        // preOmit
-        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PRE_OMIT + &apos;&quot;&gt;&apos; + TEXT_OMIT + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
-        // nextOmit
-        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_NEXT_OMIT + &apos;&quot;&gt;&apos; + TEXT_OMIT + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
-        // lastPage
-        $list.append(&apos;&lt;li class=&quot;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_PAGE + &apos;&quot; data-page=&quot;&quot;&gt;&apos; + TEXT_EMPTY + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
-        // nextPage
-        $list.append(&apos;&lt;li class=&quot;&apos; + CLASS_DISABLED + &apos;&quot;&gt;&lt;a href=&quot;javascript:void(0);&quot; class=&quot;&apos; + CLASS_NEXT_PAGE + &apos;&quot;&gt;&apos; + TEXT_NEXT_PAGE + &apos;&lt;/a&gt;&lt;/li&gt;&apos;);
-        // append to list
-        $el.empty().append($list);
-
-    };
-
-    var init = function($el){
-        $el.addClass(CLASS_PAGINATION);
-        generatePages($el);
-    };
-
-    return init(this);
-};
-</code></pre><p>这里直接为几个特殊的元素占好“坑”，分别是：上一页，第1页，滑动窗口向前的省略，滑动窗口向后的省略，最后一页（页码为空），下一页。具体的页码元素都是有<code>data-page</code>属性的，这里第一页和最后一页也属于具体页码。然后在Step 2中生成其他具体页码，并为这里占的“坑”设置active、disabled或hide。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$.fn.jqPagination = <span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> generatePages = <span class="function"><span class="keyword">function</span>(<span class="params">$el</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> $list = $(<span class="string">'&lt;ul class="'</span> + CLASS_PAGE_LIST + <span class="string">'"&gt;&lt;/ul&gt;'</span>);</span><br><span class="line">        <span class="comment">// prePage</span></span><br><span class="line">        $list.append(<span class="string">'&lt;li class="'</span> + CLASS_DISABLED + <span class="string">'"&gt;&lt;a href="javascript:void(0);" class="'</span> + CLASS_PRE_PAGE + <span class="string">'"&gt;'</span> + TEXT_PRE_PAGE + <span class="string">'&lt;/a&gt;&lt;/li&gt;'</span>);</span><br><span class="line">        <span class="comment">// firstPage</span></span><br><span class="line">        $list.append(<span class="string">'&lt;li class="'</span> + CLASS_ACTIVE + <span class="string">'"&gt;&lt;a href="javascript:void(0);" class="'</span> + CLASS_PAGE + <span class="string">'" data-page="1"&gt;1&lt;/a&gt;&lt;/li&gt;'</span>);</span><br><span class="line">        <span class="comment">// preOmit</span></span><br><span class="line">        $list.append(<span class="string">'&lt;li class="'</span> + CLASS_DISABLED + <span class="string">'"&gt;&lt;a href="javascript:void(0);" class="'</span> + CLASS_PRE_OMIT + <span class="string">'"&gt;'</span> + TEXT_OMIT + <span class="string">'&lt;/a&gt;&lt;/li&gt;'</span>);</span><br><span class="line">        <span class="comment">// nextOmit</span></span><br><span class="line">        $list.append(<span class="string">'&lt;li class="'</span> + CLASS_DISABLED + <span class="string">'"&gt;&lt;a href="javascript:void(0);" class="'</span> + CLASS_NEXT_OMIT + <span class="string">'"&gt;'</span> + TEXT_OMIT + <span class="string">'&lt;/a&gt;&lt;/li&gt;'</span>);</span><br><span class="line">        <span class="comment">// lastPage</span></span><br><span class="line">        $list.append(<span class="string">'&lt;li class=""&gt;&lt;a href="javascript:void(0);" class="'</span> + CLASS_PAGE + <span class="string">'" data-page=""&gt;'</span> + TEXT_EMPTY + <span class="string">'&lt;/a&gt;&lt;/li&gt;'</span>);</span><br><span class="line">        <span class="comment">// nextPage</span></span><br><span class="line">        $list.append(<span class="string">'&lt;li class="'</span> + CLASS_DISABLED + <span class="string">'"&gt;&lt;a href="javascript:void(0);" class="'</span> + CLASS_NEXT_PAGE + <span class="string">'"&gt;'</span> + TEXT_NEXT_PAGE + <span class="string">'&lt;/a&gt;&lt;/li&gt;'</span>);</span><br><span class="line">        <span class="comment">// append to list</span></span><br><span class="line">        $el.empty().append($list);</span><br><span class="line"></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> init = <span class="function"><span class="keyword">function</span>(<span class="params">$el</span>)</span>&#123;</span><br><span class="line">        $el.addClass(CLASS_PAGINATION);</span><br><span class="line">        generatePages($el);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> init(<span class="keyword">this</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里直接为几个特殊的元素占好“坑”，分别是：上一页，第1页，滑动窗口向前的省略，滑动窗口向后的省略，最后一页（页码为空），下一页。具体的页码元素都是有<code>data-page</code>属性的，这里第一页和最后一页也属于具体页码。然后在Step 2中生成其他具体页码，并为这里占的“坑”设置active、disabled或hide。</p>
 <p><strong>Step 2</strong></p>
-<pre><code>var generatePages = function($el){
-    // 以上省略...
-
-    var $dummies = $list.children(&apos;li&apos;);
-    var dummyLen = $dummies.length;
-
-    // targets reference
-    var $firstPage = $dummies.eq(1);
-    var $lastPage = $dummies.eq(dummyLen-2);
-    var $prePage = $dummies.first();  // eq(0)
-    var $nextPage = $dummies.last();  // eq(dummyLen-1)
-    var $preOmitted = $dummies.eq(2);
-    var $nextOmitted = $dummies.eq(dummyLen-3);
-
-    // a copy for dynamic page, initial
-    var $pageCopy = $firstPage.clone().removeAttr(&apos;class&apos;);
-
-    // page number region
-    var pn = Number(opts.pn);
-    var tpn = Number(opts.tpn);
-    var lowerPn = Math.max(pn-2, 2);  // 第1页已写在html中
-    var upperPn = Math.min(pn+2, tpn-1);  // 最后1页已写在html中
-
-    // generate new specific pages（当前页的前后2页）
-    for(var i=lowerPn; i&lt;=upperPn; i++){
-        var $newPage = $pageCopy.clone();
-        $newPage.find(&apos;a&apos;).attr(&apos;data-page&apos;, i).text(i);
-        $newPage.insertBefore($nextOmitted);
-        // add current page flag
-        i == pn &amp;&amp; $newPage.addClass(CLASS_ACTIVE);
-    }
-
-    // check first page
-    $firstPage.removeClass(CLASS_ACTIVE);
-    pn == 1 &amp;&amp; $firstPage.addClass(CLASS_ACTIVE);
-
-    // check last page
-    $lastPage.find(&apos;a&apos;).attr(&apos;data-page&apos;, tpn).text(tpn);
-    $lastPage.removeClass(CLASS_ACTIVE);
-    pn == tpn &amp;&amp; $lastPage.addClass(CLASS_ACTIVE);
-
-    // check if last page equals first page
-    $lastPage.removeClass(CLASS_HIDE)
-    tpn == 1 &amp;&amp; $lastPage.addClass(CLASS_HIDE);
-
-    // check Previous page
-    $prePage.attr(&apos;class&apos;, CLASS_DISABLED);
-    pn &gt; 1 &amp;&amp; $prePage.removeClass(CLASS_DISABLED);
-
-    // check Next page
-    $nextPage.attr(&apos;class&apos;, CLASS_DISABLED);
-    pn &lt; tpn &amp;&amp; $nextPage.removeClass(CLASS_DISABLED);
-
-    // check pre omitted
-    $preOmitted.removeClass(CLASS_HIDE);
-    lowerPn &lt;= 2 &amp;&amp; $preOmitted.addClass(CLASS_HIDE);
-
-    // check next omitted
-    $nextOmitted.removeClass(CLASS_HIDE);
-    upperPn == tpn-1 &amp;&amp; $nextOmitted.addClass(CLASS_HIDE);
-};
-</code></pre><p>这里的滑动窗口的页码范围为<code>Math.max(pn-2, 2)</code>到<code>Math.min(pn+2, tpn-1)</code>，因为第1页和最后1页已经在Step 1中占好“坑”了。生成的具体页码即当前页的前后2页，添加好<code>data-page</code>属性，插入到“坑”的相应位置。然后就是根据<code>pn</code>（当前页码）和<code>tpn</code>（总页数）对那些“坑”进行可见性的检查，该disabled的和该hide的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> generatePages = <span class="function"><span class="keyword">function</span>(<span class="params">$el</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> $dummies = $list.children(<span class="string">'li'</span>);</span><br><span class="line">    <span class="keyword">var</span> dummyLen = $dummies.length;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// targets reference</span></span><br><span class="line">    <span class="keyword">var</span> $firstPage = $dummies.eq(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">var</span> $lastPage = $dummies.eq(dummyLen<span class="number">-2</span>);</span><br><span class="line">    <span class="keyword">var</span> $prePage = $dummies.first();  <span class="comment">// eq(0)</span></span><br><span class="line">    <span class="keyword">var</span> $nextPage = $dummies.last();  <span class="comment">// eq(dummyLen-1)</span></span><br><span class="line">    <span class="keyword">var</span> $preOmitted = $dummies.eq(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">var</span> $nextOmitted = $dummies.eq(dummyLen<span class="number">-3</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// a copy for dynamic page, initial</span></span><br><span class="line">    <span class="keyword">var</span> $pageCopy = $firstPage.clone().removeAttr(<span class="string">'class'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// page number region</span></span><br><span class="line">    <span class="keyword">var</span> pn = <span class="built_in">Number</span>(opts.pn);</span><br><span class="line">    <span class="keyword">var</span> tpn = <span class="built_in">Number</span>(opts.tpn);</span><br><span class="line">    <span class="keyword">var</span> lowerPn = <span class="built_in">Math</span>.max(pn<span class="number">-2</span>, <span class="number">2</span>);  <span class="comment">// 第1页已写在html中</span></span><br><span class="line">    <span class="keyword">var</span> upperPn = <span class="built_in">Math</span>.min(pn+<span class="number">2</span>, tpn<span class="number">-1</span>);  <span class="comment">// 最后1页已写在html中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// generate new specific pages（当前页的前后2页）</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=lowerPn; i&lt;=upperPn; i++)&#123;</span><br><span class="line">        <span class="keyword">var</span> $newPage = $pageCopy.clone();</span><br><span class="line">        $newPage.find(<span class="string">'a'</span>).attr(<span class="string">'data-page'</span>, i).text(i);</span><br><span class="line">        $newPage.insertBefore($nextOmitted);</span><br><span class="line">        <span class="comment">// add current page flag</span></span><br><span class="line">        i == pn &amp;&amp; $newPage.addClass(CLASS_ACTIVE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check first page</span></span><br><span class="line">    $firstPage.removeClass(CLASS_ACTIVE);</span><br><span class="line">    pn == <span class="number">1</span> &amp;&amp; $firstPage.addClass(CLASS_ACTIVE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check last page</span></span><br><span class="line">    $lastPage.find(<span class="string">'a'</span>).attr(<span class="string">'data-page'</span>, tpn).text(tpn);</span><br><span class="line">    $lastPage.removeClass(CLASS_ACTIVE);</span><br><span class="line">    pn == tpn &amp;&amp; $lastPage.addClass(CLASS_ACTIVE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check if last page equals first page</span></span><br><span class="line">    $lastPage.removeClass(CLASS_HIDE)</span><br><span class="line">    tpn == <span class="number">1</span> &amp;&amp; $lastPage.addClass(CLASS_HIDE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check Previous page</span></span><br><span class="line">    $prePage.attr(<span class="string">'class'</span>, CLASS_DISABLED);</span><br><span class="line">    pn &gt; <span class="number">1</span> &amp;&amp; $prePage.removeClass(CLASS_DISABLED);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// check Next page</span></span><br><span class="line">    $nextPage.attr(<span class="string">'class'</span>, CLASS_DISABLED);</span><br><span class="line">    pn &lt; tpn &amp;&amp; $nextPage.removeClass(CLASS_DISABLED);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check pre omitted</span></span><br><span class="line">    $preOmitted.removeClass(CLASS_HIDE);</span><br><span class="line">    lowerPn &lt;= <span class="number">2</span> &amp;&amp; $preOmitted.addClass(CLASS_HIDE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check next omitted</span></span><br><span class="line">    $nextOmitted.removeClass(CLASS_HIDE);</span><br><span class="line">    upperPn == tpn<span class="number">-1</span> &amp;&amp; $nextOmitted.addClass(CLASS_HIDE);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里的滑动窗口的页码范围为<code>Math.max(pn-2, 2)</code>到<code>Math.min(pn+2, tpn-1)</code>，因为第1页和最后1页已经在Step 1中占好“坑”了。生成的具体页码即当前页的前后2页，添加好<code>data-page</code>属性，插入到“坑”的相应位置。然后就是根据<code>pn</code>（当前页码）和<code>tpn</code>（总页数）对那些“坑”进行可见性的检查，该disabled的和该hide的。</p>
 <p><strong>Step 3 &amp; 4</strong></p>
-<pre><code>var bindPageEvents = function($el){
-    // Previous page
-    $el.find(&apos;.&apos; + CLASS_PRE_PAGE).click(function(){
-        if($(this).parent().hasClass(CLASS_DISABLED)){
-            return false;
-        }
-        var $target = $el.find(&apos;li.&apos; + CLASS_ACTIVE).prev();
-        // omitted patch
-        if($target.hasClass(CLASS_DISABLED)){
-            $target = $target.prev();
-            if($target.hasClass(CLASS_DISABLED)){
-                $target = $target.prev();
-            }
-        }
-        targetClick($target);
-    });
-
-    // Next page
-    $el.find(&apos;.&apos; + CLASS_NEXT_PAGE).click(function(){
-        if($(this).parent().hasClass(CLASS_DISABLED)){
-            return false;
-        }
-        var $target = $el.find(&apos;li.&apos; + CLASS_ACTIVE).next();
-        // omitted patch
-        if($target.hasClass(CLASS_DISABLED)){
-            $target = $target.next();
-            if($target.hasClass(CLASS_DISABLED)){
-                $target = $target.next();
-            }
-        }
-        targetClick($target);
-    });
-
-    // specific pages
-    $el.find(&apos;a.&apos; + CLASS_PAGE).each(function(){
-        $(this).attr(&apos;href&apos;, getPageHref($(this).attr(&apos;data-page&apos;)));
-    });
-};
-</code></pre><p>这里就是为具体页码和“前一页”“后一页”添加点击效果。每个具体页码都是个带有<code>href</code>属性的<code>&lt;a&gt;</code>标签，以直接刷新页面，这里有个<code>getPageHref</code>方法稍后描述。而点击“前一页”“后一页”实则是去找到相对于当前页的具体页码元素，然后调用<code>targetClick</code>去模拟点击，也在稍后描述。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bindPageEvents = <span class="function"><span class="keyword">function</span>(<span class="params">$el</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// Previous page</span></span><br><span class="line">    $el.find(<span class="string">'.'</span> + CLASS_PRE_PAGE).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>($(<span class="keyword">this</span>).parent().hasClass(CLASS_DISABLED))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> $target = $el.find(<span class="string">'li.'</span> + CLASS_ACTIVE).prev();</span><br><span class="line">        <span class="comment">// omitted patch</span></span><br><span class="line">        <span class="keyword">if</span>($target.hasClass(CLASS_DISABLED))&#123;</span><br><span class="line">            $target = $target.prev();</span><br><span class="line">            <span class="keyword">if</span>($target.hasClass(CLASS_DISABLED))&#123;</span><br><span class="line">                $target = $target.prev();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        targetClick($target);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Next page</span></span><br><span class="line">    $el.find(<span class="string">'.'</span> + CLASS_NEXT_PAGE).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>($(<span class="keyword">this</span>).parent().hasClass(CLASS_DISABLED))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> $target = $el.find(<span class="string">'li.'</span> + CLASS_ACTIVE).next();</span><br><span class="line">        <span class="comment">// omitted patch</span></span><br><span class="line">        <span class="keyword">if</span>($target.hasClass(CLASS_DISABLED))&#123;</span><br><span class="line">            $target = $target.next();</span><br><span class="line">            <span class="keyword">if</span>($target.hasClass(CLASS_DISABLED))&#123;</span><br><span class="line">                $target = $target.next();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        targetClick($target);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// specific pages</span></span><br><span class="line">    $el.find(<span class="string">'a.'</span> + CLASS_PAGE).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        $(<span class="keyword">this</span>).attr(<span class="string">'href'</span>, getPageHref($(<span class="keyword">this</span>).attr(<span class="string">'data-page'</span>)));</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里就是为具体页码和“前一页”“后一页”添加点击效果。每个具体页码都是个带有<code>href</code>属性的<code>&lt;a&gt;</code>标签，以直接刷新页面，这里有个<code>getPageHref</code>方法稍后描述。而点击“前一页”“后一页”实则是去找到相对于当前页的具体页码元素，然后调用<code>targetClick</code>去模拟点击，也在稍后描述。</p>
 <h2 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h2><p>除了前面提到的<code>pn</code>和<code>tpn</code>两个参数外，我们还需要添加两个参数。因为是直接刷新页面以获取新的分页数据，那url中肯定要有个参数表示页码，那么这个参数的key叫什么。我们提供一个默认的名字，就叫<code>page</code>，即url都长成这样<code>/some/to/?page=2</code>，当然这个参数的名字也可以自定义。还有就是，分页刷新页面默认就是当前的url，只不过<code>page</code>参数的值不同，这个url也可以自定义。</p>
-<pre><code>$.fn.jqPagination = function(options){
-
-    // default option values
-    var opts = $.extend({
-        &apos;pn&apos;: this.attr(&apos;data-pn&apos;) || 1,
-        &apos;tpn&apos;: this.attr(&apos;data-tpn&apos;) || 1,
-        &apos;name&apos;: &apos;page&apos;
-    }, options);
-
-    // default value of &apos;pageHref&apos;
-    var defaultHref = window.location.pathname + &apos;?&apos; + opts.name + &apos;=&apos;;
-    if(/\?(\w+)=/.test(window.location.href)){
-        // 如果已经有参数
-        defaultHref = window.location.href + 
-            (eval(&apos;/&apos; + opts.name + &apos;=/&apos;).test(window.location.href) ? &apos;&apos; : &apos;&amp;&apos; + opts.name + &apos;=&apos;);
-    }
-
-    opts[&apos;pageHref&apos;] = opts[&apos;pageHref&apos;] || defaultHref;
-
-    // 以下省略...
-};
-</code></pre><p>由此，前面提到的<code>getPageHref</code>就是去替换url里的<code>page</code>参数的值。</p>
-<pre><code>var getPageHref = function(pageNo){
-    return opts.pageHref.replace(eval(&apos;/&apos; + opts.name + &apos;=\\d*/&apos;), opts.name + &apos;=&apos; + pageNo);
-};
-</code></pre><p>当然那个模拟点击页码的<code>targetClick</code>就是直接刷新<code>window.location.href</code>咯</p>
-<pre><code>var targetClick = function($li){
-    var $link = $li.find(&apos;a.&apos; + CLASS_PAGE);
-    if(!$link.hasClass(CLASS_ACTIVE) 
-        &amp;&amp; !$link.hasClass(CLASS_DISABLED) 
-        &amp;&amp; !$link.hasClass(CLASS_HIDE)){
-        // 是否刷页面
-        /^\/|((http|https|svn|ftp|file):\/\/)/.test($link.prop(&apos;href&apos;)) ? 
-            (window.location.href = $link.prop(&apos;href&apos;)) : $link.click();
-    }
-};
-</code></pre><h2 id="插件使用"><a href="#插件使用" class="headerlink" title="插件使用"></a>插件使用</h2><p>提供3种使用方式，最基本的就是</p>
-<pre><code>&lt;div id=&quot;pagination1&quot; data-pn=&quot;5&quot; data-tpn=&quot;12&quot;&gt;&lt;/div&gt;
-
-$(&apos;#pagination1&apos;).jqPagination();
-</code></pre><p>要手动设置pn和tpn，以及分页参数名称，就像这样</p>
-<pre><code>$(&apos;#pagination2&apos;).jqPagination({
-    pn: 5,
-    tpn: 12,
-    name: &apos;p&apos;
-});
-</code></pre><p>要自定义分页url的就像这样</p>
-<pre><code>$(&apos;#pagination3&apos;).jqPagination({
-    pageHref: &apos;http://www.baidu.com?from=fuxiaode.cn&amp;page=&apos;
-});
-</code></pre><p><a href="/demo/Pagination/v1/demo.html">完整Demo</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$.fn.jqPagination = <span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// default option values</span></span><br><span class="line">    <span class="keyword">var</span> opts = $.extend(&#123;</span><br><span class="line">        <span class="string">'pn'</span>: <span class="keyword">this</span>.attr(<span class="string">'data-pn'</span>) || <span class="number">1</span>,</span><br><span class="line">        <span class="string">'tpn'</span>: <span class="keyword">this</span>.attr(<span class="string">'data-tpn'</span>) || <span class="number">1</span>,</span><br><span class="line">        <span class="string">'name'</span>: <span class="string">'page'</span></span><br><span class="line">    &#125;, options);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// default value of 'pageHref'</span></span><br><span class="line">    <span class="keyword">var</span> defaultHref = <span class="built_in">window</span>.location.pathname + <span class="string">'?'</span> + opts.name + <span class="string">'='</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="regexp">/\?(\w+)=/</span>.test(<span class="built_in">window</span>.location.href))&#123;</span><br><span class="line">        <span class="comment">// 如果已经有参数</span></span><br><span class="line">        defaultHref = <span class="built_in">window</span>.location.href + </span><br><span class="line">            (<span class="built_in">eval</span>(<span class="string">'/'</span> + opts.name + <span class="string">'=/'</span>).test(<span class="built_in">window</span>.location.href) ? <span class="string">''</span> : <span class="string">'&amp;'</span> + opts.name + <span class="string">'='</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    opts[<span class="string">'pageHref'</span>] = opts[<span class="string">'pageHref'</span>] || defaultHref;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>由此，前面提到的<code>getPageHref</code>就是去替换url里的<code>page</code>参数的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> getPageHref = <span class="function"><span class="keyword">function</span>(<span class="params">pageNo</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> opts.pageHref.replace(<span class="built_in">eval</span>(<span class="string">'/'</span> + opts.name + <span class="string">'=\\d*/'</span>), opts.name + <span class="string">'='</span> + pageNo);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>当然那个模拟点击页码的<code>targetClick</code>就是直接刷新<code>window.location.href</code>咯</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> targetClick = <span class="function"><span class="keyword">function</span>(<span class="params">$li</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $link = $li.find(<span class="string">'a.'</span> + CLASS_PAGE);</span><br><span class="line">    <span class="keyword">if</span>(!$link.hasClass(CLASS_ACTIVE) </span><br><span class="line">        &amp;&amp; !$link.hasClass(CLASS_DISABLED) </span><br><span class="line">        &amp;&amp; !$link.hasClass(CLASS_HIDE))&#123;</span><br><span class="line">        <span class="comment">// 是否刷页面</span></span><br><span class="line">        /^\/|((http|https|svn|ftp|file):\/\/)/.test($link.prop(<span class="string">'href'</span>)) ? </span><br><span class="line">            (<span class="built_in">window</span>.location.href = $link.prop(<span class="string">'href'</span>)) : $link.click();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="插件使用"><a href="#插件使用" class="headerlink" title="插件使用"></a>插件使用</h2><p>提供3种使用方式，最基本的就是</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"pagination1"</span> <span class="attr">data-pn</span>=<span class="string">"5"</span> <span class="attr">data-tpn</span>=<span class="string">"12"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">$(<span class="string">'#pagination1'</span>).jqPagination();</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>要手动设置pn和tpn，以及分页参数名称，就像这样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'#pagination2'</span>).jqPagination(&#123;</span><br><span class="line">    pn: <span class="number">5</span>,</span><br><span class="line">    tpn: <span class="number">12</span>,</span><br><span class="line">    name: <span class="string">'p'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>要自定义分页url的就像这样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'#pagination3'</span>).jqPagination(&#123;</span><br><span class="line">    pageHref: <span class="string">'http://www.baidu.com?from=fuxiaode.cn&amp;page='</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><a href="/demo/Pagination/v1/demo.html">完整Demo</a></p>
 
       
     </div>

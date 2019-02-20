@@ -100,7 +100,7 @@
 <meta property="og:description" content="上一篇中我们简单实现了搜索框的功能，这节中要为它添加按键事件，“上”“下”键选择匹配的结果，“回车”键来进入下一步，以使它使用起来更加人性化。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20150126_01.jpg">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.833Z">
+<meta property="og:updated_time" content="2019-02-20T12:07:23.110Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一步步做组件-学校选择器(5)">
 <meta name="twitter:description" content="上一篇中我们简单实现了搜索框的功能，这节中要为它添加按键事件，“上”“下”键选择匹配的结果，“回车”键来进入下一步，以使它使用起来更加人性化。">
@@ -398,52 +398,10 @@
         <p>上一篇中我们简单实现了搜索框的功能，这节中要为它添加按键事件，“上”“下”键选择匹配的结果，“回车”键来进入下一步，以使它使用起来更加人性化。</p>
 <a id="more"></a>
 <h2 id="键盘事件入口"><a href="#键盘事件入口" class="headerlink" title="键盘事件入口"></a>键盘事件入口</h2><p>在搜索框<code>keyup</code>事件那里，针对特殊的按键做拦截（不触发搜索）。</p>
-<pre><code>var initSearchSchool = function(instance){
-    // 以上省略...
-
-    // 事件
-    $searchInput.bind(&apos;keyup&apos;, function(event){
-        // 特殊按键（动作键）
-        if(event.keyCode == KEY_ENTER){
-            searchSchoolChosen($searchList);
-            return preventDefault(event);
-        }
-        if(event.keyCode == KEY_UP){
-            searchListScrollPrev($searchDiv, $searchList);
-            return preventDefault(event);
-        }
-        if(event.keyCode == KEY_DOWN){
-            searchListScrollNext($searchDiv, $searchList);
-            return preventDefault(event);
-        }
-
-        var keywords = $.trim($(this).val());
-        // 空格or拼音没输完时暂不search
-        if(keywords.length == 0 || keywords.indexOf(&quot;&apos;&quot;) &gt; -1){
-            $searchDiv.hide();
-            return false;
-        }
-
-        searchSchool(keywords, $searchDiv, $searchList, $searchEmpty);
-    });
-
-    // 以下省略...
-};
-</code></pre><p>这里定义了几个按键<code>keyCode</code>的全局变量和一个阻止浏览器默认事件的方法，如下。</p>
-<pre><code>// Constants
-var KEY_ENTER = 13;
-var KEY_UP = 38;
-var KEY_DOWN = 40;
-
-// Utils
-var preventDefault = function(event){
-    if(event &amp;&amp; event.preventDefault)
-        event.preventDefault();
-    else
-        window.event.returnValue = false;
-    return false;
-};
-</code></pre><p>这里用自己写的<code>preventDefault</code>是为了能够兼容不同的浏览器，<code>event.preventDefault()</code>是标准浏览器提供的，而<code>window.event.returnValue = false</code>是IE下的写法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> initSearchSchool = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 事件</span></span><br><span class="line">    $searchInput.bind(<span class="string">'keyup'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 特殊按键（动作键）</span></span><br><span class="line">        <span class="keyword">if</span>(event.keyCode == KEY_ENTER)&#123;</span><br><span class="line">            searchSchoolChosen($searchList);</span><br><span class="line">            <span class="keyword">return</span> preventDefault(event);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(event.keyCode == KEY_UP)&#123;</span><br><span class="line">            searchListScrollPrev($searchDiv, $searchList);</span><br><span class="line">            <span class="keyword">return</span> preventDefault(event);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(event.keyCode == KEY_DOWN)&#123;</span><br><span class="line">            searchListScrollNext($searchDiv, $searchList);</span><br><span class="line">            <span class="keyword">return</span> preventDefault(event);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> keywords = $.trim($(<span class="keyword">this</span>).val());</span><br><span class="line">        <span class="comment">// 空格or拼音没输完时暂不search</span></span><br><span class="line">        <span class="keyword">if</span>(keywords.length == <span class="number">0</span> || keywords.indexOf(<span class="string">"'"</span>) &gt; <span class="number">-1</span>)&#123;</span><br><span class="line">            $searchDiv.hide();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        searchSchool(keywords, $searchDiv, $searchList, $searchEmpty);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里定义了几个按键<code>keyCode</code>的全局变量和一个阻止浏览器默认事件的方法，如下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Constants</span></span><br><span class="line"><span class="keyword">var</span> KEY_ENTER = <span class="number">13</span>;</span><br><span class="line"><span class="keyword">var</span> KEY_UP = <span class="number">38</span>;</span><br><span class="line"><span class="keyword">var</span> KEY_DOWN = <span class="number">40</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Utils</span></span><br><span class="line"><span class="keyword">var</span> preventDefault = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(event &amp;&amp; event.preventDefault)</span><br><span class="line">        event.preventDefault();</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">window</span>.event.returnValue = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里用自己写的<code>preventDefault</code>是为了能够兼容不同的浏览器，<code>event.preventDefault()</code>是标准浏览器提供的，而<code>window.event.returnValue = false</code>是IE下的写法。</p>
 <p><code>searchSchoolChosen</code>是选择当前项，<code>searchListScrollPrev</code>是选中上一项，而<code>searchListScrollNext</code>是选中下一项，我们将在后面详细讲。</p>
 <h2 id="动画效果"><a href="#动画效果" class="headerlink" title="动画效果"></a>动画效果</h2><p>有了上面的代码结构，接下来要做的就是为特殊按键添加效果，这里涉及到动画，又是一个蛋疼的话题。</p>
 <p><img src="/images/captures/20150126_01.jpg"></p>
@@ -456,95 +414,21 @@ var preventDefault = function(event){
 <p>scrollTop &lt;= Δoffset &lt;= scrollTop + sDiv.height</p>
 </blockquote>
 <p>于是我们有了控制<code>searchDiv</code>滚动条动画的方法。</p>
-<pre><code>var searchListScroll = function($searchDiv, $searchList){
-    var scrollTop = $searchDiv.scrollTop();
-    var viewMin = scrollTop;
-    var viewMax = viewMin + $searchDiv.height();
-
-    var $target = $searchList.children(&apos;li.active&apos;);
-    var deltaOffset = $target.offset().top - $searchDiv.offset().top + scrollTop;
-
-    // deltaOffset要在视窗范围里
-    if(deltaOffset &gt; viewMax){
-        $searchDiv.animate({scrollTop: scrollTop + deltaOffset - viewMax}, &apos;fast&apos;);
-    }
-    else if(deltaOffset &lt; viewMin){
-        $searchDiv.animate({scrollTop: scrollTop - (viewMin - deltaOffset)}, &apos;fast&apos;);
-    }
-};
-</code></pre><p>大体看上去没有问题，但是注意到当向“下”选中时，其实是<code>Δoffset + target.height</code>要在视窗范围内。因此我们作如下修正。</p>
-<pre><code>var searchListScroll = function(isDown, $searchDiv, $searchList){
-    // 以上省略...
-
-    var deltaOffset = $target.offset().top - $searchDiv.offset().top + scrollTop;
-    isDown &amp;&amp; (deltaOffset += $target.height());
-
-    // 以下省略...
-};
-</code></pre><p>有了这个滚动条动画的方法，上面提到的<code>searchListScrollPrev</code>和<code>searchListScrollNext</code>也就信手拈来了。</p>
-<pre><code>var searchListScrollPrev = function($searchDiv, $searchList){
-    var $cur = $searchList.children(&apos;li.active&apos;);
-    $cur.removeClass &amp;&amp; $cur.removeClass(&apos;active&apos;);
-
-    if($cur.length == 0 || $cur.index() == 0){
-        $searchList.children(&apos;li&apos;).last().addClass(&apos;active&apos;);
-        searchListScroll(true, $searchDiv, $searchList);
-    }
-    else{
-        $searchList.children(&apos;li&apos;).eq($cur.index() - 1).addClass(&apos;active&apos;);
-        searchListScroll(false, $searchDiv, $searchList);
-    }
-};
-
-var searchListScrollNext = function($searchDiv, $searchList){
-    var $cur = $searchList.children(&apos;li.active&apos;);
-    $cur.removeClass &amp;&amp; $cur.removeClass(&apos;active&apos;);
-
-    if($cur.length == 0 || $cur.index() == $searchList.children().length-1){
-        $searchList.children(&apos;li&apos;).first().addClass(&apos;active&apos;);
-        searchListScroll(false, $searchDiv, $searchList);
-    }
-    else{
-        $searchList.children(&apos;li&apos;).eq($cur.index() + 1).addClass(&apos;active&apos;);
-        searchListScroll(true, $searchDiv, $searchList);
-    }
-};
-</code></pre><p>这两个方法就是用来响应“上”“下”键，控制<code>searchList</code>当前选中的子元素，为之添加class，并保证选中的元素在<code>searchDiv</code>的可见范围内。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> searchListScroll = <span class="function"><span class="keyword">function</span>(<span class="params">$searchDiv, $searchList</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> scrollTop = $searchDiv.scrollTop();</span><br><span class="line">    <span class="keyword">var</span> viewMin = scrollTop;</span><br><span class="line">    <span class="keyword">var</span> viewMax = viewMin + $searchDiv.height();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> $target = $searchList.children(<span class="string">'li.active'</span>);</span><br><span class="line">    <span class="keyword">var</span> deltaOffset = $target.offset().top - $searchDiv.offset().top + scrollTop;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// deltaOffset要在视窗范围里</span></span><br><span class="line">    <span class="keyword">if</span>(deltaOffset &gt; viewMax)&#123;</span><br><span class="line">        $searchDiv.animate(&#123;<span class="attr">scrollTop</span>: scrollTop + deltaOffset - viewMax&#125;, <span class="string">'fast'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(deltaOffset &lt; viewMin)&#123;</span><br><span class="line">        $searchDiv.animate(&#123;<span class="attr">scrollTop</span>: scrollTop - (viewMin - deltaOffset)&#125;, <span class="string">'fast'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>大体看上去没有问题，但是注意到当向“下”选中时，其实是<code>Δoffset + target.height</code>要在视窗范围内。因此我们作如下修正。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> searchListScroll = <span class="function"><span class="keyword">function</span>(<span class="params">isDown, $searchDiv, $searchList</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> deltaOffset = $target.offset().top - $searchDiv.offset().top + scrollTop;</span><br><span class="line">    isDown &amp;&amp; (deltaOffset += $target.height());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>有了这个滚动条动画的方法，上面提到的<code>searchListScrollPrev</code>和<code>searchListScrollNext</code>也就信手拈来了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> searchListScrollPrev = <span class="function"><span class="keyword">function</span>(<span class="params">$searchDiv, $searchList</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $cur = $searchList.children(<span class="string">'li.active'</span>);</span><br><span class="line">    $cur.removeClass &amp;&amp; $cur.removeClass(<span class="string">'active'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($cur.length == <span class="number">0</span> || $cur.index() == <span class="number">0</span>)&#123;</span><br><span class="line">        $searchList.children(<span class="string">'li'</span>).last().addClass(<span class="string">'active'</span>);</span><br><span class="line">        searchListScroll(<span class="literal">true</span>, $searchDiv, $searchList);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        $searchList.children(<span class="string">'li'</span>).eq($cur.index() - <span class="number">1</span>).addClass(<span class="string">'active'</span>);</span><br><span class="line">        searchListScroll(<span class="literal">false</span>, $searchDiv, $searchList);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> searchListScrollNext = <span class="function"><span class="keyword">function</span>(<span class="params">$searchDiv, $searchList</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $cur = $searchList.children(<span class="string">'li.active'</span>);</span><br><span class="line">    $cur.removeClass &amp;&amp; $cur.removeClass(<span class="string">'active'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($cur.length == <span class="number">0</span> || $cur.index() == $searchList.children().length<span class="number">-1</span>)&#123;</span><br><span class="line">        $searchList.children(<span class="string">'li'</span>).first().addClass(<span class="string">'active'</span>);</span><br><span class="line">        searchListScroll(<span class="literal">false</span>, $searchDiv, $searchList);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        $searchList.children(<span class="string">'li'</span>).eq($cur.index() + <span class="number">1</span>).addClass(<span class="string">'active'</span>);</span><br><span class="line">        searchListScroll(<span class="literal">true</span>, $searchDiv, $searchList);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这两个方法就是用来响应“上”“下”键，控制<code>searchList</code>当前选中的子元素，为之添加class，并保证选中的元素在<code>searchDiv</code>的可见范围内。</p>
 <p>注意这里代码<code>$cur.removeClass &amp;&amp; $cur.removeClass(&#39;active&#39;);</code>这样写是因为可能找不到<code>$cur</code>元素，那么<code>$cur.removeClass</code>就肯定是<code>false</code>了，就不会执行<code>$cur.removeClass(&#39;active&#39;)</code>了。</p>
-<!-- 还有一点要注意的是，`$cur.index()`值的范围并不是`0 ~ length-1`，实际上值为`-1`时表示找不到元素，而超过`length-1`时又会从头开始找，即`$cur.index()`等于`length`时其实是第一个子元素。所以这里的代码中当`$cur.index() == $searchList.children().length-1`时要即时为第一个元素添加class，以保证`$cur.index()`的值范围在`0 ~ length-1`中。 -->
+<p>~~还有一点要注意的是，<code>$cur.index()</code>值的范围并不是<code>0 ~ length-1</code>，实际上值为<code>-1</code>时表示找不到元素，而超过<code>length-1</code>时又会从头开始找，即<code>$cur.index()</code>等于<code>length</code>时其实是第一个子元素。所以这里的代码中当<code>$cur.index() == $searchList.children().length-1</code>时要即时为第一个元素添加class，以保证<code>$cur.index()</code>的值范围在<code>0 ~ length-1</code>中。 ~~</p>
 <h2 id="锦上添花"><a href="#锦上添花" class="headerlink" title="锦上添花"></a>锦上添花</h2><p>1.当通过“上”“下”键来选中时，我们已经为目标子元素添加了<code>active</code>的样式，那么这时如果鼠标再来捣乱该怎么办？我们只好再为鼠标添加<code>hover</code>效果，以抹去上下键的选中效果。</p>
-<pre><code>var initSearchSchool = function(instance){
-    // 以上省略...
-
-    $searchList.find(&apos;li&apos;).live(&apos;mouseenter&apos;, function(){
-        $searchList.find(&apos;li.active&apos;).removeClass(&apos;active&apos;);
-        $(this).addClass(&apos;hover&apos;);
-    }).live(&apos;mouseleave&apos;, function(){
-        $searchList.find(&apos;li.hover&apos;).removeClass(&apos;hover&apos;);
-    });
-
-    // 以下省略...
-};
-</code></pre><p>2.至于“回车”键的响应方法，我们用最简单的办法，相当于选中的子元素<code>click</code>一下。</p>
-<pre><code>var searchSchoolChosen = function($searchList){
-    // 转向click event
-    $searchList.children(&apos;li.active&apos;).click();
-};
-</code></pre><p>3.我们发现当我们输入关键字搜索时，其实每按一次键都执行了一次搜索和更新元素。而大多数情况下，我们输入一个关键字需要进行多次按键，比如搜索“江苏”，其实按键依次输入了“jiangsu”和最后拼音选择汉字的数字键或空格键。我们应该对此做些优化，以减少搜索执行，若使用Ajax搜索的话，可以减少很多次网络开销。</p>
-<pre><code>var initSearchSchool = function(instance){
-    // 以上省略...
-
-    // when正常输入
-    initSearchSchool.currentTime = (new Date()).getTime();
-    // 持续快速输入时不触发搜索
-    if(initSearchSchool.currentTime - initSearchSchool.lastKeypressTime &gt; KEY_PRESS_INTERVAL){
-        initSearchSchool.lastKeypressTime = initSearchSchool.currentTime;
-        searchSchool(keywords, $searchDiv, $searchList, $searchEmpty);
-    }
-
-    // 以下省略...
-};
-</code></pre><p>这里在全局定义常量<code>var KEY_PRESS_INTERVAL = 300;</code>毫秒即可。虽然不能面面俱到，但是已经可以减少大部分按键情况的执行开销了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> initSearchSchool = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    $searchList.find(<span class="string">'li'</span>).live(<span class="string">'mouseenter'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        $searchList.find(<span class="string">'li.active'</span>).removeClass(<span class="string">'active'</span>);</span><br><span class="line">        $(<span class="keyword">this</span>).addClass(<span class="string">'hover'</span>);</span><br><span class="line">    &#125;).live(<span class="string">'mouseleave'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        $searchList.find(<span class="string">'li.hover'</span>).removeClass(<span class="string">'hover'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>2.至于“回车”键的响应方法，我们用最简单的办法，相当于选中的子元素<code>click</code>一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> searchSchoolChosen = <span class="function"><span class="keyword">function</span>(<span class="params">$searchList</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 转向click event</span></span><br><span class="line">    $searchList.children(<span class="string">'li.active'</span>).click();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>3.我们发现当我们输入关键字搜索时，其实每按一次键都执行了一次搜索和更新元素。而大多数情况下，我们输入一个关键字需要进行多次按键，比如搜索“江苏”，其实按键依次输入了“jiangsu”和最后拼音选择汉字的数字键或空格键。我们应该对此做些优化，以减少搜索执行，若使用Ajax搜索的话，可以减少很多次网络开销。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> initSearchSchool = <span class="function"><span class="keyword">function</span>(<span class="params">instance</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// when正常输入</span></span><br><span class="line">    initSearchSchool.currentTime = (<span class="keyword">new</span> <span class="built_in">Date</span>()).getTime();</span><br><span class="line">    <span class="comment">// 持续快速输入时不触发搜索</span></span><br><span class="line">    <span class="keyword">if</span>(initSearchSchool.currentTime - initSearchSchool.lastKeypressTime &gt; KEY_PRESS_INTERVAL)&#123;</span><br><span class="line">        initSearchSchool.lastKeypressTime = initSearchSchool.currentTime;</span><br><span class="line">        searchSchool(keywords, $searchDiv, $searchList, $searchEmpty);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以下省略...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里在全局定义常量<code>var KEY_PRESS_INTERVAL = 300;</code>毫秒即可。虽然不能面面俱到，但是已经可以减少大部分按键情况的执行开销了。</p>
 <p><a href="/demo/SchoolBox/v6/demo.html">学校选择器v6 Demo</a></p>
 
       

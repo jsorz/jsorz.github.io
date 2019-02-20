@@ -101,7 +101,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20160118_01.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20160118_02.png">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.840Z">
+<meta property="og:updated_time" content="2019-02-20T13:58:23.690Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多仓库git配置">
 <meta name="twitter:description" content="最早自己在github上写博客，然后实习的时候用公司内部的gitlab，回学校后实验室又要搞自己的gitlab，提交的时候发现提交信息还是以前公司的，于是恍然大悟，上github一看，果然都是这样。。。">
@@ -400,66 +400,44 @@
 <a id="more"></a>
 <p><img src="/images/captures/20160118_01.png"></p>
 <p>严重影响活跃度啊有木有 (╯‵□′)╯︵┻━┻   于是我研究了下git多仓库配置的原理（本文只介绍类Unix环境下的配置）</p>
-<h2 id="git通用配置"><a href="#git通用配置" class="headerlink" title="git通用配置"></a>git通用配置</h2><h3 id="生成-ssh-key"><a href="#生成-ssh-key" class="headerlink" title="生成 ssh key"></a>生成 ssh key</h3><pre><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot;
-</code></pre><p>会有提示，一路空格即可，会在 <code>~/.ssh/</code> 下生成 <code>id_rsa</code> 和 <code>id_rsa.pub</code> 两个文件，需要将公钥（即<code>id_rsa.pub</code>）的内容添加到 github/gitlab 的账户ssh key设置里。</p>
-<pre><code>cat ~/.ssh/id_rsa.pub
-</code></pre><p>结果为：<code>ssh-rsa AAAA省略几百个字符+yMS5Nl4F “your_email@example.com”</code> 可以看到末尾就是你的邮箱。如果这是你的gitlab账号，那就把它加到gitlab的ssh key setting里。但如果你又想用github，又不幸的是你github账号不是这个邮箱，那么sorry，你得重新把这个新的<code>id_rsa.pub</code>添加到account setting里。</p>
+<h2 id="git通用配置"><a href="#git通用配置" class="headerlink" title="git通用配置"></a>git通用配置</h2><h3 id="生成-ssh-key"><a href="#生成-ssh-key" class="headerlink" title="生成 ssh key"></a>生成 ssh key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"your_email@example.com"</span></span><br></pre></td></tr></table></figure>
+<p>会有提示，一路空格即可，会在 <code>~/.ssh/</code> 下生成 <code>id_rsa</code> 和 <code>id_rsa.pub</code> 两个文件，需要将公钥（即<code>id_rsa.pub</code>）的内容添加到 github/gitlab 的账户ssh key设置里。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>结果为：<code>ssh-rsa AAAA省略几百个字符+yMS5Nl4F “your_email@example.com”</code> 可以看到末尾就是你的邮箱。如果这是你的gitlab账号，那就把它加到gitlab的ssh key setting里。但如果你又想用github，又不幸的是你github账号不是这个邮箱，那么sorry，你得重新把这个新的<code>id_rsa.pub</code>添加到account setting里。</p>
 <p>注意，我这里的做法是一个home目录下，只保留一份 <code>id_rsa</code> 和 <code>id_rsa.pub</code>，不管有多少个gitlab，都要把当前机器上最新的公钥添加进去。网上还查到一种办法，<a href="http://www.cnblogs.com/fanyong/p/3962455.html" target="_blank" rel="noopener">github/gitlab 管理多个ssh key</a>，我觉得一个 ssh key 也能用了，就懒得折腾了。</p>
 <h3 id="新加仓库"><a href="#新加仓库" class="headerlink" title="新加仓库"></a>新加仓库</h3><p>如果你要从零开始搭一个project，并且把代码传到git上，就像下面这样，先去 github/gitlab 上建个仓库。</p>
-<pre><code>git clone git@your_git_repo.git
-cd your_git_repo
-touch README.md
-git add README.md
-git commit -m &quot;add README&quot;
-git push -u origin master
-</code></pre><h3 id="已有仓库"><a href="#已有仓库" class="headerlink" title="已有仓库"></a>已有仓库</h3><p>如果你已经有project了，如果原来是用svn管理代码的，那需要先把 <code>.svn</code> 这样的目录删掉。这是svn自己生成的文件，用来比对更改的，其实文件挺大的，一般至少占project目录总大小的1/3</p>
-<pre><code>find . -type d -name &apos;.svn&apos; | xargs rm -rf
-</code></pre><p>上面命令的意思是：先(递归)找到当前路径下含有<code>.svn</code>的文件目录，再经<code>xargs</code>逐个删除。现在终于可以将project迁移到git了！</p>
-<pre><code>cd your_project
-git init
-git remote add origin git@your_git_repo.git
-git add .
-git commit
-git push -u origin master
-</code></pre><h2 id="多仓库user配置"><a href="#多仓库user配置" class="headerlink" title="多仓库user配置"></a>多仓库user配置</h2><p>回到一开始那张图上的问题：我github上的提交信息是公司gitlab上的信息和邮箱，导致我活跃度丢了。。。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@your_git_repo.git</span><br><span class="line"><span class="built_in">cd</span> your_git_repo</span><br><span class="line">touch README.md</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">"add README"</span></span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<h3 id="已有仓库"><a href="#已有仓库" class="headerlink" title="已有仓库"></a>已有仓库</h3><p>如果你已经有project了，如果原来是用svn管理代码的，那需要先把 <code>.svn</code> 这样的目录删掉。这是svn自己生成的文件，用来比对更改的，其实文件挺大的，一般至少占project目录总大小的1/3</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -<span class="built_in">type</span> d -name <span class="string">'.svn'</span> | xargs rm -rf</span><br></pre></td></tr></table></figure>
+<p>上面命令的意思是：先(递归)找到当前路径下含有<code>.svn</code>的文件目录，再经<code>xargs</code>逐个删除。现在终于可以将project迁移到git了！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> your_project</span><br><span class="line">git init</span><br><span class="line">git remote add origin git@your_git_repo.git</span><br><span class="line">git add .</span><br><span class="line">git commit</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<h2 id="多仓库user配置"><a href="#多仓库user配置" class="headerlink" title="多仓库user配置"></a>多仓库user配置</h2><p>回到一开始那张图上的问题：我github上的提交信息是公司gitlab上的信息和邮箱，导致我活跃度丢了。。。</p>
 <p>研究后发现是 git config 的问题，在公司实习的时候误用了下面两条命令</p>
-<pre><code>git config --global user.name &quot;Your Name&quot;
-git config --global user.email &quot;your_email@example.com&quot;
-</code></pre><p><code>--global</code>选项是会覆盖全局的，就是说你在home下的任何目录不管使用 github 还是 gitlab，只要你用 git commit 提交，都会默认先取 global user 作为 contributor，可能会导致和你 github/gitlab 账号不符！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">"Your Name"</span></span><br><span class="line">git config --global user.email <span class="string">"your_email@example.com"</span></span><br></pre></td></tr></table></figure>
+<p><code>--global</code>选项是会覆盖全局的，就是说你在home下的任何目录不管使用 github 还是 gitlab，只要你用 git commit 提交，都会默认先取 global user 作为 contributor，可能会导致和你 github/gitlab 账号不符！</p>
 <h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><ol>
 <li><p>先确定自己哪个 github/gitlab 账号用的最多，把用的最多的号作为 global user （别忘了前提是<code>id_rsa.pub</code>都得添加到各平台上）</p>
 </li>
 <li><p>假设我现在gitlab用的最多</p>
-<pre><code>cd your_gitlab_repo
-git config --global user.name &quot;Your Name&quot;
-git config --global user.email &quot;your_email@gitlab.com&quot;
-</code></pre></li>
-<li><p>然后要去github里改回github的账号，防止被当成其他contributor</p>
-<pre><code>cd your_github_repo
-git config --local user.name &quot;Your Name&quot;
-git config --local user.email &quot;your_email@github.com&quot;
-</code></pre><p> 注意这里用的是 <code>--local</code> 选项，不会覆盖全局，只在当前目录生效</p>
 </li>
-<li><p>在github的仓库的里查看</p>
-<pre><code>git config --list
-</code></pre><p> 可以看到最上面是global user，最下面是重写的local user</p>
-<pre><code>push.default=matching
-user.name=Global Name
-user.email=your_email@gitlab.com
-省略...
-remote.origin.url=git@your_github_repo.git
-branch.master.remote=origin
-branch.master.merge=refs/heads/master
-user.name=Local Name
-user.email=your_email@github.com
-</code></pre></li>
 </ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> your_gitlab_repo</span><br><span class="line">git config --global user.name <span class="string">"Your Name"</span></span><br><span class="line">git config --global user.email <span class="string">"your_email@gitlab.com"</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>然后要去github里改回github的账号，防止被当成其他contributor</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> your_github_repo</span><br><span class="line">git config --<span class="built_in">local</span> user.name <span class="string">"Your Name"</span></span><br><span class="line">git config --<span class="built_in">local</span> user.email <span class="string">"your_email@github.com"</span></span><br></pre></td></tr></table></figure>
+<pre><code>注意这里用的是 `--local` 选项，不会覆盖全局，只在当前目录生效
+</code></pre><ol start="4">
+<li>在github的仓库的里查看</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br></pre></td></tr></table></figure>
+<pre><code>可以看到最上面是global user，最下面是重写的local user
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">push.default=matching</span><br><span class="line">user.name=Global Name</span><br><span class="line">user.email=your_email@gitlab.com</span><br><span class="line">省略...</span><br><span class="line">remote.origin.url=git@your_github_repo.git</span><br><span class="line">branch.master.remote=origin</span><br><span class="line">branch.master.merge=refs/heads/master</span><br><span class="line">user.name=Local Name</span><br><span class="line">user.email=your_email@github.com</span><br></pre></td></tr></table></figure>
 <p>终于经过一番更改后，再看github，就恢复正常啦！</p>
 <p><img src="/images/captures/20160118_02.png"></p>
 <h2 id="gitignore"><a href="#gitignore" class="headerlink" title="gitignore"></a>gitignore</h2><p>最后再补充一点关于gitignore的配置，我觉得这个功能比svn好用多了！</p>
-<pre><code>cd your_git_repo
-touch .gitignore
-</code></pre><p>配置语法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> your_git_repo</span><br><span class="line">touch .gitignore</span><br></pre></td></tr></table></figure>
+<p>配置语法：</p>
 <ul>
 <li>以斜杠 <code>/</code> 开头表示目录</li>
 <li>以星号 <code>*</code> 通配多个字符</li>

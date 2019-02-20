@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="JPA全称Java Persistence API。JPA通过JDK 5.0注解或XML描述对象关系表的映射关系，并将运行期的实体对象持久化到数据库中（摘自百度百科）。本篇结合自己的项目经历，使用的框架是Play Framework 1.2.7，其JPA底层采用的是Hibernate 3.6的实现，来讲述基于JPA构建一个泛型DAO（Data Access Object）。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.833Z">
+<meta property="og:updated_time" content="2019-02-20T12:09:18.760Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JPA泛型DAO">
 <meta name="twitter:description" content="JPA全称Java Persistence API。JPA通过JDK 5.0注解或XML描述对象关系表的映射关系，并将运行期的实体对象持久化到数据库中（摘自百度百科）。本篇结合自己的项目经历，使用的框架是Play Framework 1.2.7，其JPA底层采用的是Hibernate 3.6的实现，来讲述基于JPA构建一个泛型DAO（Data Access Object）。">
@@ -398,182 +398,33 @@
 <h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>关于JPA就不多做介绍了，如果用过Hibernate或Spring，就会对JPA一目了然。可以点击这里看看<a href="http://www.cnblogs.com/holbrook/archive/2012/12/30/2839842.html" target="_blank" rel="noopener">JPA概要</a>。我之前也写过一篇介绍在eclipse中集成Hibernate的文章中也提到了<a href="/blog/2014/05/integrate-hibernate-into-eclipse.html#dao泛型编程">DAO泛型编程</a>。</p>
 <h2 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h2><p>项目中有好多实体，比如说老师、学生，还有考试，那么就有对应的DAO叫<code>TeacherDao</code>、<code>StudentDao</code>和<code>ExamDao</code>。虽然JPA对实体提供了方便的<code>find</code>查询，但是还得在<code>TeacherDao</code>里写个比如<code>findTeachersBySchool</code>，在<code>StudentDao</code>里写个比如<code>findStudentsByTeacher</code>，或者在<code>ExamDao</code>里写个<code>findExamsByTeacherAndStudent</code>等等的方法，而其方法内部通过JPA为实体附加的<code>find</code>查询来实现。现在的问题是在不同实体对应的DAO类里存在着一堆看起来相似的方法（只是<code>find</code>里的参数和方法的返回值不同），这就是典型的应该使用泛型的场景。</p>
 <h2 id="泛型DAO"><a href="#泛型DAO" class="headerlink" title="泛型DAO"></a>泛型DAO</h2><p>1.我们首先要建一个叫<code>GenericDao</code>的抽象类</p>
-<pre><code>public abstract class GenericDao&lt;T, PK extends Serializable&gt; {
-    private Class&lt;T&gt; clazz;
-
-    public GenericDao(){
-        // 反射获取T.class，实参类型
-        clazz = (Class&lt;T&gt;)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    }
-}
-</code></pre><p>T代表实体类型，PK代表主键类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericDao</span>&lt;<span class="title">T</span>, <span class="title">PK</span> <span class="keyword">extends</span> <span class="title">Serializable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;T&gt; clazz;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GenericDao</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 反射获取T.class，实参类型</span></span><br><span class="line">        clazz = (Class&lt;T&gt;)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>T代表实体类型，PK代表主键类型。</p>
 <p>2.实体对应的DAO类去继承<code>GenericDao</code></p>
-<pre><code>public class ExamDao extends GenericDao&lt;Exam, Long&gt; {
-
-}
-</code></pre><p>这里<code>Exam</code>是实体类型，<code>Long</code>是主键类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExamDao</span> <span class="keyword">extends</span> <span class="title">GenericDao</span>&lt;<span class="title">Exam</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里<code>Exam</code>是实体类型，<code>Long</code>是主键类型。</p>
 <p>3.业务层使用DAO时创建具体DAO的实例</p>
-<pre><code>ExamDao examDao = new ExamDao();
-</code></pre><p>我们系统中所有的DAO都按照这样的规范来写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExamDao examDao = <span class="keyword">new</span> ExamDao();</span><br></pre></td></tr></table></figure>
+<p>我们系统中所有的DAO都按照这样的规范来写：</p>
 <p>a) 可以采用统一实现的方法都写在<code>GenericDao</code>中</p>
 <p>b) 具体DAO中实现各不相同的方法，在<code>GenericDao</code>定义抽象方法，并在各自的DAO类中实现</p>
 <p>c) 具体DAO中特有的方法就写在自己的DAO类里</p>
-<h2 id="统一实现的query"><a href="#统一实现的query" class="headerlink" title="统一实现的query"></a>统一实现的query</h2><pre><code>public T findById(PK id){
-    return (T) JPA.em().find(clazz, id);
-}
-
-public List&lt;T&gt; findAll(){
-    return (List&lt;T&gt;) JPA.em().createQuery(&quot;select e from &quot; + clazz.getName() + &quot; e&quot;).getResultList();
-}
-
-public void save(T instance){
-    JPA.em().persist(instance);
-}
-
-public void saveList(List&lt;T&gt; instances){
-    EntityManager manager = JPA.em();
-    for (T instance : instances){
-        manager.persist(instance);
-    }
-}
-
-public void refresh(T instance){
-    JPA.em().refresh(instance);
-}
-
-public void delete(PK id){
-    JPA.em().createQuery(&quot;delete from &quot; + clazz.getName() + &quot; e where e.id=&quot; + id).executeUpdate();
-}
-</code></pre><p>这是拍脑袋首先想出来的一些方法，最最简单的增删改查，肯定每个实体的DAO中都要用到。大致看看好像没有问题，但是细思极恐，因为一般系统中用的最多的是按条件且带分页的查询，甚至还带排序，简单一个<code>findAll</code>真是图样图森破。</p>
+<h2 id="统一实现的query"><a href="#统一实现的query" class="headerlink" title="统一实现的query"></a>统一实现的query</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">findById</span><span class="params">(PK id)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (T) JPA.em().find(clazz, id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findAll</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (List&lt;T&gt;) JPA.em().createQuery(<span class="string">"select e from "</span> + clazz.getName() + <span class="string">" e"</span>).getResultList();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">save</span><span class="params">(T instance)</span></span>&#123;</span><br><span class="line">    JPA.em().persist(instance);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveList</span><span class="params">(List&lt;T&gt; instances)</span></span>&#123;</span><br><span class="line">    EntityManager manager = JPA.em();</span><br><span class="line">    <span class="keyword">for</span> (T instance : instances)&#123;</span><br><span class="line">        manager.persist(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">(T instance)</span></span>&#123;</span><br><span class="line">    JPA.em().refresh(instance);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(PK id)</span></span>&#123;</span><br><span class="line">    JPA.em().createQuery(<span class="string">"delete from "</span> + clazz.getName() + <span class="string">" e where e.id="</span> + id).executeUpdate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是拍脑袋首先想出来的一些方法，最最简单的增删改查，肯定每个实体的DAO中都要用到。大致看看好像没有问题，但是细思极恐，因为一般系统中用的最多的是按条件且带分页的查询，甚至还带排序，简单一个<code>findAll</code>真是图样图森破。</p>
 <p>1.首先我们要实现一个带分页带排序项的<code>findAll</code>方法。</p>
-<pre><code>public List&lt;T&gt; findAll(int pageNo, String orderBy, String order){
-    return find(getHQLString(null, null, orderBy, order), new Object[]{}, pageNo);
-}
-</code></pre><p>这里的<code>find</code>内部利用Java反射，调用了JPA为具体实体类附加的查询方法。</p>
-<pre><code>protected List&lt;T&gt; find(String query, Object[] params, Integer pageNo){
-    try {
-        Method method = clazz.getMethod(&quot;find&quot;, new Class[]{String.class, Object[].class});
-        JPAQuery queryObj = (JPAQuery) method.invoke(clazz, new Object[]{query, params});
-
-        if(pageNo != null){
-            return queryObj.fetch(pageNo, Constants.PAGE_SIZE);
-        }
-        else{
-            return queryObj.fetch();
-        }
-
-    } catch (Exception e) {
-        return new ArrayList&lt;T&gt;();
-    }
-}
-</code></pre><p>这里的<code>pageNo</code>是<code>Integer</code>类型，为<code>null</code>时代表不分页。而<code>query</code>是我们手工拼成的一个HQL query，下面来看看这个方法。</p>
-<pre><code>private String getHQLString(String[] columns, String[] signs, String orderBy, String order){
-    StringBuilder builder = new StringBuilder();
-
-    if(columns != null &amp;&amp; columns.length &gt; 0){
-        for(int i=0; i&lt;columns.length; i++){
-            builder.append(columns[i] + &quot; &quot; + signs[i] + &quot; ?&quot;);
-            if(i &lt; columns.length - 1){
-                builder.append(&quot; and &quot;);
-            }
-        }
-    }
-
-    if(orderBy != null){
-        builder.append(&quot; order by &quot; + orderBy + &quot; &quot; + order);
-    }
-    return builder.toString();
-}
-</code></pre><p>这里<code>columns</code>表示查询需要比较的字段，而<code>signs</code>表示比较时的符号（小于、等于、大于等等）。最后返回的HQL形如<code>columnX = ? and columnY &lt; ? orderBy columnZ desc</code>。最后将这个HQL传给<code>find</code>，配上实际的参数值（即“?”的填充值），再调用JPA提供的<code>find</code>来<code>fetch</code>出相应的结果，以完成分页查询。这个查询过程就如此，注意这里我们将“页”的大小存到了一个常量中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findAll</span><span class="params">(<span class="keyword">int</span> pageNo, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(<span class="keyword">null</span>, <span class="keyword">null</span>, orderBy, order), <span class="keyword">new</span> Object[]&#123;&#125;, pageNo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>find</code>内部利用Java反射，调用了JPA为具体实体类附加的查询方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> List&lt;T&gt; <span class="title">find</span><span class="params">(String query, Object[] params, Integer pageNo)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Method method = clazz.getMethod(<span class="string">"find"</span>, <span class="keyword">new</span> Class[]&#123;String.class, Object[].class&#125;);</span><br><span class="line">        JPAQuery queryObj = (JPAQuery) method.invoke(clazz, <span class="keyword">new</span> Object[]&#123;query, params&#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(pageNo != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> queryObj.fetch(pageNo, Constants.PAGE_SIZE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> queryObj.fetch();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;T&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>pageNo</code>是<code>Integer</code>类型，为<code>null</code>时代表不分页。而<code>query</code>是我们手工拼成的一个HQL query，下面来看看这个方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">getHQLString</span><span class="params">(String[] columns, String[] signs, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    StringBuilder builder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(columns != <span class="keyword">null</span> &amp;&amp; columns.length &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;columns.length; i++)&#123;</span><br><span class="line">            builder.append(columns[i] + <span class="string">" "</span> + signs[i] + <span class="string">" ?"</span>);</span><br><span class="line">            <span class="keyword">if</span>(i &lt; columns.length - <span class="number">1</span>)&#123;</span><br><span class="line">                builder.append(<span class="string">" and "</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(orderBy != <span class="keyword">null</span>)&#123;</span><br><span class="line">        builder.append(<span class="string">" order by "</span> + orderBy + <span class="string">" "</span> + order);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> builder.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里<code>columns</code>表示查询需要比较的字段，而<code>signs</code>表示比较时的符号（小于、等于、大于等等）。最后返回的HQL形如<code>columnX = ? and columnY &lt; ? orderBy columnZ desc</code>。最后将这个HQL传给<code>find</code>，配上实际的参数值（即“?”的填充值），再调用JPA提供的<code>find</code>来<code>fetch</code>出相应的结果，以完成分页查询。这个查询过程就如此，注意这里我们将“页”的大小存到了一个常量中。</p>
 <p>2.为<code>signs</code>和<code>order</code>定义一些常量，以及帮助方法。</p>
-<pre><code>public static final String SIGN_EQUALS = &quot;=&quot;;
-public static final String SIGN_LESS_THAN = &quot;&lt;&quot;;
-public static final String SIGN_GREATER_THAN = &quot;&gt;&quot;;
-public static final String SIGN_LESS_EQUALS_THAN = &quot;&lt;=&quot;;
-public static final String SIGN_GREATER_EQUALS_THAN =&quot;&gt;=&quot;;
-public static final String ORDER_ASC = &quot;asc&quot;;
-public static final String ORDER_DESC = &quot;desc&quot;;
-
-private String[] getDefaultSigns(int length){
-    String[] signs = new String[length];
-    for(int i=0; i&lt;length; i++){
-        signs[i] = SIGN_EQUALS;
-    }
-    return signs;
-}
-</code></pre><p>3.有了以上的基础，我们可以顺势写出好多<code>findBy</code>方法出来。</p>
-<pre><code>public List&lt;T&gt; findBy(String[] columns, Object[] values, String[] signs, int pageNo, String orderBy, String order){
-    return find(getHQLString(columns, signs, orderBy, order), values, pageNo);
-}
-
-public List&lt;T&gt; findBy(String[] columns, Object[] values, String[] signs, int pageNo){
-    return find(getHQLString(columns, signs, null, null), values, pageNo);
-}
-
-public List&lt;T&gt; findBy(String[] columns, Object[] values, int pageNo, String orderBy, String order){
-    String[] signs = getDefaultSigns(columns.length);
-    return find(getHQLString(columns, signs, orderBy, order), values, pageNo);
-}
-
-public List&lt;T&gt; findBy(String[] columns, Object[] values, int pageNo){
-    String[] signs = getDefaultSigns(columns.length);
-    return find(getHQLString(columns, signs, null, null), values, pageNo);
-}
-
-public List&lt;T&gt; findBy(String column, Object value, int pageNo, String orderBy, String order){
-    return find(getHQLString(new String[]{column}, new String[]{SIGN_EQUALS}, orderBy, order), new Object[]{value}, pageNo);
-}
-
-public List&lt;T&gt; findBy(String column, Object value, int pageNo){
-    return find(getHQLString(new String[]{column}, new String[]{SIGN_EQUALS}, null, null), new Object[]{value}, pageNo);
-}
-
-public List&lt;T&gt; findLessThan(String column, Object value, int pageNo, String orderBy, String order){
-    return find(getHQLString(new String[]{column}, new String[]{SIGN_LESS_THAN}, orderBy, order), new Object[]{value}, pageNo);
-}
-
-public List&lt;T&gt; findLessThan(String column, Object value, int pageNo){
-    return find(getHQLString(new String[]{column}, new String[]{SIGN_LESS_THAN}, null, null), new Object[]{value}, pageNo);
-}
-
-public List&lt;T&gt; findGreaterThan(String column, Object value, int pageNo, String orderBy, String order){
-    return find(getHQLString(new String[]{column}, new String[]{SIGN_GREATER_THAN}, orderBy, order), new Object[]{value}, pageNo);
-}
-
-public List&lt;T&gt; findGreaterThan(String column, Object value, int pageNo){
-    return find(getHQLString(new String[]{column}, new String[]{SIGN_GREATER_THAN}, null, null), new Object[]{value}, pageNo);
-}
-</code></pre><p>4.同理，我们还可以写出<code>findIn</code>方法。</p>
-<pre><code>private String getInHQLString(String column, int inLength, String orderBy, String order){
-    StringBuilder builder = new StringBuilder(column);
-
-    if(inLength &gt; 0){
-        builder.append(&quot; in (&quot;);
-
-        for(int i=0; i&lt;inLength; i++){
-            builder.append(&quot;?&quot;);
-            if(i &lt; inLength - 1){
-                builder.append(&quot;,&quot;);
-            }
-        }
-
-        builder.append(&quot;)&quot;);
-    }
-
-    if(orderBy != null){
-        builder.append(&quot; order by &quot; + orderBy + &quot; &quot; + order);
-    }
-    return builder.toString();
-}
-
-public List&lt;T&gt; findIn(String column, Object[] values, int pageNo, String orderBy, String order){
-    return find(getInHQLString(column, values.length, orderBy, order), values, pageNo);
-}
-
-public List&lt;T&gt; findIn(String column, Object[] values, int pageNo){
-    return find(getInHQLString(column, values.length, null, null), values, pageNo);
-}
-</code></pre><p>当然我们还能写出<code>findIn</code>和<code>findBy</code>混合的方法，即部分字段用符号比较，而部分字段用<code>in</code>比较。还可以写一堆<code>count</code>方法，我们这里就不再罗列了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SIGN_EQUALS = <span class="string">"="</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SIGN_LESS_THAN = <span class="string">"&lt;"</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SIGN_GREATER_THAN = <span class="string">"&gt;"</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SIGN_LESS_EQUALS_THAN = <span class="string">"&lt;="</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SIGN_GREATER_EQUALS_THAN =<span class="string">"&gt;="</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String ORDER_ASC = <span class="string">"asc"</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String ORDER_DESC = <span class="string">"desc"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> String[] getDefaultSigns(<span class="keyword">int</span> length)&#123;</span><br><span class="line">    String[] signs = <span class="keyword">new</span> String[length];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; i++)&#123;</span><br><span class="line">        signs[i] = SIGN_EQUALS;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> signs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3.有了以上的基础，我们可以顺势写出好多<code>findBy</code>方法出来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findBy</span><span class="params">(String[] columns, Object[] values, String[] signs, <span class="keyword">int</span> pageNo, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(columns, signs, orderBy, order), values, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findBy</span><span class="params">(String[] columns, Object[] values, String[] signs, <span class="keyword">int</span> pageNo)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(columns, signs, <span class="keyword">null</span>, <span class="keyword">null</span>), values, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findBy</span><span class="params">(String[] columns, Object[] values, <span class="keyword">int</span> pageNo, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    String[] signs = getDefaultSigns(columns.length);</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(columns, signs, orderBy, order), values, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findBy</span><span class="params">(String[] columns, Object[] values, <span class="keyword">int</span> pageNo)</span></span>&#123;</span><br><span class="line">    String[] signs = getDefaultSigns(columns.length);</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(columns, signs, <span class="keyword">null</span>, <span class="keyword">null</span>), values, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findBy</span><span class="params">(String column, Object value, <span class="keyword">int</span> pageNo, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(<span class="keyword">new</span> String[]&#123;column&#125;, <span class="keyword">new</span> String[]&#123;SIGN_EQUALS&#125;, orderBy, order), <span class="keyword">new</span> Object[]&#123;value&#125;, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findBy</span><span class="params">(String column, Object value, <span class="keyword">int</span> pageNo)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(<span class="keyword">new</span> String[]&#123;column&#125;, <span class="keyword">new</span> String[]&#123;SIGN_EQUALS&#125;, <span class="keyword">null</span>, <span class="keyword">null</span>), <span class="keyword">new</span> Object[]&#123;value&#125;, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findLessThan</span><span class="params">(String column, Object value, <span class="keyword">int</span> pageNo, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(<span class="keyword">new</span> String[]&#123;column&#125;, <span class="keyword">new</span> String[]&#123;SIGN_LESS_THAN&#125;, orderBy, order), <span class="keyword">new</span> Object[]&#123;value&#125;, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findLessThan</span><span class="params">(String column, Object value, <span class="keyword">int</span> pageNo)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(<span class="keyword">new</span> String[]&#123;column&#125;, <span class="keyword">new</span> String[]&#123;SIGN_LESS_THAN&#125;, <span class="keyword">null</span>, <span class="keyword">null</span>), <span class="keyword">new</span> Object[]&#123;value&#125;, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findGreaterThan</span><span class="params">(String column, Object value, <span class="keyword">int</span> pageNo, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(<span class="keyword">new</span> String[]&#123;column&#125;, <span class="keyword">new</span> String[]&#123;SIGN_GREATER_THAN&#125;, orderBy, order), <span class="keyword">new</span> Object[]&#123;value&#125;, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findGreaterThan</span><span class="params">(String column, Object value, <span class="keyword">int</span> pageNo)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getHQLString(<span class="keyword">new</span> String[]&#123;column&#125;, <span class="keyword">new</span> String[]&#123;SIGN_GREATER_THAN&#125;, <span class="keyword">null</span>, <span class="keyword">null</span>), <span class="keyword">new</span> Object[]&#123;value&#125;, pageNo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4.同理，我们还可以写出<code>findIn</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">getInHQLString</span><span class="params">(String column, <span class="keyword">int</span> inLength, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    StringBuilder builder = <span class="keyword">new</span> StringBuilder(column);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(inLength &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        builder.append(<span class="string">" in ("</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;inLength; i++)&#123;</span><br><span class="line">            builder.append(<span class="string">"?"</span>);</span><br><span class="line">            <span class="keyword">if</span>(i &lt; inLength - <span class="number">1</span>)&#123;</span><br><span class="line">                builder.append(<span class="string">","</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        builder.append(<span class="string">")"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(orderBy != <span class="keyword">null</span>)&#123;</span><br><span class="line">        builder.append(<span class="string">" order by "</span> + orderBy + <span class="string">" "</span> + order);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> builder.toString();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findIn</span><span class="params">(String column, Object[] values, <span class="keyword">int</span> pageNo, String orderBy, String order)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getInHQLString(column, values.length, orderBy, order), values, pageNo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">findIn</span><span class="params">(String column, Object[] values, <span class="keyword">int</span> pageNo)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(getInHQLString(column, values.length, <span class="keyword">null</span>, <span class="keyword">null</span>), values, pageNo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然我们还能写出<code>findIn</code>和<code>findBy</code>混合的方法，即部分字段用符号比较，而部分字段用<code>in</code>比较。还可以写一堆<code>count</code>方法，我们这里就不再罗列了。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>泛型编程是减少代码冗余的利器，尤其是在DAO层面的泛型，可以将HQL或SQL语句都封装到一个类中，外部使用时只需调用方法和传参即可，降低了程序员写SQL出错的可能性。</p>
 
       

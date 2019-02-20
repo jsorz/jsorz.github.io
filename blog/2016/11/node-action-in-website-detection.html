@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://jsorz.cn/images/captures/20161121_project_architecture.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20161121_producer_and_runner.png">
 <meta property="og:image" content="http://jsorz.cn/images/captures/20161121_runner_task_pipe.png">
-<meta property="og:updated_time" content="2019-02-20T05:48:46.601Z">
+<meta property="og:updated_time" content="2019-02-20T14:11:52.292Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网站安全监测 - Node实战">
 <meta name="twitter:description" content="（拖了近一年的文章）去年这个时候接了一个心力交瘁的项目，大体目标是：1、为用户的网站提供安全监测的服务，用户在我们的管理端系统中添加一个站点并勾选要检测的项；2、然后由后台爬虫系统完成用户站点链接的入库，并定时针对站内链接执行各种检测任务；3、再由前端系统给用户交付网站监测报表。在中间这一步，最重要的爬虫系统，我第一次学习用 Nodejs 来做。">
@@ -405,18 +405,17 @@
 <h2 id="Node起步"><a href="#Node起步" class="headerlink" title="Node起步"></a>Node起步</h2><p>安装</p>
 <ul>
 <li><p>nvm</p>
-<pre><code>curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.2/install.sh | bash
-</code></pre></li>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.2/install.sh | bash</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>node 0.12.x</p>
-<pre><code>nvm install 0.12
-</code></pre></li>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install 0.12</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>cnpm 镜像</p>
-<pre><code>npm install --registry=http://r.cnpmjs.org -g cnpm
-</code></pre></li>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --registry=http://r.cnpmjs.org -g cnpm</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>debug 工具</p>
-<pre><code>cnpm install -g node-inspector
-node-debug yourApp.js
-</code></pre></li>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cnpm install -g node-inspector</span><br><span class="line">node-debug yourApp.js</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 <p>教程</p>
 <ul>

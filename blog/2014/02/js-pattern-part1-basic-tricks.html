@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="Javascript是一门面向对象的语言。只有五种基本类型不是对象：数值类型、字符串类型、布尔类型、空类型和未定义类型。其中前三个类型有对应的以基本类型封装形式体现的对象表示。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.830Z">
+<meta property="og:updated_time" content="2019-02-20T06:10:33.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript模式之一-基本技巧">
 <meta name="twitter:description" content="Javascript是一门面向对象的语言。只有五种基本类型不是对象：数值类型、字符串类型、布尔类型、空类型和未定义类型。其中前三个类型有对应的以基本类型封装形式体现的对象表示。">
@@ -404,97 +404,43 @@
 <p>最后需要记住的是对象主要有两种：<br>原生的（Native），在ECMAScript标准中有详细描述。<br>主机的（Host），在主机环境中定义的（例如浏览器环境）。<br>原生的对象可以进一步分为内置对象（例如数组、日期对象等）和用户自定义对象（例如<code>var o={};</code>）等。<br>主机对象包含windows对象和所有的DOM对象。</p>
 <p>JavaScript中没有类。Javascript只处理对象。<br>JavaScript没有继承，通常使用原型来实现继承。<br>原型是一个对象，并且创建的每一个函数都会自动获取一个<code>prototype</code>属性，该属性指向一个新的空对象。该默认的原型对象几乎等同于采用对象字面量或<code>Object()</code>创建的对象，区别在于它的<code>constructor</code>属性指向了所创建的函数，而不是指向内置的<code>Object()</code>函数。</p>
 <p>example.</p>
-<pre><code>var func = function(){};
-console.log(func.constructor);  //output: function Function() { [native code] }
-console.log(func.prototype);  //output: Object {}
-console.log(func.prototype.constructor);  //output: function (){}
-
-var obj = {};
-console.log(obj.constructor);  //output: function Object() { [native code] }
-</code></pre><h2 id="全局变量的问题"><a href="#全局变量的问题" class="headerlink" title="全局变量的问题"></a>全局变量的问题</h2><p>全局变量的问题在于它们在整个Javascript应用或Web页面内共享，它们生存于同一个全局命名空间内，总有可能发生命名冲突。要尽可能少地使用全局变量，如使用命名空间模式或自执行立即生效函数（the self-executing immediate functions），但最重要的方法还是使用<code>var</code>声明变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> func = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(func.constructor);  <span class="comment">//output: function Function() &#123; [native code] &#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(func.prototype);  <span class="comment">//output: Object &#123;&#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(func.prototype.constructor);  <span class="comment">//output: function ()&#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(obj.constructor);  <span class="comment">//output: function Object() &#123; [native code] &#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="全局变量的问题"><a href="#全局变量的问题" class="headerlink" title="全局变量的问题"></a>全局变量的问题</h2><p>全局变量的问题在于它们在整个Javascript应用或Web页面内共享，它们生存于同一个全局命名空间内，总有可能发生命名冲突。要尽可能少地使用全局变量，如使用命名空间模式或自执行立即生效函数（the self-executing immediate functions），但最重要的方法还是使用<code>var</code>声明变量。</p>
 <p>Javascript总是在不知不觉中就出人意料地创建了全局变量，其原因在于Javascript的两个特性。第一个特性是Javascript可直接使用变量，甚至无需声明。第二个特性是Javascript有个暗示全局变量（implied globals）的概念，即任何变量，如果未经声明，就为全局对象所有（也就像正确声明过的全局变量一样可以访问）。</p>
 <p>注：在ECMAScript5 strict模式中，为没有声明的变量赋值会抛出错误。</p>
 <p>另一种创建隐式全局变量的反模式是带有<code>var</code>声明的链式赋值。</p>
 <p>example.</p>
-<pre><code>function foo(){
-    var a = b = 0;
-    //...
-}
-</code></pre><p>在这代码片段中，<code>a</code>是局部变量，<code>b</code>是全局变量，这也许并不是你想要的。这源于从右至左的操作符优先级。首先，优先级较高的是表达式<code>b=0</code>，此时<code>b</code>未经声明。表达式的返回值为<code>0</code>，它被赋给<code>var</code>声明的局部变量<code>a</code>，如以下代码表示：</p>
-<pre><code>var a = (b = 0);
-</code></pre><h2 id="变量释放时的副作用"><a href="#变量释放时的副作用" class="headerlink" title="变量释放时的副作用"></a>变量释放时的副作用</h2><p>隐式全局变量与明确定义的全局变量有细微的不同，不同之处在于能否使用<code>delete</code>操作符撤销变量。<br>使用<code>var</code>创建的全局变量（这类变量在函数外部创建）不能删除。<br>不使用<code>var</code>创建的隐式全局变量（尽管它是在函数内部创建）可以删除。<br>这表明隐式全局变量严格来讲不是真正的变量，而是全局对象的属性。属性可以通过<code>delete</code>操作符删除，但变量不可以。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> a = b = <span class="number">0</span>;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这代码片段中，<code>a</code>是局部变量，<code>b</code>是全局变量，这也许并不是你想要的。这源于从右至左的操作符优先级。首先，优先级较高的是表达式<code>b=0</code>，此时<code>b</code>未经声明。表达式的返回值为<code>0</code>，它被赋给<code>var</code>声明的局部变量<code>a</code>，如以下代码表示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = (b = <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="变量释放时的副作用"><a href="#变量释放时的副作用" class="headerlink" title="变量释放时的副作用"></a>变量释放时的副作用</h2><p>隐式全局变量与明确定义的全局变量有细微的不同，不同之处在于能否使用<code>delete</code>操作符撤销变量。<br>使用<code>var</code>创建的全局变量（这类变量在函数外部创建）不能删除。<br>不使用<code>var</code>创建的隐式全局变量（尽管它是在函数内部创建）可以删除。<br>这表明隐式全局变量严格来讲不是真正的变量，而是全局对象的属性。属性可以通过<code>delete</code>操作符删除，但变量不可以。</p>
 <h2 id="提升-凌散变量的问题"><a href="#提升-凌散变量的问题" class="headerlink" title="提升-凌散变量的问题"></a>提升-凌散变量的问题</h2><p>Javascript允许在函数的任意地方声明多个变量，无论在哪里声明，效果都等同于在函数顶部进行声明。这就是所谓的“提升”。只要变量是在同一个范围（同一函数）里，就视为已经声明，哪怕是在变量声明前就使用。</p>
 <p>example.</p>
-<pre><code>myname = &apos;global&apos;;
-function func(){
-    alert(myname);  //output: undefined
-    var myname = &apos;local&apos;;
-       alert(myname);  //output: local
-}
-func();
-</code></pre><p>等同于</p>
-<pre><code>myname = &apos;global&apos;;
-function func(){
-    var myname;  //等同于 var myname = undefined;
-    alert(myname);  //output: undefined
-    myname = &apos;local&apos;;
-    alert(myname);  //output: local
-}
-func();
-</code></pre><p>注：仅仅是变量声明提升了，赋值仍在原来的位置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">myname = <span class="string">'global'</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(myname);  <span class="comment">//output: undefined</span></span><br><span class="line">	<span class="keyword">var</span> myname = <span class="string">'local'</span>;</span><br><span class="line">   	alert(myname);  <span class="comment">//output: local</span></span><br><span class="line">&#125;</span><br><span class="line">func();</span><br></pre></td></tr></table></figure>
+<p>等同于</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">myname = <span class="string">'global'</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> myname;  <span class="comment">//等同于 var myname = undefined;</span></span><br><span class="line">	alert(myname);  <span class="comment">//output: undefined</span></span><br><span class="line">	myname = <span class="string">'local'</span>;</span><br><span class="line">	alert(myname);  <span class="comment">//output: local</span></span><br><span class="line">&#125;</span><br><span class="line">func();</span><br></pre></td></tr></table></figure>
+<p>注：仅仅是变量声明提升了，赋值仍在原来的位置。</p>
 <h2 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h2><p>for循环性能提升建议：</p>
 <ol>
 <li>缓存遍历对象的长度，尤其是DOM元素。每次访问任何容器的长度时，也就是在查询活动的DOM。</li>
 <li>逐步减至0，这样通常更快，因为同0比较更有效率。</li>
 </ol>
 <p>example.</p>
-<pre><code>for(var i=elements.length-1; i&gt;=0; i--){...}
-//或
-for(var i=elements.length; i--; ){...}
-</code></pre><p>for-in循环用来遍历非数组对象，也被称为枚举。当遍历对象属性时，使用<code>hasOwnProperty()</code>来过滤原型链的属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=elements.length<span class="number">-1</span>; i&gt;=<span class="number">0</span>; i--)&#123;...&#125;</span><br><span class="line"><span class="comment">//或</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=elements.length; i--; )&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>for-in循环用来遍历非数组对象，也被称为枚举。当遍历对象属性时，使用<code>hasOwnProperty()</code>来过滤原型链的属性。</p>
 <p>example.</p>
-<pre><code>for(var i in obj){
-    if(obj.hasOwnProperty(i)){...}
-    //或
-    if(Object.prototype.hasOwnProperty(obj, i)){...}
-}
-</code></pre><h2 id="避免使用eval"><a href="#避免使用eval" class="headerlink" title="避免使用eval()"></a>避免使用eval()</h2><p>“<code>eval()</code>是一个魔鬼”。该函数可以将任意字符串当做一个Javascript代码来执行。当需要讨论的代码是预先就编写好了（不是在动态运行时决定），是没有理由使用<code>eval()</code>的。使用<code>eval()</code>存在安全隐患，因为这样做有可能执行被篡改过的代码（例如来自网络的代码）。这是在处理来自一个Ajax请求的JSON响应时常见的反模式，最好是使用浏览器内置的方法来解析JSON数据，以确保安全性和有效性。对于原生不支持<code>JSON.parse()</code>的浏览器来说，可以使用来自JSON.org网站的类库。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> obj)&#123;</span><br><span class="line">	<span class="keyword">if</span>(obj.hasOwnProperty(i))&#123;...&#125;</span><br><span class="line">	<span class="comment">//或</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="built_in">Object</span>.prototype.hasOwnProperty(obj, i))&#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="避免使用eval"><a href="#避免使用eval" class="headerlink" title="避免使用eval()"></a>避免使用eval()</h2><p>“<code>eval()</code>是一个魔鬼”。该函数可以将任意字符串当做一个Javascript代码来执行。当需要讨论的代码是预先就编写好了（不是在动态运行时决定），是没有理由使用<code>eval()</code>的。使用<code>eval()</code>存在安全隐患，因为这样做有可能执行被篡改过的代码（例如来自网络的代码）。这是在处理来自一个Ajax请求的JSON响应时常见的反模式，最好是使用浏览器内置的方法来解析JSON数据，以确保安全性和有效性。对于原生不支持<code>JSON.parse()</code>的浏览器来说，可以使用来自JSON.org网站的类库。</p>
 <p>还有一点，通过<code>setInterval()</code>、<code>setTimeout()</code>和<code>function()</code>等构造函数来传递参数，在大部分情形下，会导致类似<code>eval()</code>的隐患。</p>
 <p>example.</p>
-<pre><code>//反模式 
-setTimeout(&apos;myFunc()&apos;, 1000);
-setTimeout(&apos;myFunc(1, 2, 3)&apos;, 1000);
-
-//推荐的模式 
-setTimeout(myFunc, 1000);
-setTimeout(function(){
-    myFunc(1, 2, 3);
-}, 1000);
-</code></pre><p>如果一定要使用<code>eval()</code>，那么可以考虑使用<code>new Function()</code>来替代<code>eval()</code>。这样做的一个潜在好处是由于在<code>new Function()</code>中的代码将在局部函数空间中运行，因此代码中任何采用<code>var</code>定义的变量不会自动成为全局变量。另一个避免自动成为全局变量的方法是将<code>eval()</code>调用封装到一个即时函数中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//反模式 </span></span><br><span class="line">setTimeout(<span class="string">'myFunc()'</span>, <span class="number">1000</span>);</span><br><span class="line">setTimeout(<span class="string">'myFunc(1, 2, 3)'</span>, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//推荐的模式 </span></span><br><span class="line">setTimeout(myFunc, <span class="number">1000</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	myFunc(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<p>如果一定要使用<code>eval()</code>，那么可以考虑使用<code>new Function()</code>来替代<code>eval()</code>。这样做的一个潜在好处是由于在<code>new Function()</code>中的代码将在局部函数空间中运行，因此代码中任何采用<code>var</code>定义的变量不会自动成为全局变量。另一个避免自动成为全局变量的方法是将<code>eval()</code>调用封装到一个即时函数中。</p>
 <p>example.</p>
-<pre><code>var jsstring = &apos;var one = 1; console.log(one);&apos;;
-eval(jsstring);  //output: 1
-
-jsstring = &apos;var two = 2; console.log(two);&apos;;
-(function(){
-    eval(jsstring);
-}());  //output: 2
-
-console.log(typeof one);  //output: number
-console.log(typeof two);  //output: undefined
-</code></pre><p>另一个<code>new Function()</code>和<code>eval()</code>的区别在于<code>eval()</code>会影响到作用域链，而<code>Function()</code>更多地类似于一个沙盒。无论在哪里执行<code>Function</code>，它都仅仅能看到全局作用域，因此对局部变量的影响较小。<br>在接下来的例子中，<code>eval()</code>可以访问和修改它外部作用域的变量，然而<code>Function</code>不行（请注意使用<code>Function</code>和使用<code>new Function</code>是一样的）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> jsstring = <span class="string">'var one = 1; console.log(one);'</span>;</span><br><span class="line"><span class="built_in">eval</span>(jsstring);  <span class="comment">//output: 1</span></span><br><span class="line"></span><br><span class="line">jsstring = <span class="string">'var two = 2; console.log(two);'</span>;</span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">eval</span>(jsstring);</span><br><span class="line">&#125;());  <span class="comment">//output: 2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> one);  <span class="comment">//output: number</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> two);  <span class="comment">//output: undefined</span></span><br></pre></td></tr></table></figure>
+<p>另一个<code>new Function()</code>和<code>eval()</code>的区别在于<code>eval()</code>会影响到作用域链，而<code>Function()</code>更多地类似于一个沙盒。无论在哪里执行<code>Function</code>，它都仅仅能看到全局作用域，因此对局部变量的影响较小。<br>在接下来的例子中，<code>eval()</code>可以访问和修改它外部作用域的变量，然而<code>Function</code>不行（请注意使用<code>Function</code>和使用<code>new Function</code>是一样的）。</p>
 <p>example.</p>
-<pre><code>(function(){
-    var local = 1;
-    eval(&apos;local = 3; console.log(local);&apos;);  //output: 3
-    console.log(local);  //output: 3
-}());
-
-(function(){
-    var local = 1;
-    Function(&apos;console.log(typeof local);&apos;)();  //output: undefined
-}());
-</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> local = <span class="number">1</span>;</span><br><span class="line">	<span class="built_in">eval</span>(<span class="string">'local = 3; console.log(local);'</span>);  <span class="comment">//output: 3</span></span><br><span class="line">	<span class="built_in">console</span>.log(local);  <span class="comment">//output: 3</span></span><br><span class="line">&#125;());</span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> local = <span class="number">1</span>;</span><br><span class="line">	<span class="built_in">Function</span>(<span class="string">'console.log(typeof local);'</span>)();  <span class="comment">//output: undefined</span></span><br><span class="line">&#125;());</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>
 
       
     </div>

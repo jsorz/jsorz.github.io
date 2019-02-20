@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="一直想总结下自己摸打滚爬的前端经历，3年，从一个极讨厌前端的人，变成一个吃前端饭碗的人。没有人带过我，跌跌撞撞的缓慢前进，但我很喜欢分享，喜欢一起进步，这会是我以后一直乐意做的事情。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.840Z">
+<meta property="og:updated_time" content="2019-02-20T13:55:36.228Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端要给力 — 平凡之路">
 <meta name="twitter:description" content="一直想总结下自己摸打滚爬的前端经历，3年，从一个极讨厌前端的人，变成一个吃前端饭碗的人。没有人带过我，跌跌撞撞的缓慢前进，但我很喜欢分享，喜欢一起进步，这会是我以后一直乐意做的事情。">
@@ -424,37 +424,10 @@
 </ul>
 <h3 id="华丽跳跃谢幕"><a href="#华丽跳跃谢幕" class="headerlink" title="华丽跳跃谢幕"></a>华丽跳跃谢幕</h3><p>只有把平衡木上的技能磨熟练后，我们才能真正的游刃有余，保证不从平衡木上摔下来的前提下，再有余力去设计如何华丽的跳跃和谢幕。</p>
 <h2 id="组件封装"><a href="#组件封装" class="headerlink" title="组件封装"></a>组件封装</h2><p>还没了解js对类(或模块)的封装前，我们的代码可能是这样的</p>
-<pre><code>var getData = function(){
-    // ......
-};
-
-function editFunc(){
-    // ......
-};
-
-$(&apos;.refresh-btn&apos;).on(&apos;click&apos;, function(){
-    var data = getData();
-    var $target = $($(this).attr(&apos;data-target&apos;));
-    $target.empty();
-
-    for(var i=0; i&lt;data.length; i++){
-        var $child = $(&apos;&lt;tr&gt;&lt;/tr&gt;&apos;);
-        $child.append(&apos;&lt;td&gt;&apos; + data[i][&apos;name&apos;] + &apos;&lt;/td&gt;&apos;);
-        // ......
-        $child.append(&apos;&lt;td&gt;&lt;a class=&quot;edit-link&quot;&gt;编辑&lt;/a&gt;&lt;/td&gt;&apos;);
-        $target.append($child);
-    }
-
-    $target.find(&apos;.edit-link&apos;).on(&apos;click&apos;, editFunc);
-});
-</code></pre><p>一个点击就获取数据，然后刷新表格的功能。如果一个页面中有多个类似的异步刷新的表格，且每个表格的字段又各不相同，那么最偷懒的做法就是拷贝大段代码，然后再调整<code>&lt;td&gt;</code>的字段。这样的代码简直了，太难维护了！</p>
-<pre><code>var table1 = new AjaxTable({
-    el: &apos;#dataTable&apos;,
-    dataUrl: &apos;/path/to/action/&apos;
-});
-
-table1.refresh();
-</code></pre><p>如果代码变成这样，那就爽多了，获取数据和刷新表格的过程都封在了<code>AjaxTable</code>中，各个使用之处只需要传个参数调用下<code>refresh()</code>即可，减少了大量重复(相似的)代码。这就是对UI组件/功能组件的封装。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> getData = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// ......</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">editFunc</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">// ......</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$(<span class="string">'.refresh-btn'</span>).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> data = getData();</span><br><span class="line">    <span class="keyword">var</span> $target = $($(<span class="keyword">this</span>).attr(<span class="string">'data-target'</span>));</span><br><span class="line">    $target.empty();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;data.length; i++)&#123;</span><br><span class="line">        <span class="keyword">var</span> $child = $(<span class="string">'&lt;tr&gt;&lt;/tr&gt;'</span>);</span><br><span class="line">        $child.append(<span class="string">'&lt;td&gt;'</span> + data[i][<span class="string">'name'</span>] + <span class="string">'&lt;/td&gt;'</span>);</span><br><span class="line">        <span class="comment">// ......</span></span><br><span class="line">        $child.append(<span class="string">'&lt;td&gt;&lt;a class="edit-link"&gt;编辑&lt;/a&gt;&lt;/td&gt;'</span>);</span><br><span class="line">        $target.append($child);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $target.find(<span class="string">'.edit-link'</span>).on(<span class="string">'click'</span>, editFunc);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>一个点击就获取数据，然后刷新表格的功能。如果一个页面中有多个类似的异步刷新的表格，且每个表格的字段又各不相同，那么最偷懒的做法就是拷贝大段代码，然后再调整<code>&lt;td&gt;</code>的字段。这样的代码简直了，太难维护了！</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> table1 = <span class="keyword">new</span> AjaxTable(&#123;</span><br><span class="line">    el: <span class="string">'#dataTable'</span>,</span><br><span class="line">    dataUrl: <span class="string">'/path/to/action/'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">table1.refresh();</span><br></pre></td></tr></table></figure>
+<p>如果代码变成这样，那就爽多了，获取数据和刷新表格的过程都封在了<code>AjaxTable</code>中，各个使用之处只需要传个参数调用下<code>refresh()</code>即可，减少了大量重复(相似的)代码。这就是对UI组件/功能组件的封装。</p>
 <p>以前为了准备面试时的“手撕代码”，写过一个简单的轮播组件，不用jquery（面试经常不允许使用任何库）</p>
 <ul>
 <li><a href="/demo/js-native/slider/demo.html">原生js的Slider组件</a></li>
@@ -466,104 +439,27 @@ table1.refresh();
 <li><a href="/blog/2015/02/step-by-step-js-component-schoolbox-collections.html">一步步做组件-学校选择器(系列)</a> （系列长文，如何把一段生硬实现的代码一步一步封装和扩展成为一个可配置的UI组件）</li>
 </ul>
 <h2 id="模块化开发"><a href="#模块化开发" class="headerlink" title="模块化开发"></a>模块化开发</h2><p>如果要在页面上引入外部的js库，最初学习的时候是这样引入的</p>
-<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.7.2.min.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-ui/jquery-ui-1.8.24.min.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-ui/jquery-ui-datepicker-zh-CN.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;bootstrap-2.3.2.min.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>由于浏览器中js的执行(非加载)过程是在单线程中的，而各js文件又会存在依赖关系，比如 jquery-ui 依赖 jquery，bootstrap 也依赖 jquery，所以<code>&lt;script&gt;</code>标签的引入得满足依赖顺序。当一个项目越做页面越多时，这么多页面中会存在一堆<code>&lt;script&gt;</code>标签，如果要将某个js文件升级版本，或者修改script的依赖关系时，这就会成为一个很繁琐的工作，特别是<code>&lt;script&gt;</code>分散在项目的各个文件中时。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.2.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"jquery-ui/jquery-ui-1.8.24.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"jquery-ui/jquery-ui-datepicker-zh-CN.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"bootstrap-2.3.2.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>由于浏览器中js的执行(非加载)过程是在单线程中的，而各js文件又会存在依赖关系，比如 jquery-ui 依赖 jquery，bootstrap 也依赖 jquery，所以<code>&lt;script&gt;</code>标签的引入得满足依赖顺序。当一个项目越做页面越多时，这么多页面中会存在一堆<code>&lt;script&gt;</code>标签，如果要将某个js文件升级版本，或者修改script的依赖关系时，这就会成为一个很繁琐的工作，特别是<code>&lt;script&gt;</code>分散在项目的各个文件中时。</p>
 <p><a href="http://www.requirejs.cn/" target="_blank" rel="noopener">RequireJS</a>就是出来解决这个问题的（简单来说就是用js去管理js），还有<a href="https://github.com/seajs/seajs" target="_blank" rel="noopener">SeaJS</a>，它们分别代表着<strong>AMD</strong>和<strong>CMD</strong>两种风格，关于<a href="http://www.html-js.com/article/The-front-box-front-end-module" target="_blank" rel="noopener">模块化和两者的区别可以看这篇文章</a>。</p>
 <h3 id="实战案例"><a href="#实战案例" class="headerlink" title="实战案例"></a>实战案例</h3><ul>
 <li><a href="/blog/2015/02/wrap-ajaxchart-with-requirejs.html">用RequireJS包装AjaxChart</a></li>
 <li><a href="/blog/2015/12/attack-map-with-amd.html">前端模块化开发demo之攻击地图</a></li>
 </ul>
 <h2 id="页面继承"><a href="#页面继承" class="headerlink" title="页面继承"></a>页面继承</h2><p><em>页面继承</em> 这块跟上面的各种具体的技术没太大关系，页面继承主要是用来组织项目文件结构（或页面结构）的一些经验规则。假设在一个系统里，每个页面都有相同的头和尾，还有nav，那根据上面封装和分离的思想，我们可能会这样写</p>
-<pre><code>&lt;html&gt;
-&lt;body&gt;
-    %{ include header.html }%
-
-    &lt;div class=&quot;container&quot;&gt;
-        &lt;div class=&quot;left&quot;&gt;
-            %{ include nav.html }%
-        &lt;/div&gt;
-        &lt;div class=&quot;main&quot;&gt;
-            &lt;!-- 具体业务... --&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-
-    %{ include footer.html }%
-
-    &lt;script src=&quot;require.min.js&quot;&gt;&lt;/script&gt;
-    &lt;script type=&quot;text/javascript&quot;&gt;
-    requirejs.config({
-        // 全局配置...
-    });
-    &lt;/script&gt;
-
-    &lt;script type=&quot;text/javascript&quot;&gt;
-    require([&apos;jquery&apos;], function($){
-        // 具体业务...
-    });
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre><p>我们可以把这一段作为一个base的父页面，命名为<code>base.html</code>，每个“具体业务”的页面都继承自它。</p>
-<pre><code>%{ extends &apos;base.html&apos; }%
-
-%{ block styles }%
-&lt;style type=&quot;text/css&quot;&gt;
-
-&lt;/style&gt;
-%{ endblock }%
-
-%{ block content }%
-&lt;div&gt;具体业务...&lt;/div&gt;
-%{ endblock }%
-
-%{ block scripts }%
-&lt;script type=&quot;text/javascript&quot;
-require([&apos;jquery&apos;], function($){
-    // 具体业务...
-});
-&lt;/script&gt;
-%{ endblock }%
-</code></pre><p>把这个页面叫做<code>func1.html</code>，具体业务的页面中只会包含自身业务功能需要关心(用到)的东西，不去多管base页面的闲事。可以看到子页面中有很多<code>block</code>之类的锚点，会将与<code>endblock</code>之间的内容插入到父页面中的相应位置，所以要先在<code>base.html</code>中“挖好坑”。</p>
-<pre><code>%{ block styles }% %{ endblock }%
-%{ block content }% %{ endblock }%
-%{ block scripts }% %{ endblock }%
-</code></pre><p>具体做法可以去看常见的模板系统，本例中参考的是<a href="https://docs.djangoproject.com/en/1.9/ref/templates/language/" target="_blank" rel="noopener">Django</a>中的模板定义。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    %&#123; include header.html &#125;%</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"left"</span>&gt;</span></span><br><span class="line">            %&#123; include nav.html &#125;%</span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"main"</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 具体业务... --&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    %&#123; include footer.html &#125;%</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"require.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">    requirejs.config(&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 全局配置...</span></span></span><br><span class="line"><span class="undefined">    &#125;);</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="built_in">require</span>([<span class="string">'jquery'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">$</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 具体业务...</span></span></span><br><span class="line"><span class="undefined">    &#125;);</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们可以把这一段作为一个base的父页面，命名为<code>base.html</code>，每个“具体业务”的页面都继承自它。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">%&#123; extends 'base.html' &#125;%</span><br><span class="line"></span><br><span class="line">%&#123; block styles &#125;%</span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">%&#123; endblock &#125;%</span><br><span class="line"></span><br><span class="line">%&#123; block content &#125;%</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>具体业务...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">%&#123; endblock &#125;%</span><br><span class="line"></span><br><span class="line">%&#123; block scripts &#125;%</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span></span></span><br><span class="line"><span class="tag"><span class="attr">require</span>(['<span class="attr">jquery</span>'], <span class="attr">function</span>($)&#123;</span></span><br><span class="line"><span class="tag">    // 具体业务<span class="attr">...</span></span></span><br><span class="line"><span class="tag">&#125;);</span></span><br><span class="line">&lt;/script&gt;</span><br><span class="line">%&#123; endblock &#125;%</span><br></pre></td></tr></table></figure>
+<p>把这个页面叫做<code>func1.html</code>，具体业务的页面中只会包含自身业务功能需要关心(用到)的东西，不去多管base页面的闲事。可以看到子页面中有很多<code>block</code>之类的锚点，会将与<code>endblock</code>之间的内容插入到父页面中的相应位置，所以要先在<code>base.html</code>中“挖好坑”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%&#123; block styles &#125;% %&#123; endblock &#125;%</span><br><span class="line">%&#123; block content &#125;% %&#123; endblock &#125;%</span><br><span class="line">%&#123; block scripts &#125;% %&#123; endblock &#125;%</span><br></pre></td></tr></table></figure>
+<p>具体做法可以去看常见的模板系统，本例中参考的是<a href="https://docs.djangoproject.com/en/1.9/ref/templates/language/" target="_blank" rel="noopener">Django</a>中的模板定义。</p>
 <h2 id="页面组件化"><a href="#页面组件化" class="headerlink" title="页面组件化"></a>页面组件化</h2><p><em>页面组件化</em> 也是和具体技术没有关系，它是顺着 <em>页面继承</em> 的思路，把页面或文件结构做更小粒度的拆分，页面由一个个页面组件构成。</p>
-<pre><code>%{ include sectionA.css }%
-%{ include sectionB.css }%
-
-&lt;div class=&quot;row&quot;&gt;
-    %{ include sectionA.tpl }%
-&lt;/div&gt;
-&lt;div class=&quot;row&quot;&gt;
-    %{ include sectionB.tpl }%
-&lt;/div&gt;
-
-&lt;script type=&quot;text/javascript&quot;&gt;
-require([&apos;sectionA&apos;, &apos;sectionB&apos;], function(A, B){
-    var App = Base.extend({
-        _init: function(){
-            var that = this;
-            var mods = [A, B];
-            this.modules = [];
-
-            mods.forEach(function(Module){
-                that.modules.push(new Module(App));
-            });
-        }
-    });
-});
-&lt;/script&gt;
-</code></pre><p>上面相当于一个业务页面，它由<code>sectionA</code>和<code>sectionB</code>两个页面组件组成，<code>sectionA.tpl</code>和<code>sectionB.tpl</code>是html模板。在应用层(即业务)页面中初始化两个js模块<code>A</code>和<code>B</code>，并且把自身的<code>App</code>变量传递给模块（<code>new Module(App)</code>），可以实现子模块与应用层页面的通信，甚至是模块之间的通信。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">%&#123; include sectionA.css &#125;%</span><br><span class="line">%&#123; include sectionB.css &#125;%</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></span><br><span class="line">    %&#123; include sectionA.tpl &#125;%</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></span><br><span class="line">    %&#123; include sectionB.tpl &#125;%</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="built_in">require</span>([<span class="string">'sectionA'</span>, <span class="string">'sectionB'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">A, B</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> App = Base.extend(&#123;</span></span><br><span class="line"><span class="javascript">        _init: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> that = <span class="keyword">this</span>;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> mods = [A, B];</span></span><br><span class="line"><span class="javascript">            <span class="keyword">this</span>.modules = [];</span></span><br><span class="line"><span class="undefined">            </span></span><br><span class="line"><span class="javascript">            mods.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">Module</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                that.modules.push(<span class="keyword">new</span> Module(App));</span></span><br><span class="line"><span class="undefined">            &#125;);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    &#125;);</span></span><br><span class="line"><span class="undefined">&#125;);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面相当于一个业务页面，它由<code>sectionA</code>和<code>sectionB</code>两个页面组件组成，<code>sectionA.tpl</code>和<code>sectionB.tpl</code>是html模板。在应用层(即业务)页面中初始化两个js模块<code>A</code>和<code>B</code>，并且把自身的<code>App</code>变量传递给模块（<code>new Module(App)</code>），可以实现子模块与应用层页面的通信，甚至是模块之间的通信。</p>
 <p>这样把页面拆成粒度更细的结构，好处是页面模块可以复用，也便于管理，改动页面中的一小块时只需在所处的模块中，缩小改动的影响范围。</p>
 <p>还看过一种思想是，把css文件也当做资源由requireJS动态加载，这样上面示例中的<code>include xxx.css</code>都不需要了，页面模块的css资源作为该模块的依赖，写在js模块的<code>define</code>的依赖中。</p>
-<pre><code>define([&apos;jquery&apos;, &apos;sectionA.css&apos;], function($){
-    // 业务模块...
-});
-</code></pre><p>这样把css和js都抽象成“资源”，相当于</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">define([<span class="string">'jquery'</span>, <span class="string">'sectionA.css'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">$</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 业务模块...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这样把css和js都抽象成“资源”，相当于</p>
 <blockquote>
 <p>组件 = 模板 + 资源</p>
 </blockquote>

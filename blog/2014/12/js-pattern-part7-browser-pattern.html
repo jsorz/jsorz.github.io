@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="这个系列的文章终于整理完了，来自于Stoyan Stefanov的《JavaScript Patterns》一书，断断续续看了半年多，受益匪浅，整理了这些笔记。前面的章节讲述了Javascript的大部分核心模式，这些模式是和环境无关的。最后一章集中介绍了在特定客户端浏览器环境下的模式，这些内容包括：内容、表现和行为的分离，加速DOM操作，事件委托，远程脚本，以及脚本的载入性能。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-25T03:49:08.832Z">
+<meta property="og:updated_time" content="2019-02-20T07:34:23.594Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript模式之七-浏览器模式">
 <meta name="twitter:description" content="这个系列的文章终于整理完了，来自于Stoyan Stefanov的《JavaScript Patterns》一书，断断续续看了半年多，受益匪浅，整理了这些笔记。前面的章节讲述了Javascript的大部分核心模式，这些模式是和环境无关的。最后一章集中介绍了在特定客户端浏览器环境下的模式，这些内容包括：内容、表现和行为的分离，加速DOM操作，事件委托，远程脚本，以及脚本的载入性能。">
@@ -399,21 +399,8 @@
       
         <h2 id="关注分离"><a href="#关注分离" class="headerlink" title="关注分离"></a>关注分离</h2><p>HTML、CSS、JS相互独立，不要使用内联处理器（onclick之类）和内联样式属性（style属性），因为这些都不属于内容层。<br>js应该是用来加强网页功能，而不能称为网页正常工作的必需组件。</p>
 <p>不要使用用户代理来嗅探代码路径，而应该在运行环境中检查是否有所需的属性或方法。</p>
-<pre><code>// 反模式
-if(navigator.userAgent.indexOf(&apos;MSIE&apos;) !== -1){
-    document.attachEvent(&apos;onclick&apos;, console.log);
-}
-
-// 比较好的做法
-if(document.attachEvent){
-    document.attachEvent(&apos;onclick&apos;, console.log);
-}
-
-// 更具体的做法
-if(typeof document.attachEvent !== &apos;undefined&apos;){
-    document.attachEvent(&apos;onclick&apos;, console.log);
-}
-</code></pre><h2 id="DOM脚本"><a href="#DOM脚本" class="headerlink" title="DOM脚本"></a>DOM脚本</h2><p>DOM访问的代价是昂贵的，它是制约js性能的主要瓶颈，这是因为DOM通常是独立于js引擎而实现的。<br>总之，DOM的访问应该减少到最低，这意味着：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 反模式</span></span><br><span class="line"><span class="keyword">if</span>(navigator.userAgent.indexOf(<span class="string">'MSIE'</span>) !== <span class="number">-1</span>)&#123;</span><br><span class="line">    <span class="built_in">document</span>.attachEvent(<span class="string">'onclick'</span>, <span class="built_in">console</span>.log);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 比较好的做法</span></span><br><span class="line"><span class="keyword">if</span>(<span class="built_in">document</span>.attachEvent)&#123;</span><br><span class="line">    <span class="built_in">document</span>.attachEvent(<span class="string">'onclick'</span>, <span class="built_in">console</span>.log);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更具体的做法</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">document</span>.attachEvent !== <span class="string">'undefined'</span>)&#123;</span><br><span class="line">    <span class="built_in">document</span>.attachEvent(<span class="string">'onclick'</span>, <span class="built_in">console</span>.log);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="DOM脚本"><a href="#DOM脚本" class="headerlink" title="DOM脚本"></a>DOM脚本</h2><p>DOM访问的代价是昂贵的，它是制约js性能的主要瓶颈，这是因为DOM通常是独立于js引擎而实现的。<br>总之，DOM的访问应该减少到最低，这意味着：</p>
 <ol>
 <li>避免在循环中使用DOM访问</li>
 <li>将DOM引用分配给局部变量，并使用这些局部变量</li>
@@ -421,100 +408,19 @@ if(typeof document.attachEvent !== &apos;undefined&apos;){
 <li>当在HTML容器中重复使用时，缓存重复的次数</li>
 </ol>
 <p>example.</p>
-<pre><code>// 反模式
-for(var i=0;  i&lt;100; i++){
-     document.getElementById(&apos;result&apos;).innerHTML += (i + &apos; , &apos;);
-}
-
-// 更好的方式，使用了局部便利了
-var i, content = &apos;&apos;;
-for(i=0; i&lt;100; i++){
-     content += (i + &apos; , &apos;);
-}
-document.getElementById(&apos;result&apos;).innerHTML += content;
-</code></pre><p>为经常访问的元素增加<code>id</code>属性是一个很好的做法，因为<code>document.getElementById(myId)</code>是最简单快捷查找节点的方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 反模式</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;  i&lt;<span class="number">100</span>; i++)&#123;</span><br><span class="line">     <span class="built_in">document</span>.getElementById(<span class="string">'result'</span>).innerHTML += (i + <span class="string">' , '</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更好的方式，使用了局部便利了</span></span><br><span class="line"><span class="keyword">var</span> i, content = <span class="string">''</span>;</span><br><span class="line"><span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">100</span>; i++)&#123;</span><br><span class="line">     content += (i + <span class="string">' , '</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">'result'</span>).innerHTML += content;</span><br></pre></td></tr></table></figure>
+<p>为经常访问的元素增加<code>id</code>属性是一个很好的做法，因为<code>document.getElementById(myId)</code>是最简单快捷查找节点的方法。</p>
 <p>除了访问DOM元素以外，对元素的增删改也很频繁。更新DOM会导致浏览器重新绘制屏幕，也会经常导致reflow（也就是重新计算元素的几何位置），这样会带来巨大的开销。</p>
 <p><strong>1. 添加节点时，使用文档碎片（document fragment）</strong></p>
-<pre><code>var p, t;
-var frag = document.createDocumentFragment();
-
-p = document.createElement(&apos;p&apos;);
-t = document.createTextNode(&apos;first paragraph&apos;);
-p.appendChild(t);
-frag.appendChild(p);
-
-p = document.createElement(&apos;p&apos;);
-t = document.createTextNode(&apos;second paragraph&apos;);
-p.appendChild(t);
-frag.appendChild(p);
-
-document.body.appendChild(frag);  // 只触发一次屏幕重绘
-</code></pre><p><strong>2. 更新节点时，使用克隆镜像</strong></p>
-<pre><code>var oldNode = document.getElementById(&apos;result&apos;);
-var clone = oldNode.cloneNode(true);
-
-// 处理克隆对象...
-
-// 更新到DOM
-oldNode.parentNode.replaceChild(clone, oldNode);  // 只触发一次重绘
-</code></pre><h2 id="事件委托"><a href="#事件委托" class="headerlink" title="事件委托"></a>事件委托</h2><p>事件委托模式得益于事件冒泡，会减少为每个节点附加的事件监听器数量。如果在<code>div</code>元素中有10个按钮，只需要为该<code>div</code>元素附加一个事件监听器就可以实现为每个按钮分别附加一个监听器的效果。</p>
-<pre><code>function myHandler(e) {
-    var src, parts;
-    // 获取事件和源元素
-    e = e || window.event;
-    src = e.target || e.srcElement;
-
-    // 过滤不感兴趣的事件源
-    if (src.nodeName.toLowerCase() !== &apos;button&apos;) {
-        return;
-    }
-
-    // 实际工作：更新标签
-    parts = src.innerHTML.split(&quot;: &quot;);
-    parts[1] = parseInt(parts[1], 10) + 1;
-    src.innerHTML = parts[0] + &quot;: &quot; + parts[1];
-
-    // 无冒泡
-    if (typeof e.stopPropagation === &quot;function&quot;) {
-        e.stopPropagation();
-    }
-    if (typeof e.cancelBubble !== &apos;undefined&apos;) {
-        e.cancelBubble = true;
-    }
-
-    // 阻止默认操作
-    if (typeof e.preventDefault === &quot;function&quot;) {
-        e.preventDefault();
-    }
-    if (typeof e.returnValue !== &apos;undefined&apos;) {
-        e.returnValue = false;
-    }
-}
-
-// 事件绑定
-var el = document.getElementById(&apos;click-wrap&apos;);
-if (document.addEventListener) { // W3C
-    el.addEventListener(&apos;click&apos;, myHandler, false);
-} else if (document.attachEvent) { // IE
-    el.attachEvent(&apos;click&apos;, myHandler);
-} else { // 终极手段
-    el.onclick = myHandler;
-}
-</code></pre><p>事件委托的缺点在于如果碰巧没有感兴趣的事件发生，那么增加的小部分代码就显得没用了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p, t;</span><br><span class="line"><span class="keyword">var</span> frag = <span class="built_in">document</span>.createDocumentFragment();</span><br><span class="line"></span><br><span class="line">p = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line">t = <span class="built_in">document</span>.createTextNode(<span class="string">'first paragraph'</span>);</span><br><span class="line">p.appendChild(t);</span><br><span class="line">frag.appendChild(p);</span><br><span class="line"></span><br><span class="line">p = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line">t = <span class="built_in">document</span>.createTextNode(<span class="string">'second paragraph'</span>);</span><br><span class="line">p.appendChild(t);</span><br><span class="line">frag.appendChild(p);</span><br><span class="line"></span><br><span class="line"><span class="built_in">document</span>.body.appendChild(frag);  <span class="comment">// 只触发一次屏幕重绘</span></span><br></pre></td></tr></table></figure>
+<p><strong>2. 更新节点时，使用克隆镜像</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> oldNode = <span class="built_in">document</span>.getElementById(<span class="string">'result'</span>);</span><br><span class="line"><span class="keyword">var</span> clone = oldNode.cloneNode(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理克隆对象...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新到DOM</span></span><br><span class="line">oldNode.parentNode.replaceChild(clone, oldNode);  <span class="comment">// 只触发一次重绘</span></span><br></pre></td></tr></table></figure>
+<h2 id="事件委托"><a href="#事件委托" class="headerlink" title="事件委托"></a>事件委托</h2><p>事件委托模式得益于事件冒泡，会减少为每个节点附加的事件监听器数量。如果在<code>div</code>元素中有10个按钮，只需要为该<code>div</code>元素附加一个事件监听器就可以实现为每个按钮分别附加一个监听器的效果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myHandler</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> src, parts;</span><br><span class="line">    <span class="comment">// 获取事件和源元素</span></span><br><span class="line">    e = e || <span class="built_in">window</span>.event;</span><br><span class="line">    src = e.target || e.srcElement;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 过滤不感兴趣的事件源</span></span><br><span class="line">    <span class="keyword">if</span> (src.nodeName.toLowerCase() !== <span class="string">'button'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="comment">// 实际工作：更新标签</span></span><br><span class="line">    parts = src.innerHTML.split(<span class="string">": "</span>);</span><br><span class="line">    parts[<span class="number">1</span>] = <span class="built_in">parseInt</span>(parts[<span class="number">1</span>], <span class="number">10</span>) + <span class="number">1</span>;</span><br><span class="line">    src.innerHTML = parts[<span class="number">0</span>] + <span class="string">": "</span> + parts[<span class="number">1</span>];</span><br><span class="line">   </span><br><span class="line">    <span class="comment">// 无冒泡</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> e.stopPropagation === <span class="string">"function"</span>) &#123;</span><br><span class="line">        e.stopPropagation();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> e.cancelBubble !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">        e.cancelBubble = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="comment">// 阻止默认操作</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> e.preventDefault === <span class="string">"function"</span>) &#123;</span><br><span class="line">        e.preventDefault();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> e.returnValue !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">        e.returnValue = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件绑定</span></span><br><span class="line"><span class="keyword">var</span> el = <span class="built_in">document</span>.getElementById(<span class="string">'click-wrap'</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.addEventListener) &#123; <span class="comment">// W3C</span></span><br><span class="line">    el.addEventListener(<span class="string">'click'</span>, myHandler, <span class="literal">false</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">document</span>.attachEvent) &#123; <span class="comment">// IE</span></span><br><span class="line">    el.attachEvent(<span class="string">'click'</span>, myHandler);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; <span class="comment">// 终极手段</span></span><br><span class="line">    el.onclick = myHandler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>事件委托的缺点在于如果碰巧没有感兴趣的事件发生，那么增加的小部分代码就显得没用了。</p>
 <p>YUI3中有一个<code>Y.delegate()</code>方法，该方法可以指定一个CSS选择器来匹配封装，并使用另外一个选择器来匹配感兴趣的节点。这是十分方便的，因为当事件在关注的节点之外发生时，回调函数实际上并没有被调用。</p>
-<pre><code>function myHandler(e) {
-    var src = e.target;
-    var parts = src.get(&apos;innerHTML&apos;).split(&quot;: &quot;);
-    parts[1] = parseInt(parts[1], 10) + 1;
-    src.set(&apos;innerHTML&apos;, parts[0] + &quot;: &quot; + parts[1]);
-
-    e.halt();
-}
-
-YUI().use(&quot;event-delegate&quot;, function (Y) {
-    Y.delegate(&apos;click&apos;, myHandler, &quot;#click-wrap&quot;, &quot;button&quot;);
-});
-</code></pre><p>同样，jQuery中也有类似的接口。<code>$(selector).delegate(childSelector,event,data,function)</code><br>参见<a href="http://www.w3school.com.cn/jquery/event_delegate.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/jquery/event_delegate.asp</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myHandler</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> src = e.target;</span><br><span class="line">    <span class="keyword">var</span> parts = src.get(<span class="string">'innerHTML'</span>).split(<span class="string">": "</span>);</span><br><span class="line">    parts[<span class="number">1</span>] = <span class="built_in">parseInt</span>(parts[<span class="number">1</span>], <span class="number">10</span>) + <span class="number">1</span>;</span><br><span class="line">    src.set(<span class="string">'innerHTML'</span>, parts[<span class="number">0</span>] + <span class="string">": "</span> + parts[<span class="number">1</span>]);</span><br><span class="line">   </span><br><span class="line">    e.halt();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">YUI().use(<span class="string">"event-delegate"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">Y</span>) </span>&#123;</span><br><span class="line">    Y.delegate(<span class="string">'click'</span>, myHandler, <span class="string">"#click-wrap"</span>, <span class="string">"button"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>同样，jQuery中也有类似的接口。<code>$(selector).delegate(childSelector,event,data,function)</code><br>参见<a href="http://www.w3school.com.cn/jquery/event_delegate.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/jquery/event_delegate.asp</a></p>
 <h2 id="长期运行脚本"><a href="#长期运行脚本" class="headerlink" title="长期运行脚本"></a>长期运行脚本</h2><p>可能会注意到有时候浏览器会提示某个脚本已经运行了很长时间，是否应该停止脚本。实际上无论要处理多么复杂的任务，都不希望应用程序发生上述事情。而且，如果该脚本的工作十分繁重，那么浏览器的UI将会无法响应用户的任何操作，应该尽量避免。</p>
 <p>在js中没有线程，但是可以在浏览器中使用<code>setTimeout()</code>来模拟线程。这样做的思想是将一个大任务分解为多个小任务，并为每一个小任务设置timeout为1毫秒。虽然这样会导致完成整个任务需要耗费更长的时间，但是通过这样做，可以使得用户接口保持响应，用户体验较好。</p>
 <p>注意，timeout时间设置为1毫秒（或者0毫秒）实际上是与浏览器和操作系统有关的。0毫秒不意味着没有timeout，而是指尽可能快的处理。例如在IE中，最快的时钟周期是15毫秒。</p>
@@ -526,38 +432,8 @@ YUI().use(&quot;event-delegate&quot;, function (Y) {
 <li>发送请求</li>
 </ol>
 <p>但是在IE 7.0之前的版本中，XHR功能性是以ActiveX对象的方式实现的，因此对于那些版本需要做一些特殊处理。</p>
-<pre><code>var xhr;
-var activeXids = [
-    &apos;MSXML2.XMLHTTP.3.0&apos;,
-    &apos;MSXML2.XMLHTTP&apos;,
-    &apos;Microsoft.XMLHTTP&apos;
-];
-
-if (typeof XMLHttpRequest === &quot;function&quot;) { // 原生XHR
-    xhr =  new XMLHttpRequest();       
-} else { // IE 7.0之前版本
-    for (var i = 0; i &lt; activeXids.length; i += 1) {
-        try {
-            xhr = new ActiveXObject(activeXids[i]);
-            break;
-        } catch (e) {}
-    }
-}
-
-xhr.onreadystatechange = function () {
-    if (xhr.readyState !== 4) {
-        return false;
-    }
-    if (xhr.status !== 200) {
-        alert(&quot;Error, status code: &quot; + xhr.status);
-        return false;
-    }
-    document.body.innerHTML += &quot;&lt;pre&gt;&quot; + xhr.responseText + &quot;&lt;\/pre&gt;&quot;;
-};
-
-xhr.open(&quot;GET&quot;, &quot;page.html&quot;, true);
-xhr.send(&quot;&quot;);
-</code></pre><h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>JSONP（JSON with Padding）是另外一种创建远程请求的方法。和XHR有所不同，它不受同一个域浏览器策略的限制，出于从第三方网站载入数据的安全考虑，需要小心使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr;</span><br><span class="line"><span class="keyword">var</span> activeXids = [</span><br><span class="line">    <span class="string">'MSXML2.XMLHTTP.3.0'</span>,</span><br><span class="line">    <span class="string">'MSXML2.XMLHTTP'</span>,</span><br><span class="line">    <span class="string">'Microsoft.XMLHTTP'</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> XMLHttpRequest === <span class="string">"function"</span>) &#123; <span class="comment">// 原生XHR</span></span><br><span class="line">    xhr =  <span class="keyword">new</span> XMLHttpRequest();       </span><br><span class="line">&#125; <span class="keyword">else</span> &#123; <span class="comment">// IE 7.0之前版本</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; activeXids.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            xhr = <span class="keyword">new</span> ActiveXObject(activeXids[i]);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (xhr.readyState !== <span class="number">4</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (xhr.status !== <span class="number">200</span>) &#123;</span><br><span class="line">        alert(<span class="string">"Error, status code: "</span> + xhr.status);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">document</span>.body.innerHTML += <span class="string">"&lt;pre&gt;"</span> + xhr.responseText + <span class="string">"&lt;\/pre&gt;"</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">xhr.open(<span class="string">"GET"</span>, <span class="string">"page.html"</span>, <span class="literal">true</span>);</span><br><span class="line">xhr.send(<span class="string">""</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>JSONP（JSON with Padding）是另外一种创建远程请求的方法。和XHR有所不同，它不受同一个域浏览器策略的限制，出于从第三方网站载入数据的安全考虑，需要小心使用。</p>
 <p>对应于XHR请求，JSONP的请求可以是任意类型的文档：</p>
 <ul>
 <li>XML文档（过去常用）</li>
@@ -567,13 +443,11 @@ xhr.send(&quot;&quot;);
 </ul>
 <p>对于JSONP，最常见的是用函数调用封装的JSON，函数名由请求方提供。JSONP请求的URL通常格式如，<br><code>http://example.org/getdata.php?callback=myHandler</code><br>getdata.php可以是任意类型的网页，<code>callback</code>参数指定采用哪个js函数来处理该请求的返回值。</p>
 <p>然后像这样将URL载入到动态的<code>&lt;script&gt;</code>元素</p>
-<pre><code>var script = document.createElement(&apos;script&apos;);
-script.src = url;
-document.body.appendChild(script);
-</code></pre><p>服务器响应JSONP数据，这些数据将作为回调函数的参数。最终的结果是在网页中包含了一个新脚本，该脚本碰巧是一个函数调用。但需注意的是，JSONP中的回调函数必须是一个公有的和全局有效的函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">script.src = url;</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(script);</span><br></pre></td></tr></table></figure>
+<p>服务器响应JSONP数据，这些数据将作为回调函数的参数。最终的结果是在网页中包含了一个新脚本，该脚本碰巧是一个函数调用。但需注意的是，JSONP中的回调函数必须是一个公有的和全局有效的函数。</p>
 <h3 id="框架和图像灯塔"><a href="#框架和图像灯塔" class="headerlink" title="框架和图像灯塔"></a>框架和图像灯塔</h3><p>使用框架也是一种处理远程脚本的备选方案。可以使用js创建一个<code>iframe</code>元素，并修改其<code>src</code>属性的url，新的URL可以包含更新调用者（在iframe之外的父页面）的数据和函数调用。</p>
 <p>使用远程脚本最简单的场景是在只需要向服务器发送数据，而无需服务器回应的时候。在这种情形下，可以创建一个新图像，并将其<code>src</code>属性设置为服务器上的脚本文件，如下所示：</p>
-<p><code>new Image().src = &#39;http://example.org/some/page.php&#39;;</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Image().src = <span class="string">'http://example.org/some/page.php'</span>;</span><br></pre></td></tr></table></figure>
 <p>这种模式称为图像灯塔（image beacon），这在希望向服务器发送日志数据时非常有用。举例来说，该模式可以用于收集访问者统计信息。因为用户并不需要服务器对这些日志数据的响应，通常的做法是服务器用一个1x1像素的GIF图片来作为响应（虽然这是一种不好的模式）。使用”204 Not Content”这样的HTTP响应是更好的选择，该HTTP响应的意思是指仅向客户端发送HTTP报头文件，而不发送HTTP内容体。</p>
 <h2 id="脚本载入性能"><a href="#脚本载入性能" class="headerlink" title="脚本载入性能"></a>脚本载入性能</h2><p>脚本元素会阻止下载网页内容。浏览器可以同时下载多个组件，但一旦遇到一个外部脚本文件后，浏览器会停止进一步下载，直到这个脚本文件下载、解析并执行完毕。为了最小化阻止的影响，可以将脚本元素放置于网页的最后部分，刚好在<code>&lt;/body&gt;</code>标签之前。</p>
 <p>也有一些模式可以防范这个问题：</p>
@@ -582,89 +456,33 @@ document.body.appendChild(script);
 <li>使用<code>defer</code>和<code>async</code>属性。缺点是这种方法并不能在所有浏览器上都有效。</li>
 <li>使用动态的<code>&lt;script&gt;</code>元素</li>
 </ol>
-<h3 id="动态script元素"><a href="#动态script元素" class="headerlink" title="动态script元素"></a>动态script元素</h3><pre><code>var script = document.createElement(&apos;script&apos;);
-script.src = &apos;all_20141209.js&apos;;
-document.documentElement.firstChild.appendChild(script);
-</code></pre><p>上面的过程不会阻塞网页文件中其他部分的下载。但该模式的缺点在于如果js脚本依赖于载入主js文件，那么采用该模式后不能有其他脚本元素。主js文件是异步载入的，因此无法保证该文件什么时候能够载入完毕，所以紧跟着主js文件的脚本可能要假定对象都还未定义。</p>
+<h3 id="动态script元素"><a href="#动态script元素" class="headerlink" title="动态script元素"></a>动态script元素</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">script.src = <span class="string">'all_20141209.js'</span>;</span><br><span class="line"><span class="built_in">document</span>.documentElement.firstChild.appendChild(script);</span><br></pre></td></tr></table></figure>
+<p>上面的过程不会阻塞网页文件中其他部分的下载。但该模式的缺点在于如果js脚本依赖于载入主js文件，那么采用该模式后不能有其他脚本元素。主js文件是异步载入的，因此无法保证该文件什么时候能够载入完毕，所以紧跟着主js文件的脚本可能要假定对象都还未定义。</p>
 <p>为了解决该缺点，可以让所有内联的脚本都不要立即执行，而是将这些脚本都收集起来放在一个数组里面。然后当主脚本文件载入完毕后，就可以执行所有缓存数组中收集的函数了。</p>
 <p>首先，创建一个数组来存储所有内联代码，这部分代码应该放在页面文件尽可能前面的位置。</p>
-<pre><code>var myNamespace = {
-     inlineScripts: []
-};
-
-然后，需要将所有单独的内联脚本封装到一个函数中，并将每个函数增加到inlineScripts数组中。
-
-// 过去是
-// &lt;script&gt;console.log(&apos;inline&apos;);&lt;/script&gt;
-// 修改为
-&lt;script&gt;
-myNamespace.inlineScripts.push(function(){
-     console.log(&apos;inline&apos;);
-});
-&lt;/script&gt;
-
-最后，循环执行缓存中的所有内联脚本。
-
-for(var i=0, len=myNamespace.inlineScripts.length; i&lt;len; i++){
-     myNamespace.inlineScripts[i]();
-}
-</code></pre><h3 id="script元素位置"><a href="#script元素位置" class="headerlink" title="script元素位置"></a>script元素位置</h3><p>上面的例子中，documentElement是指<code>&lt;html&gt;</code>，而它的第一个子元素就是<code>&lt;head&gt;</code></p>
-<p><code>document.documentElement.firstChild.appendChild(script);</code> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myNamespace = &#123;</span><br><span class="line">     inlineScripts: []</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>然后，需要将所有单独的内联脚本封装到一个函数中，并将每个函数增加到inlineScripts数组中。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 过去是</span><br><span class="line">// <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"><span class="built_in">console</span>.log(<span class="string">'inline'</span>);</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">// 修改为</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">myNamespace.inlineScripts.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">     <span class="built_in">console</span>.log(<span class="string">'inline'</span>);</span></span><br><span class="line"><span class="undefined">&#125;);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最后，循环执行缓存中的所有内联脚本。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>, len=myNamespace.inlineScripts.length; i&lt;len; i++)&#123;</span><br><span class="line">     myNamespace.inlineScripts[i]();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="script元素位置"><a href="#script元素位置" class="headerlink" title="script元素位置"></a>script元素位置</h3><p>上面的例子中，documentElement是指<code>&lt;html&gt;</code>，而它的第一个子元素就是<code>&lt;head&gt;</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.documentElement.firstChild.appendChild(script);</span><br></pre></td></tr></table></figure>
 <p>通常也可以这样写</p>
-<p><code>document.getElementsByTagName(&#39;head&#39;)[0].appendChild(script);</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>].appendChild(script);</span><br></pre></td></tr></table></figure>
 <p>可以在网页中不使用<code>&lt;head&gt;</code>和<code>&lt;body&gt;</code>，尽管document.body通常能够在没有<code>&lt;body&gt;</code>标签时正常运作。但是实际上有一个标签一直会在脚本运行的网页中存在，那就是<code>&lt;script&gt;</code>标签，如果没有它，那么里面的js代码就不会运行。基于以上事实，可以在网页中使用<code>insertBefore()</code>来在第一个有效的元素之前插入元素。</p>
-<pre><code>var firstScript = document.getElementsByTagName(&apos;script&apos;)[0];
-firstScript.parentNode.insertBefore(script, firstScript);
-</code></pre><h3 id="延迟加载"><a href="#延迟加载" class="headerlink" title="延迟加载"></a>延迟加载</h3><pre><code>window.onload = function(){
-     var script = document.createElement(&apos;script&apos;);
-     script.src = &apos;all_lazy_20141209.js&apos;;
-     document.documentElement.firstChild.appendChild(script);
-};
-</code></pre><p>这样的做法符合渐进增强的思想，一部分代码是用于初始化页面并将事件附加到UI元素上，而第二部分代码只在用户交互或者其他条件下才用得上，因此这部分内容可以在用户浏览该页面时在后台载入。对于许多应用程序来说，延迟加载的代码部分远远大于立即加载的核心部分，因为很多有趣的操作（例如拖放、XHR和动画等）只在用户触发后发生。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> firstScript = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'script'</span>)[<span class="number">0</span>];</span><br><span class="line">firstScript.parentNode.insertBefore(script, firstScript);</span><br></pre></td></tr></table></figure>
+<h3 id="延迟加载"><a href="#延迟加载" class="headerlink" title="延迟加载"></a>延迟加载</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">     <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">     script.src = <span class="string">'all_lazy_20141209.js'</span>;</span><br><span class="line">     <span class="built_in">document</span>.documentElement.firstChild.appendChild(script);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这样的做法符合渐进增强的思想，一部分代码是用于初始化页面并将事件附加到UI元素上，而第二部分代码只在用户交互或者其他条件下才用得上，因此这部分内容可以在用户浏览该页面时在后台载入。对于许多应用程序来说，延迟加载的代码部分远远大于立即加载的核心部分，因为很多有趣的操作（例如拖放、XHR和动画等）只在用户触发后发生。</p>
 <h3 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h3><p>上面的模式在页面载入后，无条件地载入附加的js脚本，假定这些代码极有可能用得上。如果只载入那些确实需要的代码，请使用按需加载模式。可以创建一个<code>require()</code>函数，该函数包含需要加载的脚本的名称和当附加脚本加载后需要执行的回调函数。用法如下</p>
-<pre><code>require(&apos;extra.js&apos;, function(){
-     functionDefinedInExtraJS();
-});
-</code></pre><p>require函数的实现</p>
-<pre><code>function require(file, callback) {
-    var script = document.getElementsByTagName(&apos;script&apos;)[0],
-        newjs = document.createElement(&apos;script&apos;);
-
-    // IE
-    newjs.onreadystatechange = function () {
-        if (newjs.readyState === &apos;loaded&apos; || newjs.readyState === &apos;complete&apos;) {
-            callback();
-        }
-    };
-
-    // 其他浏览器
-    newjs.onload = function () {
-        callback();
-    };
-
-    newjs.src = file;
-    script.parentNode.insertBefore(newjs, script);
-}
-</code></pre><p>在IE中订阅<code>readystatechange</code>事件，并寻找<code>readyState</code>状态为”loaded”或”complete”的状态。而在Firefox、Safari和Opera中，需要通过<code>onload</code>属性订阅<code>load</code>事件。注意：这种方法不适用于Safari 2，如果需要，请创建一个时间间隔来定期检查是否指定变量已定义（在附加文件中定义的变量）。当该变量被定义以后，就意味着新脚本已经加载并执行了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">'extra.js'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">     functionDefinedInExtraJS();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>require函数的实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">require</span>(<span class="params">file, callback</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> script = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'script'</span>)[<span class="number">0</span>],</span><br><span class="line">        newjs = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// IE</span></span><br><span class="line">    newjs.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (newjs.readyState === <span class="string">'loaded'</span> || newjs.readyState === <span class="string">'complete'</span>) &#123;</span><br><span class="line">            callback();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 其他浏览器</span></span><br><span class="line">    newjs.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        callback();</span><br><span class="line">    &#125;;</span><br><span class="line">   </span><br><span class="line">    newjs.src = file;</span><br><span class="line">    script.parentNode.insertBefore(newjs, script);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在IE中订阅<code>readystatechange</code>事件，并寻找<code>readyState</code>状态为”loaded”或”complete”的状态。而在Firefox、Safari和Opera中，需要通过<code>onload</code>属性订阅<code>load</code>事件。注意：这种方法不适用于Safari 2，如果需要，请创建一个时间间隔来定期检查是否指定变量已定义（在附加文件中定义的变量）。当该变量被定义以后，就意味着新脚本已经加载并执行了。</p>
 <h3 id="预加载模式"><a href="#预加载模式" class="headerlink" title="预加载模式"></a>预加载模式</h3><p>在延迟加载和按需加载模式中，我们延迟加载当前页面需要的脚本。此外，还可以延迟加载当前页面不需要，但是在后续页面中可能需要的脚本。这样，当用户打开接下来的网页后，所需要的脚本已经预先加载了，进而用户会感觉速度加快了。</p>
 <p>预加载可以使用动态脚本模式来实现，但是这意味着该脚本将被解析和执行。解析仅仅会增加预加载的时间，而执行脚本可能会导致js错误，因为这些脚本应该是在第二个页面执行的，例如寻找某个特定的DOM节点。</p>
 <p>可以加载脚本而并不解析和执行这些脚本，在IE中可以使用图像灯塔来发出请求。在所有其他浏览器中可以使用一个<code>&lt;object&gt;</code>来代替脚本元素，并将其<code>data</code>属性指向脚本的URL。</p>
-<pre><code>var preload; 
-if (/*@cc_on!@*/false) { // 使用条件注释的IE嗅探
-    preload = function (file) {
-        new Image().src = file;
-    };
-} else {
-    preload = function (file) {
-        var obj = document.createElement(&apos;object&apos;);
-        // 避免显示出该对象
-        obj.width = 0;
-        obj.height = 0;
-        obj.data = file;
-       document.body.appendChild(obj);
-    };
-}
-</code></pre><p>注意：上面的代码使用了分支注释来嗅探IE，该方法比在<code>navigator.userAgent</code>中寻找字符串要安全一些，因为那些字符串很容易被用户修改。<code>var isIE = /*@cc_on!@*/false;</code> 会在除IE外的其他浏览器中将<code>isIE</code>设置为<code>false</code>，因为在注释语句中有一个<code>!</code>，因此在IE中<code>isIE</code>的值为<code>true</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> preload; </span><br><span class="line"><span class="keyword">if</span> (<span class="comment">/*@cc_on!@*/</span><span class="literal">false</span>) &#123; <span class="comment">// 使用条件注释的IE嗅探</span></span><br><span class="line">    preload = <span class="function"><span class="keyword">function</span> (<span class="params">file</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Image().src = file;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    preload = <span class="function"><span class="keyword">function</span> (<span class="params">file</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> obj = <span class="built_in">document</span>.createElement(<span class="string">'object'</span>);</span><br><span class="line">        <span class="comment">// 避免显示出该对象</span></span><br><span class="line">        obj.width = <span class="number">0</span>;</span><br><span class="line">        obj.height = <span class="number">0</span>;</span><br><span class="line">        obj.data = file;</span><br><span class="line">       <span class="built_in">document</span>.body.appendChild(obj);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：上面的代码使用了分支注释来嗅探IE，该方法比在<code>navigator.userAgent</code>中寻找字符串要安全一些，因为那些字符串很容易被用户修改。<code>var isIE = /*@cc_on!@*/false;</code> 会在除IE外的其他浏览器中将<code>isIE</code>设置为<code>false</code>，因为在注释语句中有一个<code>!</code>，因此在IE中<code>isIE</code>的值为<code>true</code>。</p>
 <p>这种模式的缺点在于使用了用户代理嗅探，但是这是无法避免的。因为在这种情况下，使用特性检测技术无法告知关于浏览器行为的足够信息。举例来说，在这种模式下如果 <code>typeof Image === &#39;function&#39;</code>，那么理论上可以用该函数来代替嗅探。然而在这里该方法没有作用，因为所有浏览器都支持 <code>new Image();</code> 区别仅仅在于有的浏览器为图像有独立的缓存，这也就意味着作为图像预加载的组件不会被用作缓存中的脚本，因此下一个页面会再次下载该图像。</p>
 <p>预加载模式可以用于各种类型组件，而不限于脚本。举例来说，这在登录页面就十分有用。当用户开始输入用户名时，可以使用输入的时间来启动预加载，因为用户下一步极有可能进入登录后的界面。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://book.douban.com/subject/11506062/" target="_blank" rel="noopener">JavaScript模式</a></p>

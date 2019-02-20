@@ -99,7 +99,7 @@
 <meta property="og:site_name" content="阿冒的前端之路">
 <meta property="og:description" content="也是去年公司培训里听课的一些笔记，较为粗略，主要供自己查阅用。bash 命令自己平时用的少，得督促了，在写 build 过程中很管用的。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-20T05:45:47.958Z">
+<meta property="og:updated_time" content="2019-02-20T14:09:38.846Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bash基础编程 (听课笔记)">
 <meta name="twitter:description" content="也是去年公司培训里听课的一些笔记，较为粗略，主要供自己查阅用。bash 命令自己平时用的少，得督促了，在写 build 过程中很管用的。">
@@ -489,7 +489,7 @@
 <ul>
 <li><code>set -u</code> 阻止变量空值，抛出错误</li>
 <li><p><code>set -e</code> 异常 false 值是否放行</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">false || echo &apos;something false here&apos;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">false</span> || <span class="built_in">echo</span> <span class="string">'something false here'</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><code>set -o pipefail</code> 管道中的 false 值</p>
 </li>
