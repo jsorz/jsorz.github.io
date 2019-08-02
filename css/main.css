@@ -7,6 +7,12 @@ html {
 body {
   margin: 0;
 }
+p {
+  margin: 0;
+}
+ul {
+  margin: 0 0 10px 0;
+}
 article,
 aside,
 details,
@@ -1675,7 +1681,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #d5a7a6;
+  background: #cf8cd6;
 }
 .links-of-blogroll {
   font-size: 13px;
