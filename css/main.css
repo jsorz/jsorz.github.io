@@ -8,10 +8,10 @@ body {
   margin: 0;
 }
 p {
-  margin: 0;
+  margin: 0 0 10px 0;
 }
 ul {
-  margin: 0 0 10px 0;
+  margin: -10px 0 10px 0;
 }
 article,
 aside,
@@ -1678,7 +1678,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #464fff;
+  background: #87d2ff;
 }
 .links-of-blogroll {
   font-size: 13px;
