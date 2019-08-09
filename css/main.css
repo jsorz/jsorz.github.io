@@ -478,7 +478,7 @@ pre,
   overflow: auto;
   margin: 20px 0;
   padding: 0;
-  font-size: 13px;
+  font-size: 15px;
   color: #4d4d4c;
   background: #f7f7f7;
   line-height: 1.6;
@@ -494,7 +494,7 @@ code {
   color: #555;
   background: #eee;
   border-radius: 3px;
-  font-size: 13px;
+  font-size: 15px;
 }
 pre code {
   padding: 0;
@@ -1013,7 +1013,7 @@ pre .javascript .function {
 }
 .site-subtitle {
   margin-top: 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: #ddd;
 }
 .use-motion .brand {
@@ -1675,7 +1675,7 @@ pre .javascript .function {
   margin-right: 10px;
   margin-bottom: 10px;
   border-bottom-color: #555;
-  font-size: 13px;
+  font-size: 15px;
 }
 .links-of-author a:before {
   display: inline-block;
@@ -1685,14 +1685,14 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #e52f8b;
+  background: #6af7ff;
 }
 .links-of-blogroll {
-  font-size: 13px;
+  font-size: 14px;
 }
 .links-of-blogroll-title {
   margin-top: 20px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
 }
 .links-of-blogroll-list {
