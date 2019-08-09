@@ -75,7 +75,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="jsorz, 阿冒, 前端, javascript">
+  <meta name="keywords" content="读书笔记,">
 
 
 
@@ -91,16 +91,18 @@
 
 
 
-<meta name="description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
-<meta property="og:type" content="website">
-<meta property="og:title" content="阿冒的前端之路">
-<meta property="og:url" content="http://jsorz.cn/categories/吹水/page/2/index.html">
+<meta name="description" content="React 文档陆陆续续看了两三遍，但一直没有真正做过业务，每次都只记住个大概。这回跳出舒适区，主动在业务里用 React，记录一些文档中的关键点。">
+<meta name="keywords" content="读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React文档备忘">
+<meta property="og:url" content="http://jsorz.cn/blog/2019/04/react-notes.html">
 <meta property="og:site_name" content="阿冒的前端之路">
-<meta property="og:description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
+<meta property="og:description" content="React 文档陆陆续续看了两三遍，但一直没有真正做过业务，每次都只记住个大概。这回跳出舒适区，主动在业务里用 React，记录一些文档中的关键点。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-09T03:14:20.347Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="阿冒的前端之路">
-<meta name="twitter:description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
+<meta name="twitter:title" content="React文档备忘">
+<meta name="twitter:description" content="React 文档陆陆续续看了两三遍，但一直没有真正做过业务，每次都只记住个大概。这回跳出舒适区，主动在业务里用 React，记录一些文档中的关键点。">
 
 
 
@@ -128,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://jsorz.cn/categories/吹水/page/2/">
+  <link rel="canonical" href="http://jsorz.cn/blog/2019/04/react-notes.html">
 
 
 
 
 
-  <title>分类: 吹水 | 阿冒的前端之路</title>
+  <title>React文档备忘 | 阿冒的前端之路</title>
   
 
 
@@ -169,7 +171,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -295,47 +297,294 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>吹水<small>分类</small>
-      </h1>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2019/04/react-notes.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">React文档备忘</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-07T00:00:00+08:00">
+                2019-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>React 文档陆陆续续看了两三遍，但一直没有真正做过业务，每次都只记住个大概。这回跳出舒适区，主动在业务里用 React，记录一些文档中的关键点。</p>
+<a id="more"></a>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h3 id="React-Class"><a href="#React-Class" class="headerlink" title="React Class"></a>React Class</h3><ul>
+<li><p>React.Component</p>
+</li>
+<li><ul>
+<li>默认的 <code>shouldComponentUpdate</code> 全是 deep compare，性能开销大</li>
+<li>可自行重写 <code>shouldComponentUpdate()</code>，作为一种优化手段</li>
+</ul>
+</li>
+<li><p>React.PureComponent</p>
+</li>
+<li><ul>
+<li>不建议重写 <code>shouldComponentUpdate()</code></li>
+<li>默认的 <code>shouldComponentUpdate</code> 中通过浅层比较 props 与 state</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>适用于简单数据模型，无嵌套结构</li>
+<li>子组件树的 props 更新可能不会触发重新渲染</li>
+<li>最好没有子组件，有的话最好也是纯组件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><a href="https://lucybain.com/blog/2018/react-js-pure-component/" target="_blank" rel="noopener">https://lucybain.com/blog/2018/react-js-pure-component/</a></li>
+</ul>
+</li>
+<li><p>React.Fragment</p>
+</li>
+<li><ul>
+<li>在不额外创建 DOM 元素的情况下，在 <code>render()</code> 中返回多个元素</li>
+<li>简写为 <code>&lt;&gt;&lt;/&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><ul>
+<li>constructor(props)</li>
+<li>render()</li>
+<li><em>UNSAFE_componentWillMount</em></li>
+<li>componentDidMount()</li>
+<li><em>UNSAFE_componentWillReceiveProps</em></li>
+<li>shouldComponentUpdate()</li>
+<li><em>UNSAFE_componentWillUpdate</em></li>
+<li>componentDidUpdate()</li>
+<li>componentWillUnmount()</li>
+</ul>
+<p>注：<code>UNSAFE</code> 开头的函数为已过时的生命周期钩子，<a href="https://zh-hans.reactjs.org/blog/2018/03/27/update-on-async-rendering.html" target="_blank" rel="noopener">详见官网博客</a>。</p>
+<h3 id="高级玩法"><a href="#高级玩法" class="headerlink" title="高级玩法"></a>高级玩法</h3><p>用于状态维护</p>
+<ul>
+<li><p>Hook：用于状态逻辑的复用</p>
+</li>
+<li><ul>
+<li>可写出更简洁的代码，减少相同逻辑分散多处</li>
+</ul>
+</li>
+<li><p>Context：用于跨层元素传递 props</p>
+</li>
+<li><ul>
+<li>会降低组件的复用性，使用前想想清楚</li>
+<li>考虑直接传递组件，或者传递 render props</li>
+</ul>
+</li>
+</ul>
+<p>用于提高复用 (关注点分离)</p>
+<ul>
+<li>Render Prop</li>
+<li><p>HOC 高阶组件</p>
+</li>
+<li><ul>
+<li><a href="https://zh-hans.reactjs.org/blog/2016/07/13/mixins-considered-harmful.html" target="_blank" rel="noopener">Mixins Considered Harmful</a></li>
+<li>HOC 是纯函数，没有副作用</li>
+<li>高阶组件要透传所有 props</li>
+<li><a href="https://zh-hans.reactjs.org/docs/hooks-faq.html#from-classes-to-hooks" target="_blank" rel="noopener">如何从 Class 迁移到 Hook</a></li>
+</ul>
+</li>
+</ul>
+<p>控制DOM</p>
+<ul>
+<li><p>Refs 转发：比 Vue 的能力强</p>
+</li>
+<li><ul>
+<li>个人感觉不利于组件内聚性</li>
+<li>适用于HOC高阶组件中</li>
+</ul>
+</li>
+</ul>
+<p>设计模式</p>
+<ul>
+<li>优先组合，而非继承</li>
+<li><a href="https://medium.com/@konstankino/2019-reactjs-best-practices-design-patterns-516e1c3ca06a" target="_blank" rel="noopener">2019 ReactJS Best Practices</a></li>
+<li><a href="https://medium.com/@konstankino/2019-redux-and-redux-thunk-for-reactjs-explained-e249b70d6188" target="_blank" rel="noopener">2019 Using Redux and Redux-Thunk </a></li>
+</ul>
+<h2 id="坑点"><a href="#坑点" class="headerlink" title="坑点"></a>坑点</h2><h3 id="this-binding"><a href="#this-binding" class="headerlink" title="this binding"></a>this binding</h3><p>背景：在 ES6 class 写法中，绑定的自定义事件函数执行时会遇到 this 作用域问题</p>
+<p>原因：React 对待生命周期的钩子函数时，会主动绑定 this，而对待 JSX 中的回调函数则不会？?</p>
+<p>解决办法</p>
+<ul>
+<li><p>extra bind in constructor</p>
+</li>
+<li><ul>
+<li>代码累赘</li>
+</ul>
+</li>
+<li><p>bind in render function</p>
+</li>
+<li><ul>
+<li>每次重新渲染都绑了一个新函数</li>
+</ul>
+</li>
+<li><p>use class property and arrow function</p>
+</li>
+<li><ul>
+<li>babel: class-properties or preset-react</li>
+</ul>
+</li>
+</ul>
+<h3 id="render-HOC"><a href="#render-HOC" class="headerlink" title="render HOC"></a>render HOC</h3><p>不要在 render 方法中使用 HOC</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">  <span class="comment">// 每次调用 render 函数都会创建一个新的 EnhancedComponent</span></span><br><span class="line">  <span class="comment">// EnhancedComponent1 !== EnhancedComponent2</span></span><br><span class="line">  <span class="keyword">const</span> EnhancedComponent = enhance(MyComponent);</span><br><span class="line">  <span class="comment">// 这将导致子树每次渲染都会进行卸载，和重新挂载的操作！</span></span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">EnhancedComponent</span> /&gt;</span>;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>React 的 diff 算法（reconciliation）使用组件标识来确定它是应该更新现有子树还是将其丢弃并挂载新子树。 如果从 <code>render</code> 返回的组件与前一个渲染中的组件相同（<code>===</code>），则 React 通过将子树与新子树进行区分来递归更新子树。 如果它们不相等，则完全卸载前一个子树。</p>
 
-      <h2 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/blog/2014/07/trivial-thoughts-after-hci-homework-checking.html" itemprop="url">
-              
-                <span itemprop="name">人机交互作业检查的一点感想——暨前端阶段总结</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2014-07-04T00:00:00+08:00" content="2014-07-04">
-          2014-07-04
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/02/regexp-in-frontend.html" rel="next" title="前端为什么要会正则表达式">
+                <i class="fa fa-chevron-left"></i> 前端为什么要会正则表达式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/06/tough-experience.html" rel="prev" title="一段难忘的H5经历">
+                一段难忘的H5经历 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/categories/吹水/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/categories/吹水/">1</a><span class="page-number current">2</span>
-  </nav>
-
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -343,6 +592,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
 
         </div>
         
@@ -362,8 +617,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
           <p class="site-author-name" itemprop="name">阿冒</p>
@@ -376,7 +640,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">86</span>
+                <span class="site-state-item-count">87</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -398,7 +662,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -469,6 +733,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#React-Class"><span class="nav-number">1.1.</span> <span class="nav-text">React Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生命周期"><span class="nav-number">1.2.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级玩法"><span class="nav-number">1.3.</span> <span class="nav-text">高级玩法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#坑点"><span class="nav-number">2.</span> <span class="nav-text">坑点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#this-binding"><span class="nav-number">2.1.</span> <span class="nav-text">this binding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render-HOC"><span class="nav-number">2.2.</span> <span class="nav-text">render HOC</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -589,10 +869,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
@@ -627,6 +907,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
