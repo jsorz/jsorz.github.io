@@ -13,6 +13,9 @@ p {
 ul {
   margin: -10px 0 10px 0;
 }
+ul ul {
+  margin: 0;
+}
 article,
 aside,
 details,
@@ -1685,7 +1688,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff6e6c;
+  background: #608fff;
 }
 .links-of-blogroll {
   font-size: 14px;
