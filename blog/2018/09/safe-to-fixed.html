@@ -75,7 +75,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="jsorz, 阿冒, 前端, javascript">
+  <meta name="keywords" content="javascript,">
 
 
 
@@ -91,16 +91,18 @@
 
 
 
-<meta name="description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
-<meta property="og:type" content="website">
-<meta property="og:title" content="阿冒的前端之路">
-<meta property="og:url" content="http://jsorz.cn/archives/2015/12/index.html">
+<meta name="description" content="保留几位小数，这在前端来 format 是很常见的。但直接之用 JavaScript 里数值的 toFixed 函数是有坑的。甩两个 bad case 看看： (1.005).toFixed(2) 为 “1.00”，应该是 “1.01” (4.05).toFixed(1) 为 “4.0”，应该是 “4.1” 结论就是：前端对敏感型数字的四舍五入展示，如价格、收入、跟金额有关的，千万不要直接 toF">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="toFixed 之坑">
+<meta property="og:url" content="http://jsorz.cn/blog/2018/09/safe-to-fixed.html">
 <meta property="og:site_name" content="阿冒的前端之路">
-<meta property="og:description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
+<meta property="og:description" content="保留几位小数，这在前端来 format 是很常见的。但直接之用 JavaScript 里数值的 toFixed 函数是有坑的。甩两个 bad case 看看： (1.005).toFixed(2) 为 “1.00”，应该是 “1.01” (4.05).toFixed(1) 为 “4.0”，应该是 “4.1” 结论就是：前端对敏感型数字的四舍五入展示，如价格、收入、跟金额有关的，千万不要直接 toF">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-04-10T03:23:53.381Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="阿冒的前端之路">
-<meta name="twitter:description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
+<meta name="twitter:title" content="toFixed 之坑">
+<meta name="twitter:description" content="保留几位小数，这在前端来 format 是很常见的。但直接之用 JavaScript 里数值的 toFixed 函数是有坑的。甩两个 bad case 看看： (1.005).toFixed(2) 为 “1.00”，应该是 “1.01” (4.05).toFixed(1) 为 “4.0”，应该是 “4.1” 结论就是：前端对敏感型数字的四舍五入展示，如价格、收入、跟金额有关的，千万不要直接 toF">
 
 
 
@@ -128,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://jsorz.cn/archives/2015/12/">
+  <link rel="canonical" href="http://jsorz.cn/blog/2018/09/safe-to-fixed.html">
 
 
 
 
 
-  <title>归档 | 阿冒的前端之路</title>
+  <title>toFixed 之坑 | 阿冒的前端之路</title>
   
 
 
@@ -169,7 +171,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -295,98 +297,189 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-       
-        
-      很好! 目前共计 100 篇日志。 继续努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2015">2015</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/blog/2015/12/twisted-way-to-awesome-fe.html" itemprop="url">
-              
-                <span itemprop="name">前端要给力 — 平凡之路</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2015-12-14T00:00:00+08:00" content="2015-12-14">
-          2015-12-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/blog/2015/12/attack-map-with-amd.html" itemprop="url">
-              
-                <span itemprop="name">前端模块化开发demo之攻击地图</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2015-12-05T00:00:00+08:00" content="2015-12-05">
-          2015-12-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2018/09/safe-to-fixed.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">toFixed 之坑</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-20T00:00:00+08:00">
+                2018-09-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>保留几位小数，这在前端来 format 是很常见的。但直接之用 JavaScript 里数值的 <code>toFixed</code> 函数是有坑的。甩两个 bad case 看看：</p>
+<p><code>(1.005).toFixed(2</code>) 为 “1.00”，应该是 “1.01”</p>
+<p><code>(4.05).toFixed(1)</code> 为 “4.0”，应该是 “4.1”</p>
+<p>结论就是：前端对敏感型数字的四舍五入展示，如价格、收入、跟金额有关的，千万不要直接 toFixed，以免被客户追究。</p>
+<a id="more"></a>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>JS 语言诟病，浮点数本身存在精度问题，举个例子：<code>0.1 + 0.2 !== 0.3</code></p>
+<p>那问题来了，保留2位小数，能否先乘 100，然后四舍五入取整后再除 100 呢？</p>
+<p>不妨试下 <code>Math.round(1.005 * 100) / 100</code> 结果也不对，因为 <code>1.005 * 100</code> 的结果是 <code>100.49999999999999</code>。而 <code>0.1 + 0.2</code> 的结果是 <code>0.30000000000000004</code> ，这就很迷了，什么时候会比正确值略大，什么时候又会略小，看不到规律。</p>
+<p>其实这要跟浮点数的二进制存储有关了，计算机是无法精确地表示任意浮点数的。有的数能用 (1/2)^n 的相加表示的话，那这个浮点数就是精确的，比如 0.5, 0.75, 0.875。否则由于浮点数存储有位数限制，肯定是不精确的。</p>
+<p>JS 里的 number 类型只有 16 位精度，所以浮点数运算捉襟见肘。</p>
+<p>另一方面，JS 对超长的整数也表示不了，比如很多系统里的订单号，在后端会用 Long 来表示，数字超过 16 位时在 JS 里就没法精确表示了。<code>30001519369635544130</code> 这个大数字末几位就会被抹成零，就会导致前端看到的订单号与后端实际单号不一致。所以超过 16 位的大数字，一定要求后端以 String 来给到前端。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>思路是，如果保留2位小数，那先乘 100 后四舍五入取整，然后把小数点加在倒数第 2 位之前。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> MAX_SAFE_INTEGER <span class="keyword">from</span> <span class="string">'core-js/library/fn/number/max-safe-integer'</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> MIN_SAFE_INTEGER <span class="keyword">from</span> <span class="string">'core-js/library/fn/number/min-safe-integer'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> NUM_REG = <span class="regexp">/^-?\d+(\.\d+)?$/</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isSafeNumber</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  val: <span class="built_in">string</span> | <span class="built_in">number</span></span></span></span><br><span class="line"><span class="function"><span class="params"></span>): <span class="title">boolean</span> =&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> num = <span class="built_in">Number</span>(val);</span><br><span class="line">  <span class="keyword">return</span> NUM_REG.test(<span class="built_in">String</span>(val))</span><br><span class="line">    &amp;&amp; num &lt;= MAX_SAFE_INTEGER</span><br><span class="line">    &amp;&amp; num &gt;= MIN_SAFE_INTEGER;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 安全的 toFixed 函数，解决浮点数 toFixed 的潜在问题</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 例如 (1.005).toFixed(2) 为 "1.00" (应该是 "1.01")</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Inspired by https://github.com/camsong/blog/issues/9</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">toFixed</span> (<span class="params">num: <span class="built_in">number</span> | <span class="built_in">string</span>, digits?: <span class="built_in">number</span></span>): <span class="title">string</span> =&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!isSafeNumber(num)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'NaN'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  digits = digits || <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 转为整数后再处理 只需取整后再补个小数点位置</span></span><br><span class="line">  <span class="keyword">let</span> scale: <span class="built_in">number</span> = <span class="built_in">Number</span>(num) * <span class="built_in">Math</span>.pow(<span class="number">10</span>, digits);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 为什么是16位? Number.MAX_SAFE_INTEGER 只有16位</span></span><br><span class="line">  <span class="comment">// (整数部分 + 小数部分) &lt;= 16 位时，可解决小数尾部 00001 和 99999 精度问题</span></span><br><span class="line">  scale = <span class="built_in">Math</span>.round(<span class="built_in">parseFloat</span>(scale.toPrecision(<span class="number">16</span>)));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 从右向左的 bit 数组</span></span><br><span class="line">  <span class="keyword">const</span> bits: <span class="built_in">string</span>[] = <span class="built_in">String</span>(scale).split(<span class="string">''</span>).reverse();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 小数点的位置，并用 0 补齐</span></span><br><span class="line">  <span class="keyword">if</span> (bits.length &lt;= digits) &#123;</span><br><span class="line">    <span class="comment">// 构造 (digits - bits.length) 个 0 的数组</span></span><br><span class="line">    <span class="keyword">const</span> patches: <span class="built_in">string</span>[] = <span class="keyword">new</span> <span class="built_in">Array</span>(digits - bits.length + <span class="number">1</span>).join(<span class="string">'0'</span>).split(<span class="string">''</span>);</span><br><span class="line">    bits.splice(bits.length, <span class="number">0</span>, ...patches, <span class="string">'.'</span>, <span class="string">'0'</span>);</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (digits &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    bits.splice(digits, <span class="number">0</span>, <span class="string">'.'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> bits.reverse().join(<span class="string">''</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> test <span class="keyword">from</span> <span class="string">'ava'</span>;</span><br><span class="line"></span><br><span class="line">test(<span class="string">'should toFixed non-number'</span>, t =&gt; &#123;</span><br><span class="line">  t.is(toFixed(<span class="literal">null</span>), <span class="string">'NaN'</span>);</span><br><span class="line">  t.is(toFixed(<span class="string">''</span>), <span class="string">'NaN'</span>);</span><br><span class="line">  t.is(toFixed(<span class="string">'1'</span>), <span class="string">'1'</span>);</span><br><span class="line">  t.is(toFixed(<span class="string">'1'</span>, <span class="number">1</span>), <span class="string">'1.0'</span>);</span><br><span class="line">  t.is(toFixed(<span class="string">'-1.1'</span>, <span class="number">2</span>), <span class="string">'-1.10'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">test(<span class="string">'should toFixed normal number'</span>, t =&gt; &#123;</span><br><span class="line">  t.is(toFixed(<span class="number">1</span>), <span class="string">'1'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">1</span>, <span class="number">1</span>), <span class="string">'1.0'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">1.1</span>, <span class="number">1</span>), <span class="string">'1.1'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">1.1</span>, <span class="number">2</span>), <span class="string">'1.10'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">1.12</span>, <span class="number">1</span>), <span class="string">'1.1'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">1.15</span>, <span class="number">1</span>), <span class="string">'1.2'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">0.101</span>, <span class="number">2</span>), <span class="string">'0.10'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">0.109</span>, <span class="number">2</span>), <span class="string">'0.11'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">0.0041</span>, <span class="number">3</span>), <span class="string">'0.004'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">0.0049</span>, <span class="number">3</span>), <span class="string">'0.005'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">test(<span class="string">'should toFixed big number'</span>, t =&gt; &#123;</span><br><span class="line">  <span class="comment">// MAX_SAFE_INTEGER 16位数字</span></span><br><span class="line">  t.is(toFixed(<span class="number">9007199254740991</span>), <span class="string">'9007199254740991'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 整数 + 小数 不能超过16位</span></span><br><span class="line">  t.is(toFixed(<span class="number">100719925474099</span>, <span class="number">1</span>), <span class="string">'100719925474099.0'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">100719925474099.1</span>, <span class="number">0</span>), <span class="string">'100719925474099'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">100719925474099.5</span>, <span class="number">0</span>), <span class="string">'100719925474100'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 整数 + 小数 不能超过16位</span></span><br><span class="line">  t.is(toFixed(<span class="number">1719925474099.005</span>, <span class="number">2</span>), <span class="string">'1719925474099.01'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">1719925474099.101</span>, <span class="number">2</span>), <span class="string">'1719925474099.10'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">test(<span class="string">'should toFixed abnormal float number'</span>, t =&gt; &#123;</span><br><span class="line">  <span class="comment">// 0.1 + 0.2 = 0.30000000000000004</span></span><br><span class="line">  t.is(toFixed(<span class="number">0.1</span> + <span class="number">0.2</span>, <span class="number">1</span>), <span class="string">'0.3'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">0.1</span> + <span class="number">0.2</span>, <span class="number">2</span>), <span class="string">'0.30'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 0.1 + 0.7 = 0.7999999999999999</span></span><br><span class="line">  t.is(toFixed(<span class="number">0.1</span> + <span class="number">0.7</span>, <span class="number">1</span>), <span class="string">'0.8'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">0.1</span> + <span class="number">0.7</span>, <span class="number">3</span>), <span class="string">'0.800'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 0.69 / 10 = 0.06899999999999999</span></span><br><span class="line">  t.is(toFixed(<span class="number">0.69</span> / <span class="number">10</span>, <span class="number">3</span>), <span class="string">'0.069'</span>);</span><br><span class="line">  t.is(toFixed(<span class="number">0.69</span> / <span class="number">10</span>, <span class="number">4</span>), <span class="string">'0.0690'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// (4.05).toFixed(1) = '4.0'</span></span><br><span class="line">  t.is(toFixed(<span class="number">4.05</span>, <span class="number">1</span>), <span class="string">'4.1'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// (1.005).toFixed(2) = '1.00'</span></span><br><span class="line">  t.is(toFixed(<span class="number">1.005</span>, <span class="number">2</span>), <span class="string">'1.01'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>最后，在前端 JS 里最好别做数值计算，如果一定要计算，可以使用 <a href="https://github.com/nefe/number-precision" target="_blank" rel="noopener">number-precision</a> 库。</p>
+<p>还有，价格这种字段，无论如何都不要在前端计算！做一个有底线的前端。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2018/04/future-rolls-on.html" rel="next" title="2018未来在哪儿">
+                <i class="fa fa-chevron-left"></i> 2018未来在哪儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/10/no-form-any-more.html" rel="prev" title="再也不想写表单了">
+                再也不想写表单了 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -394,6 +487,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
 
         </div>
         
@@ -413,8 +512,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
           <p class="site-author-name" itemprop="name">阿冒</p>
@@ -520,6 +628,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试用例"><span class="nav-number">3.</span> <span class="nav-text">测试用例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -640,7 +764,9 @@
 
 
   
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
 
 
   
@@ -676,6 +802,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
