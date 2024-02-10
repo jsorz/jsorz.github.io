@@ -91,16 +91,17 @@
 
 
 
-<meta name="description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
-<meta property="og:type" content="website">
-<meta property="og:title" content="阿冒的前端之路">
-<meta property="og:url" content="http://jsorz.cn/archives/2014/11/index.html">
+<meta name="description" content="前端常用通信方法实验，侧重跨域以及单双向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跨域通信常用技术">
+<meta property="og:url" content="http://jsorz.cn/blog/2017/03/cross-domain-comm.html">
 <meta property="og:site_name" content="阿冒的前端之路">
-<meta property="og:description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
+<meta property="og:description" content="前端常用通信方法实验，侧重跨域以及单双向">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2024-02-10T14:25:01.901Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="阿冒的前端之路">
-<meta name="twitter:description" content="我曾经失落失望失掉所有方向直到看见平凡才是唯一的答案">
+<meta name="twitter:title" content="跨域通信常用技术">
+<meta name="twitter:description" content="前端常用通信方法实验，侧重跨域以及单双向">
 
 
 
@@ -128,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://jsorz.cn/archives/2014/11/">
+  <link rel="canonical" href="http://jsorz.cn/blog/2017/03/cross-domain-comm.html">
 
 
 
 
 
-  <title>归档 | 阿冒的前端之路</title>
+  <title>跨域通信常用技术 | 阿冒的前端之路</title>
   
 
 
@@ -169,7 +170,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -295,63 +296,266 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-    <span class="archive-page-counter">
-      
-      
-       
-        
-      很好! 目前共计 113 篇日志。 继续努力。
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://jsorz.cn/blog/2017/03/cross-domain-comm.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="阿冒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿冒的前端之路">
     </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">跨域通信常用技术</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-21T00:00:00+08:00">
+                2017-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发/" itemprop="url" rel="index">
+                    <span itemprop="name">开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
 
       
       
-      
 
+      
+        <p>前端常用通信方法实验，侧重跨域以及单双向</p>
+<a id="more"></a>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>通信形式</th>
+<th>iframe 场景</th>
+<th>不改写 document.domain</th>
+<th>跨子域主域</th>
+<th>不使用 Flash</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSONP</td>
+<td>单向通信</td>
+<td>✘</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>window.name</td>
+<td>单向通信</td>
+<td>✔</td>
+<td>✘  (IE6/7 例外)</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>CORS</td>
+<td>单向通信</td>
+<td>✘</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>Flash URLLoader</td>
+<td>单向通信</td>
+<td>✘</td>
+<td>✔</td>
+<td>✔</td>
+<td>✘</td>
+</tr>
+<tr>
+<td>Server Proxy</td>
+<td>单向通信</td>
+<td>✘</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>document.domain</td>
+<td>双向通信</td>
+<td>✔</td>
+<td>✘</td>
+<td>✘</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>FIM</td>
+<td>双向通信</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>Flash LocalConnection</td>
+<td>双向通信</td>
+<td>✘</td>
+<td>✔</td>
+<td>✔</td>
+<td>✘</td>
+</tr>
+<tr>
+<td>postMessage</td>
+<td>双向通信</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>Cross Frame</td>
+<td>双向通信</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+</tbody>
+</table>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="noopener">跨源资源共享（CORS）</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
       
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2014">2014</h2>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/03/upgrade-to-jquery-seems-outdated.html" rel="next" title="现在还在重构jquery...">
+                <i class="fa fa-chevron-left"></i> 现在还在重构jquery...
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/04/techniques-for-making-presentations.html" rel="prev" title="做PPT报告的表达技巧 (by 林大班)">
+                做PPT报告的表达技巧 (by 林大班) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
         </div>
       
-      
 
       
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/blog/2014/11/js-pattern-part6-design-pattern.html" itemprop="url">
-              
-                <span itemprop="name">Javascript模式之六-设计模式</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2014-11-30T00:00:00+08:00" content="2014-11-30">
-          2014-11-30
-        </time>
-      </div>
-
-    </header>
+      
+    </footer>
   </article>
 
 
 
-    
-
-  </section>
-
-  
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -359,6 +563,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYzNy84MjAx"></div>
+    
+  </div>
+
 
         </div>
         
@@ -378,8 +588,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="阿冒">
           <p class="site-author-name" itemprop="name">阿冒</p>
@@ -485,6 +704,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">1.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -605,7 +840,9 @@
 
 
   
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
 
 
   
@@ -641,6 +878,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
